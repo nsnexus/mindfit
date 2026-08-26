@@ -1,17 +1,14 @@
 // ============================================
-// Firebase Auth Helpers (Email e Senha)
+// Firebase Auth Helpers (Email e Senha - Edge/SSR Safe)
 // ============================================
-import {
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
-  signOut,
-  sendPasswordResetEmail,
-  updateProfile,
-  onAuthStateChanged,
-  type User,
-} from 'firebase/auth';
-import { doc, setDoc, serverTimestamp } from 'firebase/firestore';
+import type { User } from 'firebase/auth';
 import { getAuthInstance, getDbInstance } from './config';
+
+async function getAuthModule() {
+  const mod = await import('firebase/auth');
+  const auth = getAuthInstance();
+  return { ...mod, auth };
+}
 
 /**
  * Criar conta com email/senha
@@ -21,7 +18,7 @@ export async function registerWithEmail(
   password: string,
   displayName: string
 ) {
-  const auth = getAuthInstance();
+  const { createUserWithEmailAndPassword, updateProfile, auth } = await getAuthModule();
   const credential = await createUserWithEmailAndPassword(auth, email, password);
   const user = credential.user;
 
@@ -35,7 +32,7 @@ export async function registerWithEmail(
  * Login com email/senha
  */
 export async function loginWithEmail(email: string, password: string) {
-  const auth = getAuthInstance();
+  const { signInWithEmailAndPassword, auth } = await getAuthModule();
   const credential = await signInWithEmailAndPassword(auth, email, password);
   return credential.user;
 }
@@ -44,7 +41,7 @@ export async function loginWithEmail(email: string, password: string) {
  * Logout
  */
 export async function logout() {
-  const auth = getAuthInstance();
+  const { signOut, auth } = await getAuthModule();
   await signOut(auth);
 }
 
@@ -52,14 +49,16 @@ export async function logout() {
  * Enviar email de recuperação de senha
  */
 export async function resetPassword(email: string) {
-  const auth = getAuthInstance();
+  const { sendPasswordResetEmail, auth } = await getAuthModule();
   await sendPasswordResetEmail(auth, email);
 }
 
 /**
  * Cria o documento do usuário no Firestore (idempotente)
  */
-async function createUserDocument(user: User, displayName: string) {
+export async function createUserDocument(user: User, displayName?: string) {
+  if (typeof window === 'undefined') return;
+  const { doc, setDoc, serverTimestamp } = await import('firebase/firestore');
   const db = getDbInstance();
   const userRef = doc(db, 'users', user.uid);
 
@@ -67,29 +66,29 @@ async function createUserDocument(user: User, displayName: string) {
     userRef,
     {
       uid: user.uid,
-      email: user.email,
-      displayName,
-      photoURL: user.photoURL || null,
+      email: user.email || '',
+      displayName: displayName || user.displayName || 'Usuário',
       role: 'user',
       isPremium: false,
-      createdAt: serverTimestamp(),
-      lastLoginAt: serverTimestamp(),
       onboardingCompleted: false,
-      acceptedTerms: true,
-      acceptedPrivacy: true,
-      lgpdConsent: true,
+      currentDay: 1,
+      createdAt: serverTimestamp(),
+      updatedAt: serverTimestamp(),
     },
     { merge: true }
   );
 }
 
 /**
- * Observer de estado de autenticação
+ * Listener de mudança de estado de autenticação
  */
 export function onAuthChange(callback: (user: User | null) => void) {
-  if (typeof window === 'undefined') {
-    return () => {};
-  }
-  const auth = getAuthInstance();
-  return onAuthStateChanged(auth, callback);
+  if (typeof window === 'undefined') return () => {};
+  let unsub: (() => void) | null = null;
+  getAuthModule().then(({ onAuthStateChanged, auth }) => {
+    unsub = onAuthStateChanged(auth, callback);
+  });
+  return () => {
+    if (unsub) unsub();
+  };
 }

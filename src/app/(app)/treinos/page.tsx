@@ -14,7 +14,7 @@ const DIFFICULTY_TABS = [
   { id: 'advanced', label: '🔴 Avançado' },
 ];
 
-export function TreinosPageContent() {
+function TreinosPageContent() {
   const {
     workouts,
     selectedPhase,

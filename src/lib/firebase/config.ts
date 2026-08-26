@@ -1,76 +1,74 @@
 // ============================================
-// Método 21 Dias — Firebase Client SDK Config
+// Método 21 Dias — Firebase Client SDK Config (Edge/SSR Safe)
 // ============================================
-import { initializeApp, getApps, getApp, type FirebaseApp } from 'firebase/app';
-import { getAuth, type Auth } from 'firebase/auth';
-import { getFirestore, type Firestore } from 'firebase/firestore';
-import { getStorage, type FirebaseStorage } from 'firebase/storage';
-import { getAnalytics, isSupported } from 'firebase/analytics';
+import type { FirebaseApp } from 'firebase/app';
+import type { Auth } from 'firebase/auth';
+import type { Firestore } from 'firebase/firestore';
+import type { FirebaseStorage } from 'firebase/storage';
 
-const firebaseConfig = {
-  apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
-  authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
-  projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
-  storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
-  messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
-  appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
-  measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID,
+export const firebaseConfig = {
+  apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY || 'AIzaSyAGL6qNbWeyfCuyjB459yqOLKKTRAJlFDw',
+  authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN || 'mindfit-d14f7.firebaseapp.com',
+  projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID || 'mindfit-d14f7',
+  storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET || 'mindfit-d14f7.firebasestorage.app',
+  messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID || '133329052719',
+  appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID || '1:133329052719:web:b54af460b83255563712da',
+  measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID || 'G-6TJFCRLX1N',
 };
 
-/**
- * Inicialização lazy do Firebase — evita erro em build time
- * quando as variáveis de ambiente não estão disponíveis
- */
-function getFirebaseApp(): FirebaseApp {
-  if (getApps().length > 0) return getApp();
-
-  // Em build time, as env vars podem não existir
-  if (!firebaseConfig.apiKey) {
-    // Retorna app com config vazia para não quebrar o build
-    // O app real será inicializado no browser com as env vars
-    console.warn('[Firebase] API key not found — using placeholder config for build.');
-  }
-
-  return initializeApp(firebaseConfig);
-}
-
-// Lazy getters — só inicializam quando acessados no browser
 let _app: FirebaseApp | null = null;
 let _auth: Auth | null = null;
 let _db: Firestore | null = null;
 let _storage: FirebaseStorage | null = null;
 
-function getApp_() {
-  if (!_app) _app = getFirebaseApp();
-  return _app;
+export function getFirebaseApp(): FirebaseApp {
+  if (_app) return _app;
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
+  const { initializeApp, getApps, getApp } = require('firebase/app');
+  if (getApps().length > 0) {
+    _app = getApp();
+  } else {
+    _app = initializeApp(firebaseConfig);
+  }
+  return _app!;
 }
 
 export function getAuthInstance(): Auth {
-  if (!_auth) _auth = getAuth(getApp_());
-  return _auth;
+  if (_auth) return _auth;
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
+  const { getAuth } = require('firebase/auth');
+  _auth = getAuth(getFirebaseApp());
+  return _auth!;
 }
 
 export function getDbInstance(): Firestore {
-  if (!_db) _db = getFirestore(getApp_());
-  return _db;
+  if (_db) return _db;
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
+  const { getFirestore } = require('firebase/firestore');
+  _db = getFirestore(getFirebaseApp());
+  return _db!;
 }
 
 export function getStorageInstance(): FirebaseStorage {
-  if (!_storage) _storage = getStorage(getApp_());
-  return _storage;
+  if (_storage) return _storage;
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
+  const { getStorage } = require('firebase/storage');
+  _storage = getStorage(getFirebaseApp());
+  return _storage!;
 }
 
-// Compat exports — usados em todo o app
 export const auth = typeof window !== 'undefined' ? getAuthInstance() : (null as unknown as Auth);
 export const db = typeof window !== 'undefined' ? getDbInstance() : (null as unknown as Firestore);
 export const storage = typeof window !== 'undefined' ? getStorageInstance() : (null as unknown as FirebaseStorage);
 
-// Analytics (só no browser)
 export const initAnalytics = async () => {
-  if (typeof window !== 'undefined' && (await isSupported())) {
-    return getAnalytics(getApp_());
+  if (typeof window !== 'undefined') {
+    const { getAnalytics, isSupported } = await import('firebase/analytics');
+    if (await isSupported()) {
+      return getAnalytics(getFirebaseApp());
+    }
   }
   return null;
 };
 
-export default getApp_;
+export default getFirebaseApp;

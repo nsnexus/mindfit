@@ -6,8 +6,6 @@
 import { useEffect, type ReactNode } from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { useAuthStore } from '@/stores/authStore';
-import { onAuthChange } from '@/lib/firebase/auth';
-import { getDocument } from '@/lib/firebase/firestore';
 import type { AppUser } from '@/types/user';
 
 const queryClient = new QueryClient({
@@ -24,22 +22,39 @@ function AuthProvider({ children }: { children: ReactNode }) {
     useAuthStore();
 
   useEffect(() => {
-    const unsubscribe = onAuthChange(async (user) => {
-      setLoading(true);
+    let unsubscribe: (() => void) | undefined;
 
-      if (user) {
-        setFirebaseUser(user);
-        const userData = await getDocument<AppUser>('users', user.uid);
-        setAppUser(userData);
-      } else {
-        reset();
+    async function initAuth() {
+      try {
+        const { onAuthChange } = await import('@/lib/firebase/auth');
+        const { getDocument } = await import('@/lib/firebase/firestore');
+
+        unsubscribe = onAuthChange(async (user) => {
+          setLoading(true);
+
+          if (user) {
+            setFirebaseUser(user);
+            const userData = await getDocument<AppUser>('users', user.uid);
+            setAppUser(userData);
+          } else {
+            reset();
+          }
+
+          setLoading(false);
+          setInitialized(true);
+        });
+      } catch (err) {
+        console.error('[AuthProvider] Error initializing Firebase auth:', err);
+        setLoading(false);
+        setInitialized(true);
       }
+    }
 
-      setLoading(false);
-      setInitialized(true);
-    });
+    initAuth();
 
-    return () => unsubscribe();
+    return () => {
+      if (unsubscribe) unsubscribe();
+    };
   }, [setFirebaseUser, setAppUser, setLoading, setInitialized, reset]);
 
   return <>{children}</>;

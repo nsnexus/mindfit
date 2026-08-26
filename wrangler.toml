@@ -10,6 +10,7 @@ binding = "ASSETS"
 [vars]
 NEXT_PUBLIC_APP_NAME = "Mindfit"
 NEXT_PUBLIC_APP_URL = "https://mindfit.pages.dev"
+NEXT_PUBLIC_FIREBASE_API_KEY = "AIzaSyAGL6qNbWeyfCuyjB459yqOLKKTRAJlFDw"
 NEXT_PUBLIC_FIREBASE_PROJECT_ID = "mindfit-d14f7"
 NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN = "mindfit-d14f7.firebaseapp.com"
 NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET = "mindfit-d14f7.firebasestorage.app"

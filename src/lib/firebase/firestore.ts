@@ -1,24 +1,14 @@
 // ============================================
-// Firebase Firestore Generic Helpers
+// Firebase Firestore Generic Helpers (Edge/SSR Safe)
 // ============================================
-import {
-  doc,
-  getDoc,
-  getDocs,
-  setDoc,
-  updateDoc,
-  deleteDoc,
-  collection,
-  query,
-  where,
-  orderBy,
-  limit,
-  onSnapshot,
-  serverTimestamp,
-  type DocumentData,
-  type QueryConstraint,
-} from 'firebase/firestore';
+import type { DocumentData, QueryConstraint } from 'firebase/firestore';
 import { getDbInstance } from './config';
+
+async function getFs() {
+  const mod = await import('firebase/firestore');
+  const db = getDbInstance();
+  return { ...mod, db };
+}
 
 /**
  * Buscar um documento por ID
@@ -27,7 +17,8 @@ export async function getDocument<T = DocumentData>(
   collectionName: string,
   docId: string
 ): Promise<T | null> {
-  const db = getDbInstance();
+  if (typeof window === 'undefined') return null;
+  const { doc, getDoc, db } = await getFs();
   const docRef = doc(db, collectionName, docId);
   const docSnap = await getDoc(docRef);
 
@@ -44,7 +35,8 @@ export async function getDocuments<T = DocumentData>(
   collectionName: string,
   constraints: QueryConstraint[] = []
 ): Promise<T[]> {
-  const db = getDbInstance();
+  if (typeof window === 'undefined') return [];
+  const { query, collection, getDocs, db } = await getFs();
   const q = query(collection(db, collectionName), ...constraints);
   const querySnapshot = await getDocs(q);
 
@@ -62,7 +54,8 @@ export async function setDocument(
   data: DocumentData,
   merge = true
 ): Promise<void> {
-  const db = getDbInstance();
+  if (typeof window === 'undefined') return;
+  const { doc, setDoc, serverTimestamp, db } = await getFs();
   const docRef = doc(db, collectionName, docId);
   await setDoc(docRef, { ...data, updatedAt: serverTimestamp() }, { merge });
 }
@@ -75,7 +68,8 @@ export async function updateDocument(
   docId: string,
   data: Partial<DocumentData>
 ): Promise<void> {
-  const db = getDbInstance();
+  if (typeof window === 'undefined') return;
+  const { doc, updateDoc, serverTimestamp, db } = await getFs();
   const docRef = doc(db, collectionName, docId);
   await updateDoc(docRef, { ...data, updatedAt: serverTimestamp() });
 }
@@ -87,7 +81,8 @@ export async function deleteDocument(
   collectionName: string,
   docId: string
 ): Promise<void> {
-  const db = getDbInstance();
+  if (typeof window === 'undefined') return;
+  const { doc, deleteDoc, db } = await getFs();
   const docRef = doc(db, collectionName, docId);
   await deleteDoc(docRef);
 }
@@ -101,15 +96,20 @@ export function subscribeToDocument<T = DocumentData>(
   callback: (data: T | null) => void
 ) {
   if (typeof window === 'undefined') return () => {};
-  const db = getDbInstance();
-  const docRef = doc(db, collectionName, docId);
-  return onSnapshot(docRef, (docSnap) => {
-    if (docSnap.exists()) {
-      callback({ id: docSnap.id, ...docSnap.data() } as T);
-    } else {
-      callback(null);
-    }
+  let unsub: (() => void) | null = null;
+  getFs().then(({ doc, onSnapshot, db }) => {
+    const docRef = doc(db, collectionName, docId);
+    unsub = onSnapshot(docRef, (docSnap) => {
+      if (docSnap.exists()) {
+        callback({ id: docSnap.id, ...docSnap.data() } as T);
+      } else {
+        callback(null);
+      }
+    });
   });
+  return () => {
+    if (unsub) unsub();
+  };
 }
 
 /**
@@ -121,14 +121,19 @@ export function subscribeToCollection<T = DocumentData>(
   callback: (data: T[]) => void
 ) {
   if (typeof window === 'undefined') return () => {};
-  const db = getDbInstance();
-  const q = query(collection(db, collectionName), ...constraints);
-  return onSnapshot(q, (querySnapshot) => {
-    const data = querySnapshot.docs.map(
-      (doc) => ({ id: doc.id, ...doc.data() }) as T
-    );
-    callback(data);
+  let unsub: (() => void) | null = null;
+  getFs().then(({ collection, query, onSnapshot, db }) => {
+    const q = query(collection(db, collectionName), ...constraints);
+    unsub = onSnapshot(q, (querySnapshot) => {
+      const data = querySnapshot.docs.map(
+        (doc) => ({ id: doc.id, ...doc.data() }) as T
+      );
+      callback(data);
+    });
   });
+  return () => {
+    if (unsub) unsub();
+  };
 }
 
 /**
@@ -140,7 +145,8 @@ export async function getSubDocument<T = DocumentData>(
   subCollection: string,
   docId: string
 ): Promise<T | null> {
-  const db = getDbInstance();
+  if (typeof window === 'undefined') return null;
+  const { doc, getDoc, db } = await getFs();
   const docRef = doc(db, parentCollection, parentId, subCollection, docId);
   const docSnap = await getDoc(docRef);
 
@@ -161,10 +167,13 @@ export async function setSubDocument(
   data: DocumentData,
   merge = true
 ): Promise<void> {
-  const db = getDbInstance();
+  if (typeof window === 'undefined') return;
+  const { doc, setDoc, serverTimestamp, db } = await getFs();
   const docRef = doc(db, parentCollection, parentId, subCollection, docId);
   await setDoc(docRef, { ...data, updatedAt: serverTimestamp() }, { merge });
 }
 
-// Re-exporta utilitários do Firestore usados frequentemente
-export { where, orderBy, limit, serverTimestamp, collection, query };
+export async function serverTimestamp() {
+  const { serverTimestamp: st } = await import('firebase/firestore');
+  return st();
+}
