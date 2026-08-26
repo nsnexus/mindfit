@@ -35,7 +35,7 @@ export function Skeleton({
 /** Card-shaped skeleton */
 export function SkeletonCard({ className = '' }: { className?: string }) {
   return (
-    <div className={`bg-white rounded-2xl border border-neutral-200 p-5 ${className}`}>
+    <div className={`bg-white rounded-[18px] border border-[#eaf3ef] p-5 ${className}`}>
       <Skeleton height="160px" rounded="lg" className="mb-4" />
       <Skeleton height="20px" width="70%" className="mb-2" />
       <Skeleton height="16px" width="90%" className="mb-2" />

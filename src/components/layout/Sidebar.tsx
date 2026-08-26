@@ -97,7 +97,7 @@ export function Sidebar() {
 
             <button
               onClick={() => setSidebarOpen(false)}
-              className="lg:hidden p-2 rounded-xl text-neutral-400 hover:text-neutral-700 hover:bg-neutral-100 transition-colors"
+              className="lg:hidden p-2 rounded-xl text-[#5b7a72] hover:text-[#12352f] hover:bg-[#f0f9f4] transition-colors"
               aria-label="Fechar menu"
             >
               <X className="w-5 h-5" />
@@ -134,7 +134,7 @@ export function Sidebar() {
                         ${
                           isActive
                             ? 'bg-white/20 text-white'
-                            : 'bg-neutral-100 text-[#5b7a72] group-hover:bg-[#e6f6ef] group-hover:text-[#0e9f6e]'
+                            : 'bg-[#f0f9f4] text-[#5b7a72] group-hover:bg-[#e6f6ef] group-hover:text-[#0e9f6e]'
                         }
                       `}
                     >
@@ -174,7 +174,7 @@ export function Sidebar() {
             type="button"
             onClick={logout}
             title="Sair da conta"
-            className="p-2 rounded-xl text-neutral-400 hover:text-rose-600 hover:bg-rose-50 transition-colors shrink-0 cursor-pointer"
+            className="p-2 rounded-xl text-[#5b7a72] hover:text-[#d24b4b] hover:bg-[#fdeaea] transition-colors shrink-0 cursor-pointer"
           >
             <LogOut className="w-4 h-4" />
           </button>

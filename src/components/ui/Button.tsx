@@ -19,27 +19,27 @@ export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 
 const variantStyles: Record<ButtonVariant, string> = {
   primary:
-    'bg-gradient-to-r from-emerald-600 to-emerald-500 hover:from-emerald-500 hover:to-emerald-400 text-white font-bold shadow-lg shadow-emerald-600/25 hover:shadow-emerald-500/35 active:scale-[0.98] border border-emerald-400/30',
+    'bg-[linear-gradient(135deg,#8bc34a_0%,#0e9f6e_45%,#1aa8a0_100%)] hover:brightness-105 text-white font-bold shadow-[0_18px_45px_rgba(14,159,110,0.18)] hover:shadow-[0_22px_55px_rgba(14,159,110,0.32)] hover:-translate-y-0.5 active:scale-[0.98] font-head',
   accent:
-    'bg-gradient-to-r from-amber-400 via-amber-500 to-amber-600 hover:from-amber-300 hover:via-amber-400 hover:to-amber-500 text-neutral-950 font-black shadow-xl shadow-amber-500/25 hover:shadow-amber-500/40 hover:scale-[1.02] active:scale-[0.98] border border-amber-300/40 tracking-tight',
+    'bg-[linear-gradient(135deg,#ecb11f_0%,#f0870f_100%)] hover:brightness-105 text-white font-black shadow-[0_14px_35px_rgba(240,135,15,0.25)] hover:-translate-y-0.5 active:scale-[0.98] tracking-tight font-head',
   secondary:
-    'bg-white hover:bg-neutral-100/90 text-neutral-800 font-semibold border border-neutral-200/80 shadow-sm active:scale-[0.98]',
+    'bg-white hover:bg-[#f5faf7] text-[#12352f] font-semibold border border-[#eaf3ef] shadow-sm active:scale-[0.98] font-head',
   outline:
-    'border-2 border-emerald-600/40 hover:border-emerald-600 text-emerald-700 bg-emerald-50/50 hover:bg-emerald-100/60 font-bold active:scale-[0.98]',
+    'border-2 border-[#d7ede3] hover:border-[#0e9f6e] text-[#0e9f6e] bg-white hover:bg-[#f5faf7] font-bold active:scale-[0.98] font-head',
   ghost:
-    'text-neutral-600 hover:text-neutral-900 hover:bg-neutral-100/80 active:bg-neutral-200 font-semibold active:scale-[0.98]',
+    'text-[#5b7a72] hover:text-[#12352f] hover:bg-[#f0f9f4] active:bg-[#e6f6ef] font-semibold active:scale-[0.98] font-head',
   danger:
-    'bg-gradient-to-r from-red-600 to-rose-500 hover:from-red-500 hover:to-rose-400 text-white font-bold shadow-md shadow-red-500/25 active:scale-[0.98]',
+    'bg-[#d24b4b] hover:bg-[#c23e3e] text-white font-bold shadow-md shadow-[#d24b4b]/25 active:scale-[0.98] font-head',
   glass:
-    'bg-white/10 hover:bg-white/20 active:bg-white/25 text-white border border-white/20 backdrop-blur-xl font-bold shadow-lg shadow-black/10 active:scale-[0.98]',
+    'bg-white/10 hover:bg-white/20 active:bg-white/25 text-white border border-white/20 backdrop-blur-xl font-bold shadow-lg shadow-black/10 active:scale-[0.98] font-head',
 };
 
 const sizeStyles: Record<ButtonSize, string> = {
-  xs: 'px-2.5 py-1 text-[11px] rounded-lg gap-1',
-  sm: 'px-3.5 py-1.5 text-xs rounded-xl gap-1.5',
-  md: 'px-4.5 py-2.5 text-sm rounded-xl gap-2',
-  lg: 'px-6 py-3.5 text-base rounded-2xl gap-2.5',
-  xl: 'px-8 py-4.5 text-base sm:text-lg rounded-2xl gap-3',
+  xs: 'px-3 py-1.5 text-[11px] rounded-full gap-1',
+  sm: 'px-4 py-2 text-xs rounded-full gap-1.5',
+  md: 'px-5 py-2.5 text-sm rounded-full gap-2',
+  lg: 'px-7 py-3.5 text-base rounded-full gap-2.5',
+  xl: 'px-8 py-4 text-base sm:text-lg rounded-full gap-3',
 };
 
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(

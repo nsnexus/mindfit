@@ -14,19 +14,19 @@ export interface CardProps extends HTMLAttributes<HTMLDivElement> {
 
 const variantStyles: Record<CardVariant, string> = {
   default:
-    'bg-white border border-neutral-200/80 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.03)]',
+    'bg-white border border-[#eaf3ef] shadow-[0_8px_22px_rgba(14,159,110,0.10)]',
   elevated:
-    'bg-white border border-neutral-100/90 shadow-[0_10px_30px_-5px_rgba(0,0,0,0.05),0_2px_6px_-2px_rgba(0,0,0,0.02)]',
+    'bg-white border border-[#eaf3ef] shadow-[0_18px_45px_rgba(14,159,110,0.18)]',
   outlined:
-    'bg-white border-2 border-neutral-200/90',
+    'bg-white border-2 border-[#eaf3ef]',
   glass:
     'glass-panel',
   emerald:
-    'bg-gradient-to-br from-emerald-950 via-neutral-950 to-neutral-950 border border-emerald-500/25 shadow-2xl shadow-emerald-950/60 text-white',
+    'bg-[linear-gradient(135deg,#0f5e5a_0%,#0a3d3a_100%)] border border-[#1aa8a0]/25 shadow-2xl shadow-[#0a3d3a]/60 text-white',
   dark:
-    'bg-neutral-900/90 backdrop-blur-xl border border-white/10 shadow-2xl text-white',
+    'bg-[#12352f]/95 backdrop-blur-xl border border-white/10 shadow-2xl text-white',
   interactive:
-    'bg-white border border-neutral-200/90 hover:border-emerald-500/50 hover:shadow-xl hover:shadow-emerald-900/5 transition-all duration-300',
+    'bg-white border border-[#eaf3ef] hover:border-transparent hover:shadow-[0_18px_45px_rgba(14,159,110,0.18)] transition-all duration-300',
 };
 
 const paddingStyles: Record<string, string> = {
@@ -48,10 +48,10 @@ export function Card({
   return (
     <div
       className={`
-        rounded-2xl sm:rounded-3xl transition-all duration-300
+        rounded-[20px] transition-all duration-300
         ${variantStyles[variant]}
         ${paddingStyles[padding]}
-        ${hoverable ? 'hover:-translate-y-1 hover:shadow-xl hover:shadow-emerald-900/10 cursor-pointer' : ''}
+        ${hoverable ? 'hover:-translate-y-2 hover:shadow-[0_18px_45px_rgba(14,159,110,0.18)] cursor-pointer' : ''}
         ${className}
       `}
       {...props}
@@ -93,7 +93,7 @@ export function CardDescription({
   className?: string;
 }) {
   return (
-    <p className={`text-xs sm:text-sm text-neutral-500 mt-1 leading-relaxed ${className}`}>
+    <p className={`text-xs sm:text-sm text-[#5b7a72] mt-1 leading-relaxed ${className}`}>
       {children}
     </p>
   );
@@ -117,7 +117,7 @@ export function CardFooter({
   className?: string;
 }) {
   return (
-    <div className={`mt-4 pt-4 border-t border-neutral-100/80 ${className}`}>
+    <div className={`mt-4 pt-4 border-t border-[#eaf3ef] ${className}`}>
       {children}
     </div>
   );

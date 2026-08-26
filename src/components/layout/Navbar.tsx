@@ -31,7 +31,7 @@ export function Navbar() {
           <button
             type="button"
             onClick={toggleSidebar}
-            className="p-2 rounded-xl text-neutral-600 hover:text-neutral-900 hover:bg-neutral-100 transition-colors lg:hidden cursor-pointer"
+            className="p-2 rounded-xl text-[#5b7a72] hover:text-[#12352f] hover:bg-[#f0f9f4] transition-colors lg:hidden cursor-pointer"
             aria-label="Abrir menu"
           >
             <Menu className="w-5 h-5" />
@@ -59,8 +59,8 @@ export function Navbar() {
 
         {/* Right side: Streak badge, User Profile & Actions */}
         <div className="flex items-center gap-3 sm:gap-4">
-          <div className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-[#fff8e6] border border-[#fde68a] text-[#b45309] text-xs font-head font-bold shadow-xs">
-            <Flame className="w-3.5 h-3.5 text-[#f59e0b] fill-[#f59e0b] animate-bounce" />
+          <div className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-[#fff4e0] border border-[#ffe3b0] text-[#c47f0a] text-xs font-head font-bold shadow-xs">
+            <Flame className="w-3.5 h-3.5 text-[#f0870f] fill-[#f0870f] animate-bounce" />
             <span>{streakDays} {streakDays === 1 ? 'Dia de Foco' : 'Dias de Foco'}</span>
           </div>
 

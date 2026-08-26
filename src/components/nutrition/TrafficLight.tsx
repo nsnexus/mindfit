@@ -15,23 +15,23 @@ const CONFIG: Record<
 > = {
   green: {
     label: 'Alta Densidade Nutricional',
-    bg: 'bg-emerald-50 border-emerald-200',
-    text: 'text-emerald-700',
-    dot: 'bg-emerald-500',
+    bg: 'bg-[#e6f6ef] border-[#c9eee0]',
+    text: 'text-[#0e9f6e]',
+    dot: 'bg-[#0e9f6e]',
     desc: 'Volume alto, poucas calorias. Excelente para saciedade.',
   },
   yellow: {
     label: 'Densidade Moderada',
-    bg: 'bg-amber-50 border-amber-200',
-    text: 'text-amber-800',
-    dot: 'bg-amber-500',
+    bg: 'bg-[#fff4e0] border-[#ffe3b0]',
+    text: 'text-[#c47f0a]',
+    dot: 'bg-[#ecb11f]',
     desc: 'Equilíbrio calórico. Consuma em porções conscientes.',
   },
   red: {
     label: 'Alta Densidade Calórica',
-    bg: 'bg-red-50 border-red-200',
-    text: 'text-red-700',
-    dot: 'bg-red-500',
+    bg: 'bg-[#fdeaea] border-[#f7c9c9]',
+    text: 'text-[#d24b4b]',
+    dot: 'bg-[#d24b4b]',
     desc: 'Muitas calorias em pouco volume. Consuma com moderação.',
   },
 };

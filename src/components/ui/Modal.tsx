@@ -60,7 +60,7 @@ export function Modal({
       <div
         className={`
           relative w-full ${sizeStyles[size]}
-          bg-white rounded-2xl shadow-elevated
+          bg-white rounded-[20px] shadow-elevated
           animate-slide-up
           max-h-[90vh] overflow-y-auto
         `}
@@ -70,13 +70,13 @@ export function Modal({
       >
         {/* Header */}
         {title && (
-          <div className="flex items-center justify-between px-6 py-4 border-b border-neutral-100">
-            <h2 id="modal-title" className="text-lg font-semibold text-neutral-900">
+          <div className="flex items-center justify-between px-6 py-4 border-b border-[#eaf3ef]">
+            <h2 id="modal-title" className="text-lg font-bold font-head text-[#12352f]">
               {title}
             </h2>
             <button
               onClick={onClose}
-              className="p-1.5 rounded-lg text-neutral-400 hover:text-neutral-600 hover:bg-neutral-100 transition-colors"
+              className="p-1.5 rounded-full text-[#5b7a72] hover:text-[#12352f] hover:bg-[#f0f9f4] transition-colors"
               aria-label="Fechar modal"
             >
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

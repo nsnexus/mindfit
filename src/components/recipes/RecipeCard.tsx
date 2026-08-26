@@ -21,7 +21,7 @@ export function RecipeCard({
   onToggleFavorite,
 }: RecipeCardProps) {
   return (
-    <div className="bg-white rounded-3xl border border-[#e2f2ea] shadow-[0_8px_25px_rgba(14,159,110,0.06)] hover:border-[#0e9f6e] hover:shadow-[0_14px_35px_rgba(14,159,110,0.12)] hover:-translate-y-1.5 transition-all duration-300 overflow-hidden flex flex-col justify-between group h-full">
+    <div className="bg-white rounded-[18px] border border-[#eaf3ef] shadow-[0_8px_22px_rgba(14,159,110,0.10)] hover:border-transparent hover:shadow-[0_18px_45px_rgba(14,159,110,0.18)] hover:-translate-y-1.5 transition-all duration-300 overflow-hidden flex flex-col justify-between group h-full">
       <div>
         {/* Recipe Image with Overlays */}
         <div className="relative h-48 w-full bg-[#12352f] overflow-hidden">
@@ -46,12 +46,12 @@ export function RecipeCard({
                   e.stopPropagation();
                   onToggleFavorite(recipe.id);
                 }}
-                className="pointer-events-auto w-9 h-9 rounded-full bg-white/90 backdrop-blur-md flex items-center justify-center text-neutral-400 hover:text-red-500 hover:scale-110 active:scale-95 transition-all shadow-md cursor-pointer"
+                className="pointer-events-auto w-9 h-9 rounded-full bg-white/90 backdrop-blur-md flex items-center justify-center text-[#5b7a72] hover:text-[#d24b4b] hover:scale-110 active:scale-95 transition-all shadow-md cursor-pointer"
                 aria-label={isFavorite ? 'Remover dos favoritos' : 'Favoritar receita'}
               >
                 <Heart
                   className={`w-4 h-4 ${
-                    isFavorite ? 'fill-red-500 text-red-500' : 'text-neutral-500 stroke-current'
+                    isFavorite ? 'fill-[#d24b4b] text-[#d24b4b]' : 'text-[#5b7a72] stroke-current'
                   }`}
                 />
               </button>
@@ -64,16 +64,16 @@ export function RecipeCard({
           {/* Tags */}
           <div className="flex flex-wrap gap-1.5 mb-1">
             {recipe.tags.includes('quick') && (
-              <span className="pill text-[10px] py-0.5 px-2 bg-amber-50 text-amber-800 border-amber-200">⚡ Rápido</span>
+              <span className="pill text-[10px] py-0.5 px-2 bg-[#fff4e0] text-[#c47f0a]">⚡ Rápido</span>
             )}
             {recipe.tags.includes('highProtein') && (
-              <span className="pill text-[10px] py-0.5 px-2 bg-emerald-50 text-[#0e9f6e] border-[#c9eee0]">🥩 Proteico</span>
+              <span className="pill text-[10px] py-0.5 px-2 bg-[#e6f6ef] text-[#0e9f6e]">🥩 Proteico</span>
             )}
             {recipe.tags.includes('lowCarb') && (
-              <span className="pill text-[10px] py-0.5 px-2 bg-teal-50 text-[#0f5e5a] border-teal-200">🥑 Low-Carb</span>
+              <span className="pill text-[10px] py-0.5 px-2 bg-[#e2f5f3] text-[#0f7f78]">🥑 Low-Carb</span>
             )}
             {recipe.tags.includes('vegan') && (
-              <span className="pill text-[10px] py-0.5 px-2 bg-lime-50 text-lime-800 border-lime-200">🌱 Vegano</span>
+              <span className="pill text-[10px] py-0.5 px-2 bg-[#eef7e2] text-[#5a8a1e]">🌱 Vegano</span>
             )}
           </div>
 

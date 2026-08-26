@@ -14,7 +14,7 @@ interface WorkoutCardProps {
 
 export function WorkoutCard({ workout }: WorkoutCardProps) {
   return (
-    <div className="bg-white rounded-3xl border border-[#e2f2ea] shadow-[0_8px_25px_rgba(14,159,110,0.06)] hover:border-[#0e9f6e] hover:shadow-[0_14px_35px_rgba(14,159,110,0.12)] hover:-translate-y-1.5 transition-all duration-300 overflow-hidden flex flex-col justify-between group h-full">
+    <div className="bg-white rounded-[18px] border border-[#eaf3ef] shadow-[0_8px_22px_rgba(14,159,110,0.10)] hover:border-transparent hover:shadow-[0_18px_45px_rgba(14,159,110,0.18)] hover:-translate-y-1.5 transition-all duration-300 overflow-hidden flex flex-col justify-between group h-full">
       <div>
         {/* Workout Thumbnail with Overlays */}
         <div className="relative h-48 sm:h-52 w-full bg-[#12352f] overflow-hidden">
