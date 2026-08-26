@@ -33,21 +33,18 @@ export function Hero() {
           </div>
         </div>
 
-        <div className="hero-visual">
-          <div className="hero-blob" />
+        <div className="hero-visual" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
           <img
             src="/mulher-hero.png"
-            alt="Mindfit — Emagrecimento saudável em 21 dias"
+            alt="Transformação Mindfit — Emagrecimento saudável em 21 dias"
             className="hero-img"
             style={{
-              position: 'relative',
-              width: 'min(440px, 90%)',
+              width: '100%',
+              maxWidth: '560px',
               height: 'auto',
-              maxHeight: '520px',
+              maxHeight: '620px',
               objectFit: 'contain',
-              filter: 'drop-shadow(0 25px 45px rgba(14, 159, 110, 0.25))',
-              animation: 'float 5s ease-in-out infinite',
-              zIndex: 10,
+              display: 'block',
             }}
           />
         </div>
