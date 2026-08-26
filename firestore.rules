@@ -1,0 +1,121 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // =========================================
+    // HELPER FUNCTIONS
+    // =========================================
+
+    // Usuário está autenticado
+    function isAuth() {
+      return request.auth != null;
+    }
+
+    // É o dono do documento
+    function isOwner(userId) {
+      return isAuth() && request.auth.uid == userId;
+    }
+
+    // É admin
+    function isAdmin() {
+      return isAuth()
+        && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
+    }
+
+    // Campos protegidos não foram alterados
+    function protectedFieldsUnchanged() {
+      return !request.resource.data.diff(resource.data).affectedKeys().hasAny(['role', 'isPremium', 'premiumSince', 'paymentId']);
+    }
+
+    // =========================================
+    // USERS
+    // =========================================
+    match /users/{userId} {
+      allow read: if isOwner(userId) || isAdmin();
+      allow create: if isOwner(userId);
+      allow update: if (isOwner(userId) && protectedFieldsUnchanged()) || isAdmin();
+      allow delete: if isOwner(userId); // LGPD: direito à exclusão
+
+      // Profile subcollection
+      match /profile/{doc} {
+        allow read, write: if isOwner(userId);
+      }
+
+      // Daily logs
+      match /dailyLogs/{date} {
+        allow read, write: if isOwner(userId);
+      }
+
+      // Progress entries
+      match /progress/{entryId} {
+        allow read, write: if isOwner(userId);
+      }
+
+      // Achievements
+      match /achievements/{badgeId} {
+        allow read, write: if isOwner(userId);
+      }
+
+      // Streak data
+      match /streak/{doc} {
+        allow read, write: if isOwner(userId);
+      }
+    }
+
+    // =========================================
+    // RECIPES (public read, admin write)
+    // =========================================
+    match /recipes/{recipeId} {
+      allow read: if isAuth();
+      allow write: if isAdmin();
+    }
+
+    // =========================================
+    // EXERCISES (public read, admin write)
+    // =========================================
+    match /exercises/{exerciseId} {
+      allow read: if isAuth();
+      allow write: if isAdmin();
+    }
+
+    // =========================================
+    // WORKOUTS (public read, admin write)
+    // =========================================
+    match /workouts/{workoutId} {
+      allow read: if isAuth();
+      allow write: if isAdmin();
+    }
+
+    // =========================================
+    // MEAL PLANS (public read, admin write)
+    // =========================================
+    match /mealPlans/{planId} {
+      allow read: if isAuth();
+      allow write: if isAdmin();
+    }
+
+    // =========================================
+    // FOODS (public read, admin write)
+    // =========================================
+    match /foods/{foodId} {
+      allow read: if isAuth();
+      allow write: if isAdmin();
+    }
+
+    // =========================================
+    // PAYMENTS (read own, write only via admin SDK)
+    // =========================================
+    match /payments/{paymentId} {
+      allow read: if isAuth() && resource.data.userId == request.auth.uid;
+      allow write: if false; // Apenas via Cloud Functions (Admin SDK)
+    }
+
+    // =========================================
+    // ACHIEVEMENT DEFINITIONS (public read, admin write)
+    // =========================================
+    match /achievementDefs/{achievementId} {
+      allow read: if isAuth();
+      allow write: if isAdmin();
+    }
+  }
+}
