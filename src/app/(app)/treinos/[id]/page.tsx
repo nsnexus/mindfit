@@ -1,14 +1,13 @@
 // ============================================
-// Sessão Ativa de Treino Guiado (Server Component com Static Params)
+// Sessão Ativa de Treino Guiado (Server Component Dinâmico)
 // ============================================
 import { WORKOUTS_SEED } from '@/data/workouts-seed';
 import { ActiveWorkoutClient } from './ActiveWorkoutClient';
 
-export function generateStaticParams() {
-  return WORKOUTS_SEED.map((workout) => ({
-    id: workout.id,
-  }));
-}
+// Treinos gerados (plano semanal) só existem no localStorage do cliente,
+// então esta rota precisa ser sempre renderizada por request — sem
+// generateStaticParams/ISR, que exige binding de cache no Cloudflare Workers.
+export const dynamic = 'force-dynamic';
 
 export default async function ActiveWorkoutPage({
   params,

@@ -116,7 +116,7 @@ export function Sidebar() {
                     group relative flex items-center justify-between px-4 py-3 rounded-2xl font-head font-bold text-sm transition-all duration-200
                     ${
                       isActive
-                        ? 'text-white shadow-[0_8px_22px_rgba(14,159,110,0.25)]'
+                        ? 'text-white'
                         : 'text-[#5b7a72] hover:bg-[#f0f9f4] hover:text-[#12352f]'
                     }
                   `}
