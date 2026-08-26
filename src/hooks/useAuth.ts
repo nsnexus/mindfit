@@ -3,18 +3,14 @@
 // ============================================
 'use client';
 
-import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuthStore } from '@/stores/authStore';
 import {
-  onAuthChange,
   loginWithEmail,
   registerWithEmail,
   logout as firebaseLogout,
   resetPassword,
 } from '@/lib/firebase/auth';
-import { getDocument } from '@/lib/firebase/firestore';
-import type { AppUser } from '@/types/user';
 import { ROUTES } from '@/constants/routes';
 
 export function useAuth() {
@@ -24,55 +20,9 @@ export function useAuth() {
     appUser,
     isLoading,
     isInitialized,
-    setFirebaseUser,
-    setAppUser,
     setLoading,
-    setInitialized,
     reset,
   } = useAuthStore();
-
-  // Listener de autenticação — roda uma vez no mount
-  useEffect(() => {
-    const unsubscribe = onAuthChange(async (user) => {
-      setLoading(true);
-
-      try {
-        if (user) {
-          setFirebaseUser(user);
-
-          // Busca dados do Firestore
-          try {
-            const userData = await getDocument<AppUser>('users', user.uid);
-            setAppUser(userData);
-          } catch (err) {
-            console.error('Erro ao buscar dados do usuário:', err);
-            const { Timestamp } = await import('firebase/firestore');
-            // Fallback para AppUser mínimo
-            setAppUser({
-              uid: user.uid,
-              email: user.email || '',
-              displayName: user.displayName || 'Aluno(a)',
-              role: 'user',
-              isPremium: false,
-              onboardingCompleted: true,
-              acceptedTerms: true,
-              acceptedPrivacy: true,
-              lgpdConsent: true,
-              createdAt: Timestamp.now(),
-              lastLoginAt: Timestamp.now(),
-            });
-          }
-        } else {
-          reset();
-        }
-      } finally {
-        setLoading(false);
-        setInitialized(true);
-      }
-    });
-
-    return () => unsubscribe();
-  }, []);
 
   // === Actions ===
 

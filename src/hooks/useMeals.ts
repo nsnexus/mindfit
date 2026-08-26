@@ -31,13 +31,15 @@ export function useMeals(initialDate = getTodayString()) {
   const [dailyLog, setDailyLog] = useState<DailyLogData>(createEmptyDayLog(initialDate));
   const [isLoading, setIsLoading] = useState(true);
 
+  const userUid = firebaseUser?.uid;
+
   // Carrega os dados do dia
   const loadDayLog = useCallback(async (date: string) => {
-    if (!firebaseUser) return;
+    if (!userUid) return;
     setIsLoading(true);
 
     try {
-      const doc = await getSubDocument<DailyLogData>('users', firebaseUser.uid, 'dailyLogs', date);
+      const doc = await getSubDocument<DailyLogData>('users', userUid, 'dailyLogs', date);
       if (doc) {
         setDailyLog({
           ...createEmptyDayLog(date),
@@ -47,11 +49,12 @@ export function useMeals(initialDate = getTodayString()) {
         setDailyLog(createEmptyDayLog(date));
       }
     } catch (err) {
-      console.error('Erro ao carregar log diário:', err);
+      console.warn('Erro ao carregar log diário:', err);
+      setDailyLog(createEmptyDayLog(date));
     } finally {
       setIsLoading(false);
     }
-  }, [firebaseUser]);
+  }, [userUid]);
 
   useEffect(() => {
     loadDayLog(selectedDate);

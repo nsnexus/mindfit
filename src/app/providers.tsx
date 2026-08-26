@@ -34,8 +34,42 @@ function AuthProvider({ children }: { children: ReactNode }) {
 
           if (user) {
             setFirebaseUser(user);
-            const userData = await getDocument<AppUser>('users', user.uid);
-            setAppUser(userData);
+            try {
+              const userData = await getDocument<AppUser>('users', user.uid);
+              if (userData) {
+                setAppUser(userData);
+              } else {
+                // Fallback para AppUser caso o documento ainda não exista
+                setAppUser({
+                  uid: user.uid,
+                  email: user.email || '',
+                  displayName: user.displayName || 'Aluno(a)',
+                  role: 'user',
+                  isPremium: true,
+                  onboardingCompleted: true,
+                  acceptedTerms: true,
+                  acceptedPrivacy: true,
+                  lgpdConsent: true,
+                  createdAt: new Date() as any,
+                  lastLoginAt: new Date() as any,
+                });
+              }
+            } catch (docErr) {
+              console.warn('[AuthProvider] Firestore user doc fetch issue:', docErr);
+              setAppUser({
+                uid: user.uid,
+                email: user.email || '',
+                displayName: user.displayName || 'Aluno(a)',
+                role: 'user',
+                isPremium: true,
+                onboardingCompleted: true,
+                acceptedTerms: true,
+                acceptedPrivacy: true,
+                lgpdConsent: true,
+                createdAt: new Date() as any,
+                lastLoginAt: new Date() as any,
+              });
+            }
           } else {
             reset();
           }
@@ -55,7 +89,7 @@ function AuthProvider({ children }: { children: ReactNode }) {
     return () => {
       if (unsubscribe) unsubscribe();
     };
-  }, [setFirebaseUser, setAppUser, setLoading, setInitialized, reset]);
+  }, []);
 
   return <>{children}</>;
 }
