@@ -1,5 +1,5 @@
 // ============================================
-// Firebase Firestore Generic Helpers
+// Firebase Firestore Generic Helpers (Edge/SSR Safe)
 // ============================================
 import {
   doc,
@@ -15,7 +15,7 @@ import {
   type DocumentData,
   type QueryConstraint,
 } from 'firebase/firestore';
-import { db } from './config';
+import { getDbInstance } from './config';
 
 /**
  * Buscar um documento por ID
@@ -24,7 +24,9 @@ export async function getDocument<T = DocumentData>(
   collectionName: string,
   docId: string
 ): Promise<T | null> {
+  if (typeof window === 'undefined') return null;
   try {
+    const db = getDbInstance();
     const docRef = doc(db, collectionName, docId);
     const docSnap = await getDoc(docRef);
 
@@ -45,7 +47,9 @@ export async function getDocuments<T = DocumentData>(
   collectionName: string,
   constraints: QueryConstraint[] = []
 ): Promise<T[]> {
+  if (typeof window === 'undefined') return [];
   try {
+    const db = getDbInstance();
     const q = query(collection(db, collectionName), ...constraints);
     const querySnapshot = await getDocs(q);
 
@@ -67,7 +71,9 @@ export async function setDocument(
   data: DocumentData,
   merge = true
 ): Promise<void> {
+  if (typeof window === 'undefined') return;
   try {
+    const db = getDbInstance();
     const docRef = doc(db, collectionName, docId);
     await setDoc(docRef, { ...data, updatedAt: firestoreServerTimestamp() }, { merge });
   } catch (err) {
@@ -83,7 +89,9 @@ export async function updateDocument(
   docId: string,
   data: Partial<DocumentData>
 ): Promise<void> {
+  if (typeof window === 'undefined') return;
   try {
+    const db = getDbInstance();
     const docRef = doc(db, collectionName, docId);
     await updateDoc(docRef, { ...data, updatedAt: firestoreServerTimestamp() });
   } catch (err) {
@@ -98,7 +106,9 @@ export async function deleteDocument(
   collectionName: string,
   docId: string
 ): Promise<void> {
+  if (typeof window === 'undefined') return;
   try {
+    const db = getDbInstance();
     const docRef = doc(db, collectionName, docId);
     await deleteDoc(docRef);
   } catch (err) {
@@ -114,7 +124,9 @@ export function subscribeToDocument<T = DocumentData>(
   docId: string,
   callback: (data: T | null) => void
 ) {
+  if (typeof window === 'undefined') return () => {};
   try {
+    const db = getDbInstance();
     const docRef = doc(db, collectionName, docId);
     return onSnapshot(
       docRef,
@@ -144,7 +156,9 @@ export function subscribeToCollection<T = DocumentData>(
   constraints: QueryConstraint[],
   callback: (data: T[]) => void
 ) {
+  if (typeof window === 'undefined') return () => {};
   try {
+    const db = getDbInstance();
     const q = query(collection(db, collectionName), ...constraints);
     return onSnapshot(
       q,
@@ -174,7 +188,9 @@ export async function getSubDocument<T = DocumentData>(
   subCollection: string,
   docId: string
 ): Promise<T | null> {
+  if (typeof window === 'undefined') return null;
   try {
+    const db = getDbInstance();
     const docRef = doc(db, parentCollection, parentId, subCollection, docId);
     const docSnap = await getDoc(docRef);
 
@@ -202,7 +218,9 @@ export async function setSubDocument(
   data: DocumentData,
   merge = true
 ): Promise<void> {
+  if (typeof window === 'undefined') return;
   try {
+    const db = getDbInstance();
     const docRef = doc(db, parentCollection, parentId, subCollection, docId);
     await setDoc(docRef, { ...data, updatedAt: firestoreServerTimestamp() }, { merge });
   } catch (err) {
