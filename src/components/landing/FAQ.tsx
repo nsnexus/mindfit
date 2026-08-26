@@ -4,28 +4,27 @@
 'use client';
 
 import { useState } from 'react';
-import { Card } from '@/components/ui';
 
 const FAQS = [
   {
     q: 'O pagamento é mensal ou único?',
-    a: 'O pagamento é 100% ÚNICO! Você paga apenas R$ 49,90 uma vez e tem acesso vitalício a toda a plataforma, sem nenhuma mensalidade ou cobrança recorrente.',
+    a: 'O pagamento é 100% ÚNICO! Você paga apenas R$ 49,90 uma única vez e tem acesso vitalício a toda a plataforma e suas atualizações, sem nenhuma mensalidade ou cobrança surpresa no futuro.',
   },
   {
     q: 'Preciso de academia ou equipamentos para fazer os treinos?',
-    a: 'Não! Todos os treinos do programa foram desenhados especificamente para serem feitos em casa usando apenas o peso do próprio corpo e objetos simples do dia a dia (como uma cadeira ou colchonete).',
+    a: 'Não! Todos os treinos do programa foram desenhados especificamente para serem feitos em casa usando apenas o peso do próprio corpo e no máximo um colchonete ou toalha.',
   },
   {
     q: 'Os alimentos do plano são difíceis de encontrar ou caros?',
-    a: 'De forma alguma! Nosso banco de alimentos e receitas é 100% adaptado à culinária brasileira real: arroz, feijão, frango, ovos, legumes da feira, frutas da época e aveia. Comida de verdade que você encontra em qualquer supermercado.',
+    a: 'De forma alguma! Nosso banco de alimentos e receitas é 100% adaptado à culinária brasileira real: arroz, feijão, frango, ovos, legumes da feira, frutas da época e aveia. Comida de verdade que você encontra em qualquer supermercado ou feira.',
   },
   {
     q: 'Quanto tempo por dia preciso dedicar?',
-    a: 'Cerca de 15 a 20 minutos para os treinos guiados e apenas 2 a 3 minutos para registrar suas refeições no diário.',
+    a: 'Cerca de 15 a 20 minutos para os treinos guiados e apenas 2 a 3 minutos para registrar suas refeições e água no diário.',
   },
   {
     q: 'E se eu não me adaptar ou não gostar?',
-    a: 'Você tem 7 dias de garantia incondicional. Basta solicitar dentro do prazo que devolveremos 100% do valor pago sem perguntas ou burocracia.',
+    a: 'Você tem 7 dias de garantia incondicional. Basta nos enviar um e-mail ou mensagem que devolveremos 100% do valor pago sem perguntas ou burocracia.',
   },
 ];
 
@@ -33,46 +32,45 @@ export function FAQ() {
   const [openIndex, setOpenIndex] = useState<number | null>(0);
 
   return (
-    <section className="py-20 px-4 sm:px-6 bg-white">
-      <div className="max-w-4xl mx-auto space-y-12">
+    <section className="py-24 px-4 sm:px-6 relative z-10 bg-neutral-950/90 border-t border-white/10">
+      <div className="max-w-4xl mx-auto space-y-16">
         <div className="text-center space-y-3">
-          <span className="text-xs uppercase font-bold tracking-widest text-primary-600 bg-primary-50 px-3 py-1 rounded-full border border-primary-100">
+          <span className="inline-flex items-center gap-1.5 text-xs uppercase font-bold tracking-widest text-emerald-400 bg-emerald-950/80 px-3.5 py-1.5 rounded-full border border-emerald-500/30">
             Dúvidas Comuns
           </span>
-          <h2 className="text-3xl sm:text-4xl font-extrabold font-[var(--font-heading)] text-neutral-900">
+          <h2 className="text-3xl sm:text-5xl font-black font-[var(--font-heading)] text-white tracking-tight">
             Perguntas Frequentes
           </h2>
-          <p className="text-sm text-neutral-500">
-            Tudo o que você precisa saber antes de começar sua transformação de 21 dias.
+          <p className="text-base text-neutral-400">
+            Tudo o que você precisa saber antes de iniciar sua transformação de 21 dias.
           </p>
         </div>
 
-        <div className="space-y-3">
+        <div className="space-y-3.5">
           {FAQS.map((faq, index) => {
             const isOpen = openIndex === index;
             return (
-              <Card
+              <div
                 key={faq.q}
-                padding="none"
-                className="overflow-hidden border border-neutral-200 transition-all"
+                className="rounded-2xl bg-white/[0.03] border border-white/10 overflow-hidden transition-all duration-200"
               >
                 <button
                   type="button"
                   onClick={() => setOpenIndex(isOpen ? null : index)}
-                  className="w-full p-5 text-left font-bold text-sm sm:text-base text-neutral-900 flex items-center justify-between gap-4 hover:bg-neutral-50 transition-colors"
+                  className="w-full p-5 sm:p-6 text-left font-bold text-base sm:text-lg text-white flex items-center justify-between gap-4 hover:bg-white/[0.02] transition-colors cursor-pointer"
                 >
-                  <span>{faq.q}</span>
-                  <span className="text-xl text-neutral-400 font-normal">
+                  <span className="font-[var(--font-heading)]">{faq.q}</span>
+                  <span className="text-2xl text-emerald-400 font-light shrink-0">
                     {isOpen ? '−' : '+'}
                   </span>
                 </button>
 
                 {isOpen && (
-                  <div className="p-5 pt-0 text-xs sm:text-sm text-neutral-600 leading-relaxed border-t border-neutral-100 bg-neutral-50/50 animate-fade-in">
+                  <div className="px-5 pb-5 sm:px-6 sm:pb-6 text-sm text-neutral-300 leading-relaxed border-t border-white/5 pt-4">
                     {faq.a}
                   </div>
                 )}
-              </Card>
+              </div>
             );
           })}
         </div>

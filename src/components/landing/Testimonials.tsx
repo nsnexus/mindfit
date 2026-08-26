@@ -1,8 +1,6 @@
 // ============================================
 // Landing Page: Social Proof & Transformations
 // ============================================
-import { Card } from '@/components/ui';
-
 const TESTIMONIALS = [
   {
     name: 'Juliana Mendes',
@@ -35,45 +33,62 @@ const TESTIMONIALS = [
 
 export function Testimonials() {
   return (
-    <section className="py-20 px-4 sm:px-6 bg-neutral-50">
-      <div className="max-w-6xl mx-auto space-y-12">
-        <div className="text-center space-y-3 max-w-xl mx-auto">
-          <span className="text-xs uppercase font-bold tracking-widest text-primary-600 bg-primary-50 px-3 py-1 rounded-full border border-primary-100">
+    <section className="py-24 px-4 sm:px-6 relative z-10 bg-neutral-900/90 border-t border-white/10">
+      <div className="max-w-6xl mx-auto space-y-16">
+        <div className="text-center space-y-3 max-w-2xl mx-auto">
+          <span className="inline-flex items-center gap-1.5 text-xs uppercase font-bold tracking-widest text-amber-400 bg-amber-950/80 px-3.5 py-1.5 rounded-full border border-amber-500/30">
             Histórias Reais
           </span>
-          <h2 className="text-3xl sm:text-4xl font-extrabold font-[var(--font-heading)] text-neutral-900">
+          <h2 className="text-3xl sm:text-5xl font-black font-[var(--font-heading)] text-white tracking-tight">
             Quem experimentou, transformou.
           </h2>
-          <p className="text-sm text-neutral-500">
-            Pessoas reais que encontraram equilíbrio e resultados duradouros no Método 21 Dias.
+          <p className="text-base text-neutral-400">
+            Alunas e alunos reais que conquistaram constância e resultados duradouros no Método 21 Dias.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
           {TESTIMONIALS.map((t) => (
-            <Card key={t.name} padding="lg" hoverable className="bg-white space-y-4">
-              <div className="flex items-center gap-3">
-                <img
-                  src={t.photo}
-                  alt={t.name}
-                  className="w-12 h-12 rounded-full object-cover border-2 border-primary-500"
-                />
-                <div>
-                  <h4 className="font-bold text-sm text-neutral-900">{t.name}</h4>
-                  <p className="text-xs text-neutral-400">{t.age} anos • {t.city}</p>
+            <div
+              key={t.name}
+              className="p-6 sm:p-8 rounded-2xl bg-white/[0.04] border border-white/10 hover:border-emerald-500/30 transition-all duration-300 flex flex-col justify-between space-y-6 hover:-translate-y-1 hover:shadow-2xl hover:shadow-emerald-950/30"
+            >
+              <div className="space-y-4">
+                <div className="flex items-center gap-3.5">
+                  <img
+                    src={t.photo}
+                    alt={t.name}
+                    className="w-13 h-13 rounded-full object-cover border-2 border-emerald-400 shadow-md"
+                  />
+                  <div>
+                    <h4 className="font-bold text-base text-white font-[var(--font-heading)]">
+                      {t.name}
+                    </h4>
+                    <p className="text-xs text-neutral-400">
+                      {t.age} anos • {t.city}
+                    </p>
+                  </div>
                 </div>
+
+                <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-black bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">
+                  <span>⚡</span>
+                  <span>{t.result}</span>
+                </div>
+
+                <p className="text-xs sm:text-sm text-neutral-300 leading-relaxed italic">
+                  "{t.comment}"
+                </p>
               </div>
 
-              <div className="inline-block px-2.5 py-0.5 rounded-full text-xs font-extrabold bg-emerald-50 text-emerald-700 border border-emerald-200">
-                {t.result}
+              <div className="pt-4 border-t border-white/10 flex items-center justify-between text-xs text-neutral-400">
+                <span className="text-amber-400 font-bold text-sm tracking-widest">
+                  ★★★★★
+                </span>
+                <span className="text-[11px] text-emerald-400 font-medium flex items-center gap-1">
+                  ✓ Aluna Verificada
+                </span>
               </div>
-
-              <p className="text-xs sm:text-sm text-neutral-600 italic leading-relaxed">
-                "{t.comment}"
-              </p>
-
-              <div className="text-amber-400 text-sm">★★★★★</div>
-            </Card>
+            </div>
           ))}
         </div>
       </div>

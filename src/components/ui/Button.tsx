@@ -1,14 +1,14 @@
 // ============================================
-// Button Component
+// Button Component — Mindfit Design System
 // ============================================
 'use client';
 
 import { forwardRef, type ButtonHTMLAttributes, type ReactNode } from 'react';
 
-type ButtonVariant = 'primary' | 'secondary' | 'outline' | 'ghost' | 'danger' | 'accent';
-type ButtonSize = 'sm' | 'md' | 'lg' | 'xl';
+export type ButtonVariant = 'primary' | 'secondary' | 'outline' | 'ghost' | 'danger' | 'accent' | 'glass';
+export type ButtonSize = 'sm' | 'md' | 'lg' | 'xl';
 
-interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
+export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: ButtonVariant;
   size?: ButtonSize;
   isLoading?: boolean;
@@ -19,24 +19,26 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 
 const variantStyles: Record<ButtonVariant, string> = {
   primary:
-    'bg-primary-600 text-white hover:bg-primary-700 active:bg-primary-800 shadow-sm hover:shadow-md',
-  secondary:
-    'bg-neutral-100 text-neutral-800 hover:bg-neutral-200 active:bg-neutral-300',
-  outline:
-    'border-2 border-primary-500 text-primary-600 hover:bg-primary-50 active:bg-primary-100',
-  ghost:
-    'text-neutral-600 hover:bg-neutral-100 active:bg-neutral-200',
-  danger:
-    'bg-danger text-white hover:bg-red-600 active:bg-red-700',
+    'bg-emerald-600 hover:bg-emerald-500 active:bg-emerald-700 text-white font-semibold shadow-md hover:shadow-emerald-500/20 active:scale-[0.98]',
   accent:
-    'bg-gradient-accent text-neutral-900 font-semibold hover:opacity-90 active:opacity-80 shadow-md hover:shadow-lg',
+    'bg-gradient-to-r from-amber-400 via-amber-500 to-amber-600 hover:from-amber-300 hover:via-amber-400 hover:to-amber-500 text-neutral-950 font-bold shadow-lg shadow-amber-500/25 active:scale-[0.98]',
+  secondary:
+    'bg-neutral-100 hover:bg-neutral-200 active:bg-neutral-300 text-neutral-800 font-medium active:scale-[0.98]',
+  outline:
+    'border-2 border-emerald-600/30 hover:border-emerald-600 text-emerald-700 hover:bg-emerald-50 active:bg-emerald-100 font-semibold active:scale-[0.98]',
+  ghost:
+    'text-neutral-600 hover:text-neutral-900 hover:bg-neutral-100/80 active:bg-neutral-200 font-medium active:scale-[0.98]',
+  danger:
+    'bg-red-600 hover:bg-red-500 active:bg-red-700 text-white font-semibold shadow-md active:scale-[0.98]',
+  glass:
+    'bg-white/10 hover:bg-white/20 active:bg-white/25 text-white border border-white/20 backdrop-blur-md font-semibold active:scale-[0.98]',
 };
 
 const sizeStyles: Record<ButtonSize, string> = {
-  sm: 'px-3 py-1.5 text-sm rounded-lg gap-1.5',
-  md: 'px-4 py-2.5 text-sm rounded-xl gap-2',
-  lg: 'px-6 py-3 text-base rounded-xl gap-2',
-  xl: 'px-8 py-4 text-lg rounded-2xl gap-3',
+  sm: 'px-3 py-1.5 text-xs rounded-lg gap-1.5',
+  md: 'px-4 py-2 text-sm rounded-xl gap-2',
+  lg: 'px-6 py-3 text-base rounded-xl gap-2.5',
+  xl: 'px-8 py-4 text-base sm:text-lg rounded-2xl gap-3',
 };
 
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
@@ -60,10 +62,10 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         ref={ref}
         disabled={disabled || isLoading}
         className={`
-          inline-flex items-center justify-center font-medium
+          inline-flex items-center justify-center cursor-pointer select-none
           transition-all duration-200 ease-out
           focus-ring
-          disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none
+          disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none disabled:shadow-none
           ${variantStyles[variant]}
           ${sizeStyles[size]}
           ${fullWidth ? 'w-full' : ''}

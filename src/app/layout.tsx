@@ -1,7 +1,22 @@
 import type { Metadata, Viewport } from 'next';
+import { Outfit, Inter } from 'next/font/google';
 import { Providers } from './providers';
 import { APP_CONFIG } from '@/constants/config';
 import './globals.css';
+
+const outfit = Outfit({
+  subsets: ['latin'],
+  weight: ['400', '500', '600', '700', '800', '900'],
+  variable: '--font-heading',
+  display: 'swap',
+});
+
+const inter = Inter({
+  subsets: ['latin'],
+  weight: ['300', '400', '500', '600', '700'],
+  variable: '--font-body',
+  display: 'swap',
+});
 
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || 'https://mindfit.pages.dev'),
@@ -57,8 +72,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="pt-BR">
-      <body className="antialiased">
+    <html lang="pt-BR" className={`${outfit.variable} ${inter.variable}`}>
+      <body className="antialiased font-[var(--font-body)] bg-neutral-50 text-neutral-800 selection:bg-emerald-500 selection:text-white">
         <Providers>{children}</Providers>
       </body>
     </html>
