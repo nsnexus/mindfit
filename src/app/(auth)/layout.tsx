@@ -1,100 +1,89 @@
 // ============================================
-// Auth Layout — Mindfit
+// Auth Layout — Mindfit (Clean & Elegant)
 // ============================================
 import type { ReactNode } from 'react';
 import Link from 'next/link';
-import { Sparkles, Salad, Dumbbell, LineChart, ShieldCheck } from 'lucide-react';
 import { ROUTES } from '@/constants/routes';
 import { APP_CONFIG } from '@/constants/config';
 
 export default function AuthLayout({ children }: { children: ReactNode }) {
   return (
-    <div className="min-h-screen flex selection:bg-emerald-500 selection:text-neutral-950">
-      {/* Left panel — decorativo (hidden no mobile) */}
-      <div className="hidden lg:flex lg:w-1/2 bg-gradient-hero relative overflow-hidden flex-col justify-between p-12 text-white">
-        {/* Glow circles */}
-        <div className="absolute top-20 left-20 w-80 h-80 bg-emerald-500/20 rounded-full blur-3xl pointer-events-none" />
-        <div className="absolute bottom-20 right-20 w-96 h-96 bg-amber-500/10 rounded-full blur-3xl pointer-events-none" />
+    <div className="min-h-screen flex flex-col lg:flex-row bg-[#f5faf7] text-[#12352f]">
+      {/* Left panel — decorativo escuro elegante (visível no desktop) */}
+      <div className="hidden lg:flex lg:w-1/2 bg-[#0f5e5a] text-white flex-col justify-between p-12 xl:p-16 relative overflow-hidden">
+        {/* Glow suave */}
+        <div className="absolute w-[400px] h-[400px] bg-gradient-to-br from-[#8bc34a] via-[#0e9f6e] to-[#1aa8a0] rounded-full blur-[100px] opacity-25 -top-20 -left-20 pointer-events-none" />
 
         {/* Top Logo */}
         <div className="relative z-10">
-          <Link href={ROUTES.HOME} className="inline-flex items-center gap-3 group">
-            <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-emerald-500 to-emerald-700 flex items-center justify-center shadow-md shadow-emerald-600/30">
-              <img
-                src="/icons/mindfit-simbolo.png"
-                alt="Mindfit"
-                className="w-6 h-6 object-contain brightness-0 invert"
-              />
-            </div>
-            <div>
-              <span className="text-2xl font-black font-[var(--font-heading)] tracking-tight text-white block leading-none">
-                {APP_CONFIG.name}
-              </span>
-              <span className="text-[10px] text-emerald-400 font-bold uppercase tracking-wider">
-                Método 21 Dias
-              </span>
-            </div>
+          <Link href={ROUTES.HOME} className="inline-flex items-center gap-3">
+            <img
+              src="/icons/mindfit-simbolo.png"
+              alt="Mindfit"
+              className="w-10 h-10 object-contain"
+            />
+            <span className="text-2xl font-extrabold font-[var(--font-heading)] text-white tracking-tight">
+              Mind<span className="text-[#8bc34a]">fit</span>
+            </span>
           </Link>
         </div>
 
-        {/* Center Content */}
-        <div className="relative z-10 max-w-lg space-y-6 my-auto">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-950/80 border border-emerald-500/30 text-xs font-bold text-emerald-300">
-            <Sparkles className="w-3.5 h-3.5" /> Transformação em 3 Fases
-          </div>
+        {/* Center Text */}
+        <div className="relative z-10 space-y-6 max-w-md my-auto">
+          <span className="inline-flex items-center gap-2 bg-white/10 px-4 py-1.5 rounded-full text-xs font-bold font-[var(--font-heading)] text-[#bfe0d5]">
+            🌱 Transformação em 21 Dias
+          </span>
 
-          <h1 className="text-4xl xl:text-5xl font-black font-[var(--font-heading)] leading-tight tracking-tight text-white">
-            Transforme seu corpo e seus hábitos em{' '}
-            <span className="text-gradient-emerald">21 dias</span>.
+          <h1 className="text-3xl xl:text-4xl font-extrabold font-[var(--font-heading)] leading-tight text-white">
+            Sua mente e seu corpo em forma com leveza e constância.
           </h1>
 
-          <p className="text-base text-neutral-300 leading-relaxed font-normal">
-            Plano alimentar realista com comida brasileira, receitas práticas, treinos guiados de 15 minutos e diário com semáforo volumétrico.
+          <p className="text-sm xl:text-base text-[#c7e5db] leading-relaxed">
+            Cardápios adaptados à rotina brasileira, receitas rápidas, treinos guiados de 15 minutos e acompanhamento diário sem efeito sanfona.
           </p>
 
-          <div className="grid grid-cols-3 gap-3 pt-4">
-            <div className="p-3.5 rounded-2xl bg-white/5 border border-white/10 text-center space-y-1">
-              <Salad className="w-5 h-5 text-emerald-400 mx-auto" />
-              <span className="text-xs font-bold block text-white">Cardápios 21D</span>
+          <div className="grid grid-cols-3 gap-3 pt-4 text-center text-xs">
+            <div className="bg-white/10 p-3.5 rounded-2xl border border-white/15">
+              <span className="text-xl block mb-1">🥗</span>
+              <span className="font-bold text-white">Cardápios 21D</span>
             </div>
-            <div className="p-3.5 rounded-2xl bg-white/5 border border-white/10 text-center space-y-1">
-              <Dumbbell className="w-5 h-5 text-amber-400 mx-auto" />
-              <span className="text-xs font-bold block text-white">Treinos 15 Min</span>
+            <div className="bg-white/10 p-3.5 rounded-2xl border border-white/15">
+              <span className="text-xl block mb-1">💪</span>
+              <span className="font-bold text-white">Treinos 15m</span>
             </div>
-            <div className="p-3.5 rounded-2xl bg-white/5 border border-white/10 text-center space-y-1">
-              <LineChart className="w-5 h-5 text-teal-400 mx-auto" />
-              <span className="text-xs font-bold block text-white">Evolução Real</span>
+            <div className="bg-white/10 p-3.5 rounded-2xl border border-white/15">
+              <span className="text-xl block mb-1">📊</span>
+              <span className="font-bold text-white">Evolução Real</span>
             </div>
           </div>
         </div>
 
-        {/* Footer Guarantee */}
-        <div className="relative z-10 flex items-center gap-2 text-xs text-neutral-400">
-          <ShieldCheck className="w-4 h-4 text-emerald-400" />
-          <span>Plataforma Segura e Criptografada</span>
+        {/* Footer info */}
+        <div className="relative z-10 text-xs text-[#9fc7bd]">
+          🔒 Plataforma 100% segura com criptografia de ponta a ponta.
         </div>
       </div>
 
-      {/* Right panel — formulário */}
-      <div className="flex-1 flex items-center justify-center p-6 sm:p-12 bg-gradient-mesh">
-        <div className="w-full max-w-md space-y-6">
+      {/* Right panel — formulário centralizado */}
+      <div className="flex-1 flex items-center justify-center p-6 sm:p-12 lg:p-16">
+        <div className="w-full max-w-[440px] space-y-6">
           {/* Logo mobile */}
           <div className="lg:hidden text-center mb-6">
-            <Link href={ROUTES.HOME} className="inline-flex items-center gap-2.5">
-              <div className="w-9 h-9 rounded-2xl bg-gradient-to-br from-emerald-500 to-emerald-700 flex items-center justify-center shadow-md shadow-emerald-600/30">
-                <img
-                  src="/icons/mindfit-simbolo.png"
-                  alt="Mindfit"
-                  className="w-5 h-5 object-contain brightness-0 invert"
-                />
-              </div>
-              <span className="text-2xl font-black text-neutral-900 font-[var(--font-heading)]">
-                {APP_CONFIG.name}
+            <Link href={ROUTES.HOME} className="inline-flex items-center gap-2">
+              <img
+                src="/icons/mindfit-simbolo.png"
+                alt="Mindfit"
+                className="w-8 h-8 object-contain"
+              />
+              <span className="text-2xl font-extrabold font-[var(--font-heading)]">
+                <span className="text-[#0f5e5a]">Mind</span>
+                <span className="text-[#0e9f6e]">fit</span>
               </span>
             </Link>
           </div>
 
-          <div className="bg-white p-6 sm:p-8 rounded-3xl border border-neutral-200/80 shadow-xl">
+          {/* Form Card */}
+          <div className="bg-white p-8 sm:p-10 rounded-[28px] border border-[#eaf3ef] shadow-[0_18px_45px_rgba(14,159,110,0.08)]">
             {children}
           </div>
         </div>

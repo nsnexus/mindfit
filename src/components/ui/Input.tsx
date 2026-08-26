@@ -22,14 +22,14 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
         {label && (
           <label
             htmlFor={inputId}
-            className="block text-xs sm:text-sm font-bold text-neutral-700 mb-1.5"
+            className="block text-xs sm:text-sm font-semibold text-[#12352f] mb-1.5 font-[var(--font-heading)]"
           >
             {label}
           </label>
         )}
         <div className="relative">
           {leftIcon && (
-            <div className="absolute left-3.5 top-1/2 -translate-y-1/2 text-neutral-400 pointer-events-none">
+            <div className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#5b7a72] pointer-events-none">
               {leftIcon}
             </div>
           )}
@@ -38,23 +38,23 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
             id={inputId}
             className={`
               w-full px-4 py-3
-              bg-white border rounded-2xl
-              text-neutral-900 font-medium placeholder:text-neutral-400 text-sm
+              bg-white border rounded-xl
+              text-[#12352f] font-medium placeholder:text-[#94a39d] text-sm sm:text-base
               transition-all duration-200
-              focus:outline-none focus:ring-4 focus:ring-emerald-500/15 focus:border-emerald-500
-              disabled:bg-neutral-100/80 disabled:cursor-not-allowed
+              focus:outline-none focus:ring-4 focus:ring-[#0e9f6e]/15 focus:border-[#0e9f6e]
+              disabled:bg-[#f5faf7] disabled:cursor-not-allowed
               ${leftIcon ? 'pl-11' : ''}
               ${rightIcon ? 'pr-11' : ''}
               ${error
                 ? 'border-red-400 focus:ring-red-500/15 focus:border-red-500'
-                : 'border-neutral-200/90 hover:border-neutral-300 shadow-sm'
+                : 'border-[#d7ede3] hover:border-[#0e9f6e]/60 shadow-sm'
               }
               ${className}
             `}
             {...props}
           />
           {rightIcon && (
-            <div className="absolute right-3.5 top-1/2 -translate-y-1/2 text-neutral-400">
+            <div className="absolute right-3.5 top-1/2 -translate-y-1/2 text-[#5b7a72]">
               {rightIcon}
             </div>
           )}
@@ -72,7 +72,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
           </p>
         )}
         {hint && !error && (
-          <p className="mt-1 text-xs text-neutral-500">{hint}</p>
+          <p className="mt-1 text-xs text-[#5b7a72]">{hint}</p>
         )}
       </div>
     );
