@@ -31,10 +31,12 @@ export interface PixResponse {
  */
 export async function createPixPayment(options: CreatePixOptions): Promise<PixResponse> {
   const gatewayUrl = process.env.NSNEXUS_GATEWAY_URL || 'https://nsmusic.nsnexus.com.br';
-  const apiKey = process.env.NSNEXUS_GATEWAY_API_KEY;
+  const apiKey =
+    process.env.GATEWAY_API_KEY ||
+    process.env.NSNEXUS_GATEWAY_API_KEY;
 
   if (!apiKey) {
-    throw new Error('NSNEXUS_GATEWAY_API_KEY não configurada nas variáveis de ambiente');
+    throw new Error('GATEWAY_API_KEY não configurada nas variáveis de ambiente');
   }
 
   const response = await fetch(`${gatewayUrl}/api/gateway/v1/charges`, {

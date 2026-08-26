@@ -12,7 +12,9 @@ export async function POST(req: Request) {
       req.headers.get('x-gateway-secret') ||
       req.headers.get('x-gateway-api-key');
 
-    const expectedSecret = process.env.NSNEXUS_GATEWAY_API_KEY;
+    const expectedSecret =
+      process.env.GATEWAY_API_KEY ||
+      process.env.NSNEXUS_GATEWAY_API_KEY;
 
     if (!signature || signature !== expectedSecret) {
       console.warn('[Webhook] Assinatura do gateway inválida ou não fornecida');
