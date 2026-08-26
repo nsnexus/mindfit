@@ -14,75 +14,55 @@ import { ROUTES } from '@/constants/routes';
 
 export default function HomePage() {
   return (
-    <div className="min-h-screen bg-white text-[#12352f]">
+    <div>
       {/* NAV */}
-      <nav className="sticky top-0 z-50 bg-white/85 backdrop-blur-md border-b border-[#eef4f1] transition-all">
-        <div className="max-w-[1180px] mx-auto px-6 h-[74px] flex items-center justify-between">
-          <Link href={ROUTES.HOME} className="flex items-center gap-2.5 font-[var(--font-heading)] font-extrabold text-xl sm:text-2xl tracking-tight">
-            <img
-              src="/icons/mindfit-simbolo.png"
-              alt="Mindfit"
-              className="w-9 h-9 object-contain"
-            />
+      <nav className="nav">
+        <div className="container">
+          <Link href={ROUTES.HOME} className="brand">
+            <img src="/icons/mindfit-simbolo.png" alt="Mindfit" />
             <span>
-              <span className="text-[#0f5e5a]">Mind</span>
-              <span className="text-[#0e9f6e]">fit</span>
+              <span className="mind">Mind</span>
+              <span className="fit">fit</span>
             </span>
           </Link>
-
-          {/* Desktop Nav Links */}
-          <div className="hidden md:flex items-center gap-7 text-sm font-medium text-[#5b7a72]">
-            <a href="#como" className="hover:text-[#0e9f6e] transition-colors">
-              Como funciona
-            </a>
-            <a href="#recursos" className="hover:text-[#0e9f6e] transition-colors">
-              Recursos
-            </a>
-            <a href="#metodo" className="hover:text-[#0e9f6e] transition-colors">
-              Método 21
-            </a>
-            <a href="#planos" className="hover:text-[#0e9f6e] transition-colors">
-              Planos
-            </a>
-            <a href="#faq" className="hover:text-[#0e9f6e] transition-colors">
-              Dúvidas
-            </a>
-            <Link href={ROUTES.LOGIN} className="hover:text-[#0e9f6e] transition-colors">
-              Entrar
-            </Link>
+          <div className="nav-links">
+            <a href="#como">Como funciona</a>
+            <a href="#recursos">Recursos</a>
+            <a href="#metodo">Método 21</a>
+            <a href="#planos">Planos</a>
+            <a href="#faq">Dúvidas</a>
+            <Link href={ROUTES.LOGIN}>Entrar</Link>
           </div>
-
-          {/* Nav CTA */}
-          <Link href={ROUTES.CHECKOUT} className="btn btn-primary text-xs sm:text-sm py-2.5 px-5 sm:px-6">
+          <Link href={ROUTES.CHECKOUT} className="btn btn-primary">
             Começar agora
           </Link>
         </div>
       </nav>
 
-      {/* 1. Hero Section */}
+      {/* HERO */}
       <Hero />
 
-      {/* 2. Stats Bar */}
+      {/* STATS */}
       <Stats />
 
-      {/* 3. Features & Method 21 */}
+      {/* FEATURES & METODO 21 */}
       <div id="como">
         <Benefits />
       </div>
 
-      {/* 4. Pricing */}
+      {/* PRICING */}
       <PricingSection />
 
-      {/* 5. Social Proof / Testimonials */}
+      {/* TESTIMONIALS */}
       <Testimonials />
 
-      {/* 6. FAQ */}
+      {/* FAQ */}
       <FAQ />
 
-      {/* 7. Final CTA Banner */}
+      {/* CTA FINAL */}
       <FinalCTA />
 
-      {/* 8. Footer */}
+      {/* FOOTER */}
       <Disclaimer />
     </div>
   );

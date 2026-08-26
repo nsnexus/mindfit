@@ -1,26 +1,15 @@
 // ============================================
-// Página de Checkout — Mindfit (Éfi Bank)
+// Página de Checkout — Mindfit (Clean Design)
 // ============================================
 'use client';
 
 import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import {
-  Lock,
-  ShieldCheck,
-  Zap,
-  CreditCard,
-  QrCode,
-  FileText,
-  Sparkles,
-  ArrowRight,
-  CheckCircle2,
-} from 'lucide-react';
 import { useAuthStore } from '@/stores/authStore';
 import { PricingCard } from '@/components/checkout/PricingCard';
 import { PixQRCode } from '@/components/checkout/PixQRCode';
-import { Input, Button, Card } from '@/components/ui';
+import { Input } from '@/components/ui';
 import { updateDocument } from '@/lib/firebase/firestore';
 import { APP_CONFIG, DISCLAIMER_TEXT } from '@/constants/config';
 import { ROUTES } from '@/constants/routes';
@@ -58,7 +47,6 @@ export default function CheckoutPage() {
         const pix = await createPixCharge(firebaseUser?.uid || 'anon', formData);
         setPixData(pix);
       } else {
-        // Simulação de cartão/boleto
         await handleUnlockAccess();
       }
     } catch {
@@ -82,30 +70,23 @@ export default function CheckoutPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-mesh py-8 sm:py-12 px-4 sm:px-6">
-      <div className="max-w-5xl mx-auto space-y-8">
+    <div className="min-h-screen bg-[#f5faf7] py-10 sm:py-16 px-4 sm:px-6">
+      <div className="max-w-[1040px] mx-auto space-y-8">
         {/* Brand Header */}
         <div className="flex items-center justify-between">
-          <Link href={ROUTES.HOME} className="flex items-center gap-3 group">
-            <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-emerald-500 to-emerald-700 flex items-center justify-center shadow-md shadow-emerald-600/30">
-              <img
-                src="/icons/mindfit-simbolo.png"
-                alt="Mindfit"
-                className="w-6 h-6 object-contain brightness-0 invert"
-              />
-            </div>
-            <div>
-              <span className="text-2xl font-black font-[var(--font-heading)] text-neutral-900 leading-none block tracking-tight">
-                {APP_CONFIG.name}
-              </span>
-              <span className="text-[10px] text-emerald-600 font-bold uppercase tracking-wider">
-                Checkout Seguro
-              </span>
-            </div>
+          <Link href={ROUTES.HOME} className="brand">
+            <img
+              src="/icons/mindfit-simbolo.png"
+              alt="Mindfit"
+            />
+            <span>
+              <span className="mind">Mind</span>
+              <span className="fit">fit</span>
+            </span>
           </Link>
 
-          <span className="text-xs text-neutral-600 font-bold flex items-center gap-1.5 bg-white px-3.5 py-1.5 rounded-full border border-neutral-200 shadow-sm">
-            <Lock className="w-3.5 h-3.5 text-emerald-600" /> SSL 256-bit
+          <span className="text-xs text-[#5b7a72] font-semibold flex items-center gap-1.5 bg-white px-3.5 py-1.5 rounded-full border border-[#eaf3ef] shadow-sm">
+            🔒 Checkout Seguro SSL 256-bit
           </span>
         </div>
 
@@ -114,13 +95,13 @@ export default function CheckoutPage() {
           {/* Left Column: Form or Pix Display (7 cols) */}
           <div className="lg:col-span-7 space-y-6">
             {!pixData ? (
-              <Card padding="lg" className="space-y-6 bg-white rounded-3xl border border-neutral-200/80 shadow-xl">
+              <div className="bg-white rounded-[28px] p-6 sm:p-8 border border-[#eaf3ef] shadow-[0_10px_30px_rgba(14,159,110,0.06)] space-y-6">
                 <div>
-                  <h2 className="text-xl sm:text-2xl font-black font-[var(--font-heading)] text-neutral-900">
+                  <h2 className="text-xl sm:text-2xl font-bold font-[var(--font-heading)] text-[#12352f]">
                     Dados do Titular
                   </h2>
-                  <p className="text-xs text-neutral-500 mt-1">
-                    Preencha suas informações para emissão da cobrança e liberação imediata do acesso.
+                  <p className="text-xs text-[#5b7a72] mt-1">
+                    Preencha suas informações para liberação imediata do acesso.
                   </p>
                 </div>
 
@@ -165,17 +146,16 @@ export default function CheckoutPage() {
 
                   {/* Payment Method Selector */}
                   <div className="pt-2">
-                    <label className="block text-xs sm:text-sm font-bold text-neutral-700 mb-2">
+                    <label className="block text-xs sm:text-sm font-bold text-[#12352f] mb-2 font-[var(--font-heading)]">
                       Forma de Pagamento
                     </label>
 
                     <div className="grid grid-cols-3 gap-2.5 text-xs">
                       {[
-                        { id: 'pix', label: 'Pix Instantâneo', icon: QrCode, highlight: 'Mais rápido' },
-                        { id: 'credit_card', label: 'Cartão de Crédito', icon: CreditCard },
-                        { id: 'boleto', label: 'Boleto Bancário', icon: FileText },
+                        { id: 'pix', label: 'Pix Instantâneo', icon: '📱', highlight: 'Mais rápido' },
+                        { id: 'credit_card', label: 'Cartão de Crédito', icon: '💳' },
+                        { id: 'boleto', label: 'Boleto Bancário', icon: '📄' },
                       ].map((item) => {
-                        const Icon = item.icon;
                         const isSelected = formData.paymentMethod === item.id;
                         return (
                           <button
@@ -188,17 +168,17 @@ export default function CheckoutPage() {
                               p-3.5 rounded-2xl border-2 text-center transition-all cursor-pointer relative flex flex-col items-center justify-center gap-1
                               ${
                                 isSelected
-                                  ? 'border-emerald-600 bg-emerald-50 text-emerald-950 font-black shadow-md'
-                                  : 'border-neutral-200/80 hover:border-neutral-300 bg-white text-neutral-600'
+                                  ? 'border-[#0e9f6e] bg-[#e6f6ef] text-[#0f5e5a] font-bold shadow-sm'
+                                  : 'border-[#eaf3ef] hover:border-[#cbd5d0] bg-white text-[#5b7a72]'
                               }
                             `}
                           >
                             {item.highlight && (
-                              <span className="absolute -top-2 bg-emerald-600 text-white text-[9px] font-black uppercase px-2 py-0.5 rounded-full shadow-sm">
+                              <span className="absolute -top-2 bg-[#0e9f6e] text-white text-[9px] font-bold uppercase px-2 py-0.5 rounded-full shadow-sm">
                                 {item.highlight}
                               </span>
                             )}
-                            <Icon className="w-5 h-5 text-emerald-600" />
+                            <span className="text-xl">{item.icon}</span>
                             <span className="text-[11px] leading-tight">{item.label}</span>
                           </button>
                         );
@@ -206,21 +186,21 @@ export default function CheckoutPage() {
                     </div>
                   </div>
 
-                  <Button
+                  <button
                     type="submit"
-                    variant="accent"
-                    size="xl"
-                    fullWidth
-                    isLoading={isLoading}
-                    rightIcon={<ArrowRight className="w-5 h-5" />}
-                    className="mt-6 font-black text-neutral-950 text-base sm:text-lg shadow-xl shadow-amber-500/25"
+                    disabled={isLoading}
+                    className="btn btn-primary w-full text-base sm:text-lg py-4 mt-6"
                   >
-                    {formData.paymentMethod === 'pix'
-                      ? 'Gerar QR Code Pix (R$ 49,90)'
-                      : 'Finalizar Pagamento (R$ 49,90)'}
-                  </Button>
+                    {isLoading ? (
+                      'Processando...'
+                    ) : formData.paymentMethod === 'pix' ? (
+                      'Gerar QR Code Pix (R$ 49,90) →'
+                    ) : (
+                      'Finalizar Pagamento (R$ 49,90) →'
+                    )}
+                  </button>
                 </form>
-              </Card>
+              </div>
             ) : (
               <PixQRCode
                 pixData={pixData}
@@ -228,7 +208,7 @@ export default function CheckoutPage() {
               />
             )}
 
-            <p className="text-[11px] text-neutral-400 text-center leading-relaxed">
+            <p className="text-[11px] text-[#5b7a72] text-center leading-relaxed">
               {DISCLAIMER_TEXT}
             </p>
           </div>

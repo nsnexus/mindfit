@@ -1,5 +1,5 @@
 // ============================================
-// Landing Page: FAQ — Mindfit (Clean Design)
+// Landing Page: FAQ — Mindfit
 // ============================================
 'use client';
 
@@ -32,48 +32,33 @@ export function FAQ() {
   const [openIndex, setOpenIndex] = useState<number | null>(0);
 
   return (
-    <section className="py-24 px-6 bg-[#f5faf7]" id="faq">
-      <div className="max-w-[1180px] mx-auto space-y-4">
-        <div className="text-center space-y-3 pb-8">
-          <div className="inline-flex">
-            <span className="pill">❓ Dúvidas frequentes</span>
-          </div>
-          <h2 className="text-3xl sm:text-4xl font-extrabold font-[var(--font-heading)] text-[#12352f] tracking-tight">
+    <section className="faq" id="faq">
+      <div className="container">
+        <div className="center">
+          <span className="pill">❓ Dúvidas frequentes</span>
+          <h2 className="sec-title" style={{ marginTop: '16px' }}>
             Ainda com perguntas?
           </h2>
-          <p className="text-base sm:text-lg text-[#5b7a72] max-w-xl mx-auto">
+          <p className="sec-sub">
             Reunimos as dúvidas mais comuns antes de você começar.
           </p>
         </div>
-
-        <div className="max-w-[760px] mx-auto space-y-3.5">
+        <div style={{ maxWidth: '760px', margin: '0 auto' }}>
           {FAQS.map((faq, index) => {
             const isOpen = openIndex === index;
             return (
-              <div
-                key={faq.q}
-                className="bg-white rounded-2xl border border-[#eaf3ef] overflow-hidden transition-all duration-200"
-              >
+              <div key={faq.q} className={`faq-item ${isOpen ? 'open' : ''}`}>
                 <button
                   type="button"
                   onClick={() => setOpenIndex(isOpen ? null : index)}
-                  className="w-full p-5 sm:p-6 text-left font-bold text-base sm:text-lg text-[#12352f] flex items-center justify-between gap-4 font-[var(--font-heading)] hover:bg-[#fafdfc] transition-colors cursor-pointer"
+                  className="faq-q"
                 >
                   <span>{faq.q}</span>
-                  <span
-                    className={`text-2xl text-[#0e9f6e] font-light shrink-0 transition-transform duration-300 ${
-                      isOpen ? 'rotate-45' : ''
-                    }`}
-                  >
-                    +
-                  </span>
+                  <span className="plus">+</span>
                 </button>
-
-                {isOpen && (
-                  <div className="px-5 pb-5 sm:px-6 sm:pb-6 text-sm sm:text-base text-[#5b7a72] leading-relaxed border-t border-[#f0f6f3] pt-4">
-                    {faq.a}
-                  </div>
-                )}
+                <div className="faq-a">
+                  <p>{faq.a}</p>
+                </div>
               </div>
             );
           })}
