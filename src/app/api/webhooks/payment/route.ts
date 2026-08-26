@@ -2,8 +2,7 @@
 // Webhook de Pagamento — NSNexus Gateway
 // ============================================
 import { NextResponse } from 'next/server';
-import { setDocument, updateDocument, getDocument, getDocuments } from '@/lib/firebase/firestore';
-import { where } from 'firebase/firestore';
+import { updateDocument, getDocument, getDocuments } from '@/lib/firebase/firestore';
 
 export async function POST(req: Request) {
   try {
@@ -50,6 +49,7 @@ export async function POST(req: Request) {
         });
       } else if (targetEmail) {
         // Localiza usuário por e-mail caso não tenha userId direto
+        const { where } = await import('firebase/firestore');
         const users = await getDocuments<{ id: string; email: string }>('users', [
           where('email', '==', targetEmail.toLowerCase().trim()),
         ]);

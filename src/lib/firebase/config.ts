@@ -1,10 +1,10 @@
 // ============================================
-// Método 21 Dias — Firebase Client SDK Config (Edge/SSR Safe)
+// Método 21 Dias — Firebase Client SDK Config (Pure Browser Lazy)
 // ============================================
-import { initializeApp, getApps, getApp, type FirebaseApp } from 'firebase/app';
-import { getAuth, type Auth } from 'firebase/auth';
-import { getFirestore, type Firestore } from 'firebase/firestore';
-import { getStorage, type FirebaseStorage } from 'firebase/storage';
+import type { FirebaseApp } from 'firebase/app';
+import type { Auth } from 'firebase/auth';
+import type { Firestore } from 'firebase/firestore';
+import type { FirebaseStorage } from 'firebase/storage';
 
 export const firebaseConfig = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY || 'AIzaSyAGL6qNbWeyfCuyjB459yqOLKKTRAJlFDw',
@@ -21,8 +21,11 @@ let _auth: Auth | null = null;
 let _db: Firestore | null = null;
 let _storage: FirebaseStorage | null = null;
 
-export function getFirebaseApp(): FirebaseApp {
+export async function getFirebaseApp(): Promise<FirebaseApp | null> {
+  if (typeof window === 'undefined') return null;
   if (_app) return _app;
+
+  const { initializeApp, getApps, getApp } = await import('firebase/app');
   if (getApps().length > 0) {
     _app = getApp();
   } else {
@@ -31,42 +34,49 @@ export function getFirebaseApp(): FirebaseApp {
   return _app;
 }
 
-export function getAuthInstance(): Auth {
+export async function getAuthInstance(): Promise<Auth | null> {
+  if (typeof window === 'undefined') return null;
   if (_auth) return _auth;
-  if (typeof window === 'undefined') {
-    return {} as Auth;
-  }
-  _auth = getAuth(getFirebaseApp());
+
+  const app = await getFirebaseApp();
+  if (!app) return null;
+
+  const { getAuth } = await import('firebase/auth');
+  _auth = getAuth(app);
   return _auth;
 }
 
-export function getDbInstance(): Firestore {
+export async function getDbInstance(): Promise<Firestore | null> {
+  if (typeof window === 'undefined') return null;
   if (_db) return _db;
-  if (typeof window === 'undefined') {
-    return {} as Firestore;
-  }
-  _db = getFirestore(getFirebaseApp());
+
+  const app = await getFirebaseApp();
+  if (!app) return null;
+
+  const { getFirestore } = await import('firebase/firestore');
+  _db = getFirestore(app);
   return _db;
 }
 
-export function getStorageInstance(): FirebaseStorage {
+export async function getStorageInstance(): Promise<FirebaseStorage | null> {
+  if (typeof window === 'undefined') return null;
   if (_storage) return _storage;
-  if (typeof window === 'undefined') {
-    return {} as FirebaseStorage;
-  }
-  _storage = getStorage(getFirebaseApp());
+
+  const app = await getFirebaseApp();
+  if (!app) return null;
+
+  const { getStorage } = await import('firebase/storage');
+  _storage = getStorage(app);
   return _storage;
 }
 
-export const auth = typeof window !== 'undefined' ? getAuthInstance() : ({} as Auth);
-export const db = typeof window !== 'undefined' ? getDbInstance() : ({} as Firestore);
-export const storage = typeof window !== 'undefined' ? getStorageInstance() : ({} as FirebaseStorage);
-
 export const initAnalytics = async () => {
   if (typeof window !== 'undefined') {
+    const app = await getFirebaseApp();
+    if (!app) return null;
     const { getAnalytics, isSupported } = await import('firebase/analytics');
     if (await isSupported()) {
-      return getAnalytics(getFirebaseApp());
+      return getAnalytics(app);
     }
   }
   return null;

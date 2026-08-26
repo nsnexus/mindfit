@@ -1,30 +1,37 @@
 // ============================================
-// Firebase Storage Helpers
+// Firebase Storage Helpers (Pure Browser Dynamic Import)
 // ============================================
-import {
-  ref,
-  uploadBytes,
-  uploadBytesResumable,
-  getDownloadURL,
-  deleteObject,
-  type UploadMetadata,
-} from 'firebase/storage';
+import type { UploadMetadata } from 'firebase/storage';
 import { getStorageInstance } from './config';
+
+/**
+ * Helper interno para carregar o módulo Storage e a instância
+ */
+async function getSt() {
+  if (typeof window === 'undefined') return null;
+  const storage = await getStorageInstance();
+  if (!storage) return null;
+  const mod = await import('firebase/storage');
+  return { ...mod, storage };
+}
 
 /**
  * Upload de arquivo com progresso
  */
-export function uploadFileWithProgress(
+export async function uploadFileWithProgress(
   path: string,
   file: File,
   metadata?: UploadMetadata,
   onProgress?: (progress: number) => void
 ): Promise<string> {
-  return new Promise((resolve, reject) => {
-    const storage = getStorageInstance();
-    const storageRef = ref(storage, path);
-    const uploadTask = uploadBytesResumable(storageRef, file, metadata);
+  const st = await getSt();
+  if (!st) throw new Error('Firebase Storage não disponível');
 
+  const { ref, uploadBytesResumable, getDownloadURL, storage } = st;
+  const storageRef = ref(storage, path);
+  const uploadTask = uploadBytesResumable(storageRef, file, metadata);
+
+  return new Promise((resolve, reject) => {
     uploadTask.on(
       'state_changed',
       (snapshot) => {
@@ -48,7 +55,10 @@ export async function uploadFile(
   file: File,
   metadata?: UploadMetadata
 ): Promise<string> {
-  const storage = getStorageInstance();
+  const st = await getSt();
+  if (!st) throw new Error('Firebase Storage não disponível');
+
+  const { ref, uploadBytes, getDownloadURL, storage } = st;
   const storageRef = ref(storage, path);
   await uploadBytes(storageRef, file, metadata);
   return getDownloadURL(storageRef);
@@ -58,7 +68,10 @@ export async function uploadFile(
  * Deletar arquivo
  */
 export async function deleteFile(path: string): Promise<void> {
-  const storage = getStorageInstance();
+  const st = await getSt();
+  if (!st) return;
+
+  const { ref, deleteObject, storage } = st;
   const storageRef = ref(storage, path);
   await deleteObject(storageRef);
 }
