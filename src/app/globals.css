@@ -887,33 +887,44 @@ footer .brand .mind {
   font-weight: 700;
   color: #12352f;
   margin-bottom: 10px;
-}
-
-.payment-methods-grid {
+.payment-methods-box {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(2, 1fr);
   gap: 12px;
 }
 
 .payment-method-btn {
   border: 2px solid #eaf3ef;
   border-radius: 16px;
-  padding: 14px 10px;
+  padding: 14px 16px;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   align-items: center;
-  justify-content: center;
-  gap: 4px;
+  gap: 12px;
   cursor: pointer;
   background: #ffffff;
   transition: all 0.2s ease;
-  text-align: center;
+  text-align: left;
 }
 
 .payment-method-btn.active {
   border-color: #0e9f6e;
   background: #f0faf5;
-  color: #0e9f6e;
+}
+
+.payment-method-btn .name {
+  display: block;
+  font-weight: 700;
+  font-size: 0.9rem;
+  color: #12352f;
+  line-height: 1.2;
+}
+
+.payment-method-btn .desc {
+  display: block;
+  font-size: 0.74rem;
+  color: #5b7a72;
+  margin-top: 2px;
 }
 
 .payment-tag-fast {
