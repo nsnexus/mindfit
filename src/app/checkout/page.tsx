@@ -13,6 +13,7 @@ import { Input, Button, Card } from '@/components/ui';
 import { updateDocument } from '@/lib/firebase/firestore';
 import { APP_CONFIG, DISCLAIMER_TEXT } from '@/constants/config';
 import { ROUTES } from '@/constants/routes';
+import { createPixCharge } from '@/lib/efi/payment';
 import type { PaymentMethod, CheckoutFormData, PixChargeResponse } from '@/types/payment';
 
 export default function CheckoutPage() {
@@ -43,21 +44,8 @@ export default function CheckoutPage() {
     setIsLoading(true);
     try {
       if (formData.paymentMethod === 'pix') {
-        const response = await fetch('/api/payment/pix', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            userId: firebaseUser?.uid || 'anon',
-            formData,
-          }),
-        });
-
-        const data = await response.json();
-        if (data.success && data.pix) {
-          setPixData(data.pix);
-        } else {
-          setError(data.error || 'Erro ao gerar Pix. Tente novamente.');
-        }
+        const pix = await createPixCharge(firebaseUser?.uid || 'anon', formData);
+        setPixData(pix);
       } else {
         // Simulação de cartão/boleto
         await handleUnlockAccess();
