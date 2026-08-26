@@ -32,8 +32,13 @@ export function Navbar() {
           </button>
 
           <Link href={ROUTES.DASHBOARD} className="flex items-center gap-2">
-            <span className="text-xl font-bold font-[var(--font-heading)] text-primary-600">
-              🍃 {APP_CONFIG.name}
+            <img
+              src="/icons/mindfit-simbolo.png"
+              alt="Mindfit"
+              className="w-7 h-7 object-contain"
+            />
+            <span className="text-xl font-bold font-[var(--font-heading)] text-primary-700">
+              {APP_CONFIG.name}
             </span>
           </Link>
         </div>

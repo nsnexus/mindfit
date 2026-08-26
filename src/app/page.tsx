@@ -23,8 +23,12 @@ export default function HomePage() {
 
       {/* Main Header / Nav */}
       <header className="px-4 sm:px-6 py-4 max-w-6xl mx-auto flex items-center justify-between relative z-20">
-        <Link href={ROUTES.HOME} className="flex items-center gap-2 text-white font-extrabold text-xl font-[var(--font-heading)]">
-          <span className="text-2xl">🍃</span>
+        <Link href={ROUTES.HOME} className="flex items-center gap-2.5 text-white font-extrabold text-xl font-[var(--font-heading)]">
+          <img
+            src="/icons/mindfit-simbolo.png"
+            alt="Mindfit"
+            className="w-8 h-8 object-contain"
+          />
           <span>{APP_CONFIG.name}</span>
         </Link>
 

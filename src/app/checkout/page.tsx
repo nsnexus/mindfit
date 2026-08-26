@@ -75,9 +75,14 @@ export default function CheckoutPage() {
       <div className="max-w-5xl mx-auto space-y-8">
         {/* Brand Header */}
         <div className="flex items-center justify-between">
-          <Link href={ROUTES.HOME} className="flex items-center gap-2">
-            <span className="text-2xl font-bold font-[var(--font-heading)] text-primary-600">
-              🍃 {APP_CONFIG.name}
+          <Link href={ROUTES.HOME} className="flex items-center gap-2.5">
+            <img
+              src="/icons/mindfit-simbolo.png"
+              alt="Mindfit"
+              className="w-8 h-8 object-contain"
+            />
+            <span className="text-2xl font-bold font-[var(--font-heading)] text-primary-700">
+              {APP_CONFIG.name}
             </span>
           </Link>
 

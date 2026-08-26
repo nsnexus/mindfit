@@ -60,8 +60,12 @@ export function Sidebar() {
         {/* Brand Header */}
         <div>
           <div className="p-6 border-b border-neutral-100 flex items-center justify-between">
-            <Link href={ROUTES.DASHBOARD} className="flex items-center gap-2">
-              <span className="text-2xl">🍃</span>
+            <Link href={ROUTES.DASHBOARD} className="flex items-center gap-2.5">
+              <img
+                src="/icons/mindfit-simbolo.png"
+                alt="Mindfit"
+                className="w-8 h-8 object-contain"
+              />
               <div>
                 <span className="text-lg font-bold font-[var(--font-heading)] text-primary-700 block leading-none">
                   {APP_CONFIG.name}

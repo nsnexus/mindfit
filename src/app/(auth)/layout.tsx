@@ -17,9 +17,14 @@ export default function AuthLayout({ children }: { children: ReactNode }) {
           <div className="absolute top-1/2 left-1/3 w-48 h-48 bg-accent-400 rounded-full blur-3xl" />
         </div>
         <div className="relative z-10 flex flex-col justify-center px-16 text-white">
-          <Link href={ROUTES.HOME} className="mb-12">
+          <Link href={ROUTES.HOME} className="mb-12 inline-flex items-center gap-3">
+            <img
+              src="/icons/mindfit-simbolo.png"
+              alt="Mindfit"
+              className="w-10 h-10 object-contain"
+            />
             <span className="text-3xl font-bold font-[var(--font-heading)]">
-              🍃 {APP_CONFIG.name}
+              {APP_CONFIG.name}
             </span>
           </Link>
           <h1 className="text-4xl xl:text-5xl font-bold leading-tight mb-6">
@@ -59,9 +64,14 @@ export default function AuthLayout({ children }: { children: ReactNode }) {
         <div className="w-full max-w-md">
           {/* Logo mobile */}
           <div className="lg:hidden mb-8 text-center">
-            <Link href={ROUTES.HOME}>
-              <span className="text-2xl font-bold text-primary-600 font-[var(--font-heading)]">
-                🍃 {APP_CONFIG.name}
+            <Link href={ROUTES.HOME} className="inline-flex items-center gap-2">
+              <img
+                src="/icons/mindfit-simbolo.png"
+                alt="Mindfit"
+                className="w-8 h-8 object-contain"
+              />
+              <span className="text-2xl font-bold text-primary-700 font-[var(--font-heading)]">
+                {APP_CONFIG.name}
               </span>
             </Link>
           </div>
