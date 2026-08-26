@@ -1,5 +1,5 @@
 // ============================================
-// Admin Shell Layout
+// Admin Shell Layout — Mindfit
 // ============================================
 import type { ReactNode } from 'react';
 import Link from 'next/link';
@@ -10,34 +10,43 @@ import { ROUTES } from '@/constants/routes';
 export default function AdminLayout({ children }: { children: ReactNode }) {
   return (
     <AuthGuard requireAuth requireAdmin>
-      <div className="min-h-screen bg-neutral-100 text-neutral-800">
+      <div className="min-h-screen bg-[#f5faf7] text-[#12352f]">
         {/* Admin Top Header */}
-        <header className="bg-neutral-900 text-white px-6 py-4 border-b border-neutral-800">
+        <header className="bg-[#0f5e5a] text-white px-6 py-4 border-b border-[#0a3d3a] sticky top-0 z-30 shadow-md">
           <div className="max-w-7xl mx-auto flex items-center justify-between">
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-3">
               <Link href={ROUTES.DASHBOARD} className="flex items-center gap-2 font-bold font-[var(--font-heading)]">
-                <span className="text-xl">🍃</span>
-                <span>{APP_CONFIG.name}</span>
+                <img
+                  src="/icons/mindfit-simbolo.png"
+                  alt="Mindfit"
+                  className="w-7 h-7 object-contain"
+                />
+                <span className="text-lg">
+                  Mind<span className="text-[#8bc34a]">fit</span>
+                </span>
               </Link>
-              <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-amber-400 text-neutral-950">
+              <span className="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-[#8bc34a] text-[#0f5e5a] font-[var(--font-heading)]">
                 Painel Admin
               </span>
             </div>
 
-            <div className="flex items-center gap-4 text-xs font-semibold">
-              <Link href={ROUTES.ADMIN} className="hover:text-primary-300 transition-colors">
+            <div className="flex items-center gap-5 text-xs font-semibold">
+              <Link href={ROUTES.ADMIN} className="hover:text-[#8bc34a] transition-colors">
                 Métricas
               </Link>
-              <Link href={ROUTES.ADMIN_USUARIOS} className="hover:text-primary-300 transition-colors">
+              <Link href={ROUTES.ADMIN_USUARIOS} className="hover:text-[#8bc34a] transition-colors">
                 Usuários
               </Link>
-              <Link href={ROUTES.ADMIN_RECEITAS} className="hover:text-primary-300 transition-colors">
+              <Link href={ROUTES.ADMIN_RECEITAS} className="hover:text-[#8bc34a] transition-colors">
                 Receitas
               </Link>
-              <Link href={ROUTES.ADMIN_TREINOS} className="hover:text-primary-300 transition-colors">
+              <Link href={ROUTES.ADMIN_TREINOS} className="hover:text-[#8bc34a] transition-colors">
                 Treinos
               </Link>
-              <Link href={ROUTES.DASHBOARD} className="text-neutral-400 hover:text-white transition-colors">
+              <Link
+                href={ROUTES.DASHBOARD}
+                className="text-[#c7e5db] hover:text-white transition-colors pl-3 border-l border-white/20"
+              >
                 ← Voltar ao App
               </Link>
             </div>

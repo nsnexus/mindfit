@@ -161,25 +161,25 @@ export function Sidebar() {
         {/* Footer / Cycle Card & Logout */}
         <div className="p-4 border-t border-neutral-100/90 space-y-3">
           {/* Quick cycle info widget */}
-          <div className="p-4 bg-gradient-to-br from-emerald-950 to-neutral-950 rounded-2xl border border-emerald-500/30 text-white shadow-lg shadow-emerald-950/20 relative overflow-hidden">
-            <div className="absolute -right-4 -top-4 w-16 h-16 bg-emerald-500/20 rounded-full blur-xl pointer-events-none" />
+          <div className="p-4 bg-[#0f5e5a] rounded-2xl border border-[#1aa8a0]/30 text-white shadow-md relative overflow-hidden">
+            <div className="absolute -right-4 -top-4 w-16 h-16 bg-[#8bc34a]/20 rounded-full blur-xl pointer-events-none" />
             
             <div className="flex items-center justify-between text-xs mb-2">
-              <span className="text-emerald-300 font-bold uppercase tracking-wider text-[10px] flex items-center gap-1">
-                <Flame className="w-3.5 h-3.5 text-amber-400" /> Ciclo Ativo
+              <span className="text-[#bfe0d5] font-bold uppercase tracking-wider text-[10px] flex items-center gap-1 font-[var(--font-heading)]">
+                <Flame className="w-3.5 h-3.5 text-[#8bc34a]" /> Ciclo Ativo
               </span>
-              <span className="font-extrabold text-amber-400 bg-amber-400/10 px-2 py-0.5 rounded-full border border-amber-400/20 text-[11px]">
+              <span className="font-extrabold text-[#8bc34a] bg-white/10 px-2 py-0.5 rounded-full border border-white/20 text-[11px] font-[var(--font-heading)]">
                 Dia 1 de 21
               </span>
             </div>
 
             <div className="w-full bg-white/15 h-2 rounded-full overflow-hidden p-[1px]">
-              <div className="bg-gradient-to-r from-emerald-400 to-emerald-300 h-full w-[5%] rounded-full shadow-sm shadow-emerald-400/50" />
+              <div className="bg-gradient-to-r from-[#8bc34a] to-[#0e9f6e] h-full w-[5%] rounded-full shadow-sm" />
             </div>
 
-            <div className="flex items-center justify-between text-[11px] text-neutral-300 mt-2">
+            <div className="flex items-center justify-between text-[11px] text-[#c7e5db] mt-2">
               <span>Fase 1: Preparação</span>
-              <span className="text-emerald-400 font-bold">5% concluído</span>
+              <span className="text-[#8bc34a] font-bold">5% concluído</span>
             </div>
           </div>
 
