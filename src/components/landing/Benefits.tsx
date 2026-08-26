@@ -33,7 +33,7 @@ export function Benefits() {
               <div className="ic">💪</div>
               <h3>Treinos guiados</h3>
               <p>
-                Exercícios em vídeo para fazer em casa ou na academia, do iniciante ao avançado, com ou sem equipamento.
+                Fichas práticas passo a passo com cronômetro para fazer em casa ou na academia, sem necessidade de equipamentos.
               </p>
             </div>
             <div className="card">

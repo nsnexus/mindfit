@@ -33,7 +33,7 @@ export function PricingSection() {
                 <span className="chk">✓</span> Mais de 500 receitas + lista de compras automática
               </li>
               <li>
-                <span className="chk">✓</span> Biblioteca completa de treinos em vídeo
+                <span className="chk">✓</span> Fichas guiadas de treinos rápidos (15 min com cronômetro)
               </li>
               <li>
                 <span className="chk">✓</span> Acompanhamento de peso, medidas e fotos
