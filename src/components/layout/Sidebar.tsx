@@ -121,10 +121,11 @@ export function Sidebar() {
                     group relative flex items-center justify-between px-4 py-3 rounded-2xl font-head font-bold text-sm transition-all duration-200
                     ${
                       isActive
-                        ? 'bg-[#e6f6ef] text-[#0e9f6e] shadow-xs'
-                        : 'text-[#5b7a72] hover:bg-[#f5faf7] hover:text-[#0e9f6e]'
+                        ? 'text-white shadow-[0_8px_22px_rgba(14,159,110,0.25)]'
+                        : 'text-[#5b7a72] hover:bg-[#f0f9f4] hover:text-[#12352f]'
                     }
                   `}
+                  style={isActive ? { background: 'linear-gradient(135deg, #8bc34a 0%, #0e9f6e 45%, #1aa8a0 100%)' } : undefined}
                 >
                   <div className="flex items-center gap-3">
                     <div
@@ -132,7 +133,7 @@ export function Sidebar() {
                         w-8 h-8 rounded-xl flex items-center justify-center transition-colors
                         ${
                           isActive
-                            ? 'bg-[#0e9f6e] text-white shadow-sm shadow-[#0e9f6e]/30'
+                            ? 'bg-white/20 text-white'
                             : 'bg-neutral-100 text-[#5b7a72] group-hover:bg-[#e6f6ef] group-hover:text-[#0e9f6e]'
                         }
                       `}

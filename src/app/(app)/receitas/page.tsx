@@ -1,15 +1,12 @@
 // ============================================
-// Catálogo de Receitas Saudáveis — Mindfit
+// Catálogo de Receitas Saudáveis — Mindfit Reference Design
 // ============================================
 'use client';
 
 import { useState } from 'react';
-import { ChefHat, ShoppingCart, Sparkles } from 'lucide-react';
 import { useRecipes } from '@/hooks/useRecipes';
 import { RecipeCard } from '@/components/recipes/RecipeCard';
-import { RecipeFilter } from '@/components/recipes/RecipeFilter';
 import { ShoppingListModal } from '@/components/recipes/ShoppingList';
-import { Button } from '@/components/ui';
 
 export default function ReceitasPage() {
   const {
@@ -18,8 +15,6 @@ export default function ReceitasPage() {
     setSearch,
     selectedCategory,
     setSelectedCategory,
-    selectedTag,
-    setSelectedTag,
     favorites,
     toggleFavorite,
     shoppingListIds,
@@ -29,20 +24,22 @@ export default function ReceitasPage() {
 
   const [isShoppingListOpen, setIsShoppingListOpen] = useState(false);
 
+  const categories = [
+    { id: 'all', label: '🍽️ Todos' },
+    { id: 'breakfast', label: '☕ Café da Manhã' },
+    { id: 'lunch', label: '🥘 Almoço' },
+    { id: 'dinner', label: '🍲 Jantar' },
+    { id: 'snack', label: '🍎 Lanches' },
+    { id: 'dessert', label: '🍫 Sobremesas Fit' },
+  ];
+
   return (
-    <div className="space-y-6 sm:space-y-8 animate-fade-in max-w-6xl mx-auto">
+    <div>
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', flexWrap: 'wrap', gap: '14px' }}>
         <div>
-          <div className="flex items-center gap-2.5 mb-1.5">
-            <span className="pill text-xs">
-              👨‍🍳 Culinária & Praticidade
-            </span>
-          </div>
-          <h1 className="font-head text-3xl sm:text-4xl font-extrabold text-[#12352f] tracking-tight">
-            Receitas <span className="gradient-text">Saudáveis</span>
-          </h1>
-          <p className="text-[#5b7a72] text-xs sm:text-sm mt-1">
+          <h1 className="page-title">👨‍🍳 Receitas Saudáveis</h1>
+          <p className="page-sub">
             Pratos saborosos, rápidos e alinhados aos macronutrientes do Método 21 Dias.
           </p>
         </div>
@@ -50,36 +47,50 @@ export default function ReceitasPage() {
         <button
           type="button"
           onClick={() => setIsShoppingListOpen(true)}
-          className="btn btn-primary font-head font-bold text-xs sm:text-sm py-3 px-5 self-start sm:self-auto shadow-md shadow-[#0e9f6e]/20 flex items-center gap-2 cursor-pointer"
+          className="btn btn-ghost btn-sm"
         >
-          <ShoppingCart className="w-4 h-4" />
-          <span>Lista de Compras ({shoppingListIds.length})</span>
+          🛒 Lista de Compras ({shoppingListIds.length})
         </button>
       </div>
 
-      {/* Search & Filters */}
-      <RecipeFilter
-        search={search}
-        onSearchChange={setSearch}
-        selectedCategory={selectedCategory}
-        onCategoryChange={setSelectedCategory}
-        selectedTag={selectedTag}
-        onTagChange={setSelectedTag}
-      />
+      {/* Search Bar */}
+      <div className="search-bar">
+        <span style={{ fontSize: '1.1rem' }}>🔍</span>
+        <input
+          type="text"
+          placeholder="Buscar receita por nome ou ingrediente (ex: frango, banana, abóbora...)"
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+        />
+      </div>
+
+      {/* Categories Filter Row */}
+      <div className="filter-row">
+        {categories.map((cat) => (
+          <button
+            key={cat.id}
+            type="button"
+            onClick={() => setSelectedCategory(cat.id)}
+            className={`fbtn ${selectedCategory === cat.id ? 'active' : ''}`}
+          >
+            {cat.label}
+          </button>
+        ))}
+      </div>
 
       {/* Recipe Grid */}
       {recipes.length === 0 ? (
-        <div className="text-center py-16 bg-white rounded-3xl border border-neutral-200 shadow-sm space-y-2">
-          <span className="text-4xl block mb-2">🔍</span>
-          <h3 className="text-base font-bold text-neutral-800">
+        <div className="card text-center" style={{ padding: '40px 20px', marginTop: '20px' }}>
+          <span style={{ fontSize: '2.5rem', display: 'block', marginBottom: '8px' }}>🔍</span>
+          <h3 style={{ fontFamily: "'Poppins', sans-serif", fontSize: '1.2rem', color: '#12352f' }}>
             Nenhuma receita encontrada
           </h3>
-          <p className="text-xs text-neutral-500 max-w-sm mx-auto">
+          <p style={{ color: 'var(--muted)', fontSize: '0.9rem', marginTop: '4px' }}>
             Tente buscar por outro termo ou remova os filtros selecionados.
           </p>
         </div>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid g-3" style={{ marginTop: '16px' }}>
           {recipes.map((recipe) => (
             <RecipeCard
               key={recipe.id}

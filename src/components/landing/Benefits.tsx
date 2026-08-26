@@ -149,7 +149,7 @@ export function Benefits() {
       </section>
 
       {/* 2. COMO FUNCIONA / METODO 21 */}
-      <section className="method" id="metodo">
+      <section className="method" id="como">
         <div className="container center">
           <span className="pill">🎯 O Método 21 Dias</span>
           <h2 className="sec-title" style={{ marginTop: '16px' }}>

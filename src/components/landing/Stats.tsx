@@ -11,8 +11,8 @@ export function Stats() {
             <div className="lbl">dias por ciclo de transformação</div>
           </div>
           <div>
-            <div className="num">500+</div>
-            <div className="lbl">receitas e treinos guiados</div>
+            <div className="num">860+</div>
+            <div className="lbl">exercícios e receitas na plataforma</div>
           </div>
           <div>
             <div className="num">12k+</div>

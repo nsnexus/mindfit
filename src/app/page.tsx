@@ -28,7 +28,6 @@ export default function HomePage() {
           <div className="nav-links">
             <a href="#como">Como funciona</a>
             <a href="#recursos">Recursos</a>
-            <a href="#metodo">Método 21</a>
             <a href="#planos">Planos</a>
             <a href="#faq">Dúvidas</a>
             <Link href={ROUTES.LOGIN}>Entrar</Link>
@@ -45,10 +44,8 @@ export default function HomePage() {
       {/* STATS */}
       <Stats />
 
-      {/* FEATURES & METODO 21 */}
-      <div id="como">
-        <Benefits />
-      </div>
+      {/* FEATURES & METHOD 21 */}
+      <Benefits />
 
       {/* PRICING */}
       <PricingSection />
