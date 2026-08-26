@@ -246,9 +246,75 @@ export async function generateCustomWorkoutFromWger(
     exercises: selectedWgerList.map((wgerEx) => ({
       exerciseId: `wger-${wgerEx.id}`,
       sets,
-      durationSeconds,
       restSeconds,
+      durationSeconds,
     })),
+  };
+}
+
+export const WEEKDAYS = ['Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado', 'Domingo'];
+
+export interface WeeklyPlanDay {
+  day: string;
+  dayIndex: number;
+  isRestDay: boolean;
+  focus?: WorkoutQuestionnaireData['focus'];
+  workout?: Awaited<ReturnType<typeof generateCustomWorkoutFromWger>>;
+}
+
+export interface WeeklyPlan {
+  generatedAt: number;
+  profile: WorkoutQuestionnaireData;
+  days: WeeklyPlanDay[];
+}
+
+/**
+ * Monta um plano de treino semanal completo, distribuindo os dias de treino
+ * e descanso conforme o nível informado e buscando exercícios reais para cada dia.
+ */
+export async function generateWeeklyPlanFromWger(
+  profile: WorkoutQuestionnaireData
+): Promise<WeeklyPlan> {
+  const trainingSlotsByLevel: Record<string, number[]> = {
+    beginner: [0, 2, 4], // Seg, Qua, Sex
+    intermediate: [0, 1, 3, 4], // Seg, Ter, Qui, Sex
+    advanced: [0, 1, 2, 3, 4], // Seg a Sex
+  };
+
+  const focusRotation: WorkoutQuestionnaireData['focus'][] =
+    profile.focus === 'fullBody'
+      ? ['fullBody', 'legs', 'back', 'arms', 'abs']
+      : [profile.focus, 'fullBody', 'legs', 'back', 'arms'];
+
+  const trainingSlots = trainingSlotsByLevel[profile.fitnessLevel] || trainingSlotsByLevel.beginner;
+
+  const days: WeeklyPlanDay[] = [];
+
+  for (let i = 0; i < WEEKDAYS.length; i++) {
+    const slotPosition = trainingSlots.indexOf(i);
+
+    if (slotPosition === -1) {
+      days.push({ day: WEEKDAYS[i], dayIndex: i, isRestDay: true });
+      continue;
+    }
+
+    const dayFocus = focusRotation[slotPosition % focusRotation.length] || 'fullBody';
+    const workout = await generateCustomWorkoutFromWger({ ...profile, focus: dayFocus });
+    workout.id = `${workout.id}-d${i}`;
+
+    days.push({
+      day: WEEKDAYS[i],
+      dayIndex: i,
+      isRestDay: false,
+      focus: dayFocus,
+      workout,
+    });
+  }
+
+  return {
+    generatedAt: Date.now(),
+    profile,
+    days,
   };
 }
 

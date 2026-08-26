@@ -5,14 +5,14 @@
 
 import { useState } from 'react';
 import {
-  generateCustomWorkoutFromWger,
+  generateWeeklyPlanFromWger,
   type WorkoutQuestionnaireData,
 } from '@/lib/wgerApi';
 
 interface WorkoutQuestionnaireModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onWorkoutGenerated: (workout: any) => void;
+  onWorkoutGenerated: (plan: any) => void;
   initialWeight?: number;
   initialGoalWeight?: number;
   initialHeight?: number;
@@ -45,13 +45,13 @@ export function WorkoutQuestionnaireModal({
     setIsGenerating(true);
 
     try {
-      const generated = await generateCustomWorkoutFromWger(formData);
+      const plan = await generateWeeklyPlanFromWger(formData);
       // Salva no localStorage para persistir na sessão
-      localStorage.setItem('mindfit_custom_workout', JSON.stringify(generated));
-      onWorkoutGenerated(generated);
+      localStorage.setItem('mindfit_weekly_plan', JSON.stringify(plan));
+      onWorkoutGenerated(plan);
       onClose();
     } catch (err) {
-      console.error('Erro ao gerar treino da API:', err);
+      console.error('Erro ao gerar plano de treino:', err);
     } finally {
       setIsGenerating(false);
     }
@@ -86,7 +86,7 @@ export function WorkoutQuestionnaireModal({
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
           <div>
             <span className="page-tag" style={{ marginBottom: '6px' }}>
-              🎯 Treino Personalizado Inteligente
+              🎯 Plano de Treino Semanal
             </span>
             <h3 style={{ fontFamily: "'Poppins', sans-serif", fontSize: '1.4rem', color: '#12352f' }}>
               Avaliação de Treino do Aluno
@@ -111,7 +111,7 @@ export function WorkoutQuestionnaireModal({
         </div>
 
         <p style={{ color: 'var(--muted)', fontSize: '0.88rem', marginBottom: '22px' }}>
-          Preencha suas medidas e preferências. Consultaremos a <b>biblioteca de exercícios da API (860+ itens)</b> para montar sua rotina ideal.
+          Preencha suas medidas e preferências. Vamos montar um <b>plano de treino semanal completo</b>, com dias de treino e descanso sob medida para você.
         </p>
 
         <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '18px' }}>
@@ -282,7 +282,7 @@ export function WorkoutQuestionnaireModal({
               opacity: isGenerating ? 0.7 : 1,
             }}
           >
-            {isGenerating ? 'Consultando API wger & Montando...' : '🚀 Gerar Treino da API wger.de'}
+            {isGenerating ? 'Montando seu plano semanal...' : '🚀 Gerar Meu Plano Semanal'}
           </button>
         </form>
       </div>

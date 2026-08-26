@@ -24,11 +24,12 @@ export function ActiveWorkoutClient({ workout: initialWorkout, workoutId }: Acti
   useEffect(() => {
     if (!initialWorkout && workoutId) {
       try {
-        const saved = localStorage.getItem('mindfit_custom_workout');
+        const saved = localStorage.getItem('mindfit_weekly_plan');
         if (saved) {
-          const parsed = JSON.parse(saved);
-          if (parsed.id === workoutId || workoutId.startsWith('custom-wger')) {
-            setResolvedWorkout(parsed);
+          const plan = JSON.parse(saved);
+          const match = plan?.days?.find((d: any) => d.workout?.id === workoutId)?.workout;
+          if (match) {
+            setResolvedWorkout(match);
           }
         }
       } catch {

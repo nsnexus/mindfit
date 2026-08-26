@@ -84,15 +84,10 @@ export function Sidebar() {
                 alt="Mindfit"
                 className="w-9 h-9 object-contain group-hover:scale-105 transition-transform"
               />
-              <div>
-                <span className="text-2xl font-extrabold font-head leading-none tracking-tight block">
-                  <span className="text-[#0f5e5a]">Mind</span>
-                  <span className="text-[#0e9f6e]">fit</span>
-                </span>
-                <span className="pill text-[10px] py-0.5 px-2 mt-1 inline-flex font-bold">
-                  Método 21 Dias
-                </span>
-              </div>
+              <span className="text-2xl font-extrabold font-head leading-none tracking-tight">
+                <span className="text-[#0f5e5a]">Mind</span>
+                <span className="text-[#0e9f6e]">fit</span>
+              </span>
             </Link>
 
             <button

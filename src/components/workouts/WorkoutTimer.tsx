@@ -114,7 +114,7 @@ export function WorkoutTimer({
 
       {/* Big Circular Counter */}
       <div style={{ position: 'relative', width: '180px', height: '180px', margin: '16px auto', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-        <svg className="ring" width="180" height="180" viewBox="0 0 180 180">
+        <svg className="progress-ring" width="180" height="180" viewBox="0 0 180 180">
           <circle
             cx="90"
             cy="90"

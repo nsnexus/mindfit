@@ -115,7 +115,7 @@ export function ExerciseLibrary() {
           </div>
 
           <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/25 text-emerald-700 text-xs font-bold self-start md:self-auto">
-            <Sparkles className="w-3.5 h-3.5" /> Powered by wger.de API
+            <Sparkles className="w-3.5 h-3.5" /> Guia com Ilustrações
           </span>
         </div>
 
@@ -275,7 +275,7 @@ export function ExerciseLibrary() {
       {isLoading && (
         <div className="p-8 text-center flex items-center justify-center gap-2 text-xs font-bold text-emerald-700">
           <RefreshCw className="w-4 h-4 animate-spin text-emerald-600" />
-          <span>Consultando base da wger.de...</span>
+          <span>Carregando exercícios...</span>
         </div>
       )}
 

@@ -52,7 +52,7 @@ export function CalorieTracker({
       </div>
 
       <div className="ring-wrap" style={{ position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-        <svg className="ring" width="140" height="140" viewBox="0 0 140 140">
+        <svg className="progress-ring" width="140" height="140" viewBox="0 0 140 140">
           <circle cx="70" cy="70" r="60" fill="none" stroke="rgba(255,255,255,.15)" strokeWidth="12" />
           <circle
             cx="70"
