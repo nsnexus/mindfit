@@ -34,28 +34,27 @@ export default function ReceitasPage() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <div className="flex items-center gap-2 mb-1">
-            <div className="w-8 h-8 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-600">
-              <ChefHat className="w-4.5 h-4.5" />
-            </div>
-            <h1 className="text-2xl sm:text-3xl font-black font-[var(--font-heading)] text-neutral-900 tracking-tight">
-              Receitas Saudáveis
-            </h1>
+          <div className="flex items-center gap-2.5 mb-1.5">
+            <span className="pill text-xs">
+              👨‍🍳 Culinária & Praticidade
+            </span>
           </div>
-          <p className="text-neutral-500 text-sm">
+          <h1 className="font-head text-3xl sm:text-4xl font-extrabold text-[#12352f] tracking-tight">
+            Receitas <span className="gradient-text">Saudáveis</span>
+          </h1>
+          <p className="text-[#5b7a72] text-xs sm:text-sm mt-1">
             Pratos saborosos, rápidos e alinhados aos macronutrientes do Método 21 Dias.
           </p>
         </div>
 
-        <Button
-          variant="accent"
-          size="md"
+        <button
+          type="button"
           onClick={() => setIsShoppingListOpen(true)}
-          leftIcon={<ShoppingCart className="w-4 h-4" />}
-          className="font-black text-xs sm:text-sm self-start sm:self-auto shadow-md"
+          className="btn btn-primary font-head font-bold text-xs sm:text-sm py-3 px-5 self-start sm:self-auto shadow-md shadow-[#0e9f6e]/20 flex items-center gap-2 cursor-pointer"
         >
-          Lista de Compras ({shoppingListIds.length})
-        </Button>
+          <ShoppingCart className="w-4 h-4" />
+          <span>Lista de Compras ({shoppingListIds.length})</span>
+        </button>
       </div>
 
       {/* Search & Filters */}

@@ -63,7 +63,7 @@ export default function CadastroPage() {
 
   return (
     <div>
-      <h2 className="text-2xl sm:text-3xl font-extrabold font-[var(--font-heading)] text-[#12352f] mb-1.5">
+      <h2 className="text-2xl sm:text-3xl font-extrabold font-head text-[#12352f] mb-1.5">
         Crie sua conta 🌱
       </h2>
       <p className="text-sm text-[#5b7a72] mb-6">

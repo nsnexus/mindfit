@@ -50,13 +50,13 @@ function OnboardingWizardContent() {
               alt="Mindfit"
               className="w-8 h-8 object-contain"
             />
-            <span className="text-xl font-extrabold font-[var(--font-heading)]">
+            <span className="text-xl font-extrabold font-head">
               <span className="text-[#0f5e5a]">Mind</span>
               <span className="text-[#0e9f6e]">fit</span>
             </span>
           </Link>
 
-          <span className="text-xs font-bold text-[#0e9f6e] bg-[#e6f6ef] px-3.5 py-1 rounded-full font-[var(--font-heading)]">
+          <span className="pill text-xs font-head font-bold">
             Etapa {currentStep} de {totalSteps}
           </span>
         </div>
@@ -74,7 +74,7 @@ function OnboardingWizardContent() {
 
       {/* Main Step Container */}
       <main className="flex-1 max-w-2xl w-full mx-auto px-4 py-8 sm:py-12 animate-fade-in">
-        <div className="bg-white rounded-[28px] p-6 sm:p-10 border border-[#eaf3ef] shadow-[0_18px_45px_rgba(14,159,110,0.08)] space-y-6">
+        <div className="bg-white rounded-3xl p-6 sm:p-10 border border-[#e2f2ea] shadow-[0_18px_45px_rgba(14,159,110,0.08)] space-y-6">
           {currentStep === 1 && <StepPersonalInfo />}
           {currentStep === 2 && <StepGoals />}
           {currentStep === 3 && <StepDiet />}
@@ -85,28 +85,30 @@ function OnboardingWizardContent() {
           {currentStep < 5 && (
             <div className="flex items-center justify-between pt-6 border-t border-[#f0f6f3] gap-4">
               {currentStep > 1 ? (
-                <Button
-                  variant="ghost"
+                <button
+                  type="button"
                   onClick={prevStep}
-                  leftIcon={<ChevronLeft className="w-4 h-4" />}
-                  className="font-bold text-sm"
+                  className="btn btn-ghost py-3 px-5 text-sm font-head font-bold flex items-center gap-1.5 cursor-pointer"
                 >
-                  Voltar
-                </Button>
+                  <ChevronLeft className="w-4 h-4" />
+                  <span>Voltar</span>
+                </button>
               ) : (
                 <div />
               )}
 
-              <Button
-                variant="primary"
-                size="lg"
+              <button
+                type="button"
                 onClick={nextStep}
                 disabled={!canProceed()}
-                rightIcon={<ArrowRight className="w-4 h-4" />}
-                className="font-black text-sm shadow-md"
+                className={`
+                  btn btn-primary py-3.5 px-7 text-sm font-head font-bold shadow-md shadow-[#0e9f6e]/20 flex items-center gap-2 cursor-pointer
+                  ${!canProceed() ? 'opacity-50 cursor-not-allowed' : ''}
+                `}
               >
-                Avançar
-              </Button>
+                <span>Avançar</span>
+                <ArrowRight className="w-4 h-4" />
+              </button>
             </div>
           )}
         </div>

@@ -1,5 +1,5 @@
 // ============================================
-// Active Workout Client Component
+// Active Workout Client Component — Mindfit Official
 // ============================================
 'use client';
 
@@ -7,7 +7,7 @@ import Link from 'next/link';
 import { useActiveWorkout } from '@/hooks/useWorkouts';
 import { ExerciseDemo } from '@/components/workouts/ExerciseDemo';
 import { WorkoutTimer } from '@/components/workouts/WorkoutTimer';
-import { Card, Button, Progress } from '@/components/ui';
+import { Progress } from '@/components/ui';
 import { ROUTES } from '@/constants/routes';
 import type { Workout } from '@/types/workout';
 
@@ -32,73 +32,79 @@ export function ActiveWorkoutClient({ workout }: { workout: Workout }) {
   if (isCompleted) {
     return (
       <div className="max-w-lg mx-auto py-10 animate-fade-in text-center">
-        <Card variant="elevated" padding="lg" className="space-y-6">
-          <div className="w-20 h-20 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center mx-auto text-4xl animate-bounce-in">
+        <div className="bg-white rounded-3xl border border-[#e2f2ea] p-8 shadow-[0_16px_40px_rgba(14,159,110,0.12)] space-y-6">
+          <div className="w-20 h-20 rounded-full bg-[#e6f6ef] text-[#0e9f6e] border border-[#c9eee0] flex items-center justify-center mx-auto text-4xl animate-bounce-in shadow-xs">
             🏆
           </div>
 
           <div>
-            <h2 className="text-2xl sm:text-3xl font-extrabold font-[var(--font-heading)] text-neutral-900">
+            <h2 className="text-2xl sm:text-3xl font-extrabold font-head text-[#12352f]">
               Treino Concluído com Sucesso!
             </h2>
-            <p className="text-xs sm:text-sm text-neutral-500 mt-1">
+            <p className="text-xs sm:text-sm text-[#5b7a72] mt-1 font-medium">
               Excelente trabalho! Você deu mais um passo fundamental na sua transformação de 21 dias.
             </p>
           </div>
 
-          <div className="grid grid-cols-2 gap-4 p-4 bg-neutral-50 rounded-2xl border border-neutral-100">
+          <div className="grid grid-cols-2 gap-4 p-5 bg-[#f5faf7] rounded-2xl border border-[#e2f2ea]">
             <div>
-              <p className="text-xs text-neutral-400 font-bold uppercase">Tempo Total</p>
-              <p className="text-2xl font-black text-neutral-900 mt-0.5">
+              <p className="text-xs text-[#5b7a72] font-head font-extrabold uppercase">Tempo Total</p>
+              <p className="text-2xl font-extrabold font-head text-[#12352f] mt-0.5">
                 {workout.durationMinutes} min
               </p>
             </div>
             <div>
-              <p className="text-xs text-neutral-400 font-bold uppercase">Calorias Estimadas</p>
-              <p className="text-2xl font-black text-primary-700 mt-0.5">
+              <p className="text-xs text-[#5b7a72] font-head font-extrabold uppercase">Calorias Queimadas</p>
+              <p className="text-2xl font-extrabold font-head text-[#0e9f6e] mt-0.5">
                 ~{workout.caloriesBurned} kcal
               </p>
             </div>
           </div>
 
-          <div className="space-y-2 pt-2">
-            <Link href={ROUTES.DASHBOARD}>
-              <Button variant="primary" size="lg" fullWidth>
+          <div className="space-y-3 pt-2">
+            <Link href={ROUTES.DASHBOARD} className="block">
+              <button
+                type="button"
+                className="btn btn-primary w-full py-3.5 text-sm font-head font-bold shadow-md shadow-[#0e9f6e]/20 cursor-pointer"
+              >
                 Voltar ao Dashboard
-              </Button>
+              </button>
             </Link>
-            <Link href={ROUTES.DIARIO}>
-              <Button variant="outline" size="md" fullWidth>
+            <Link href={ROUTES.DIARIO} className="block">
+              <button
+                type="button"
+                className="btn btn-ghost w-full py-3 text-xs font-head font-bold cursor-pointer"
+              >
                 Ver Diário do Dia
-              </Button>
+              </button>
             </Link>
           </div>
-        </Card>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="space-y-6 animate-fade-in max-w-4xl mx-auto">
+    <div className="space-y-6 animate-fade-in max-w-5xl mx-auto">
       {/* Top Session Bar */}
       <div className="flex items-center justify-between">
         <div>
           <Link
             href={ROUTES.TREINOS}
-            className="inline-flex items-center gap-1.5 text-xs text-neutral-500 hover:text-neutral-800 transition-colors"
+            className="inline-flex items-center gap-1.5 text-xs font-head font-bold text-[#5b7a72] hover:text-[#0e9f6e] transition-colors"
           >
             ← Cancelar Treino
           </Link>
-          <h1 className="text-lg sm:text-xl font-bold text-neutral-900 mt-1">
+          <h1 className="text-xl sm:text-2xl font-extrabold font-head text-[#12352f] mt-1">
             {workout.title}
           </h1>
         </div>
 
         <div className="text-right">
-          <span className="text-xs font-bold text-neutral-500">
+          <span className="pill text-[11px] font-head font-bold bg-[#f5faf7] text-[#0e9f6e] border border-[#e2f2ea]">
             Exercício {currentExerciseIndex + 1} de {totalExercises}
           </span>
-          <div className="w-32 mt-1">
+          <div className="w-32 mt-1.5">
             <Progress
               value={((currentExerciseIndex + 1) / totalExercises) * 100}
               size="sm"
@@ -128,13 +134,14 @@ export function ActiveWorkoutClient({ workout }: { workout: Workout }) {
           />
 
           {/* Quick Info Card */}
-          <Card padding="sm" className="text-center bg-white">
-            <p className="text-xs text-neutral-500">
+          <div className="text-center bg-white p-4 rounded-2xl border border-[#e2f2ea] shadow-xs">
+            <p className="text-xs text-[#5b7a72] font-medium">
               💡 Mantenha a respiração ritmada. Descanse quando indicado pelo timer.
             </p>
-          </Card>
+          </div>
         </div>
       </div>
     </div>
   );
 }
+

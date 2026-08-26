@@ -15,7 +15,7 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
         <header className="bg-[#0f5e5a] text-white px-6 py-4 border-b border-[#0a3d3a] sticky top-0 z-30 shadow-md">
           <div className="max-w-7xl mx-auto flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <Link href={ROUTES.DASHBOARD} className="flex items-center gap-2 font-bold font-[var(--font-heading)]">
+              <Link href={ROUTES.DASHBOARD} className="flex items-center gap-2 font-head font-extrabold">
                 <img
                   src="/icons/mindfit-simbolo.png"
                   alt="Mindfit"
@@ -25,7 +25,7 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
                   Mind<span className="text-[#8bc34a]">fit</span>
                 </span>
               </Link>
-              <span className="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-[#8bc34a] text-[#0f5e5a] font-[var(--font-heading)]">
+              <span className="pill text-[11px] font-head font-bold bg-[#8bc34a] text-[#0f5e5a]">
                 Painel Admin
               </span>
             </div>

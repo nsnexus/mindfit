@@ -1,5 +1,5 @@
 // ============================================
-// Diário Alimentar & Hidratação — Mindfit
+// Diário Alimentar & Hidratação — Mindfit Official
 // ============================================
 'use client';
 
@@ -18,7 +18,7 @@ import { useAuthStore } from '@/stores/authStore';
 import { CalorieTracker } from '@/components/nutrition/CalorieTracker';
 import { MacroChart } from '@/components/nutrition/MacroChart';
 import { MealCard } from '@/components/nutrition/MealCard';
-import { Card, Button, Input, Progress } from '@/components/ui';
+import { Progress } from '@/components/ui';
 import { formatDate, getTodayString } from '@/lib/utils';
 
 export default function DiarioPage() {
@@ -63,43 +63,43 @@ export default function DiarioPage() {
   };
 
   return (
-    <div className="space-y-6 sm:space-y-8 animate-fade-in max-w-5xl mx-auto">
+    <div className="space-y-6 sm:space-y-8 animate-fade-in max-w-6xl mx-auto">
       {/* Header & Date Navigation */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <div className="flex items-center gap-2 mb-1">
-            <div className="w-8 h-8 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-600">
-              <UtensilsCrossed className="w-4.5 h-4.5" />
-            </div>
-            <h1 className="text-2xl sm:text-3xl font-black font-[var(--font-heading)] text-neutral-900 tracking-tight">
-              Diário Alimentar
-            </h1>
+          <div className="flex items-center gap-2.5 mb-1.5">
+            <span className="pill text-xs">
+              🍽️ Nutrição Consciente
+            </span>
           </div>
-          <p className="text-neutral-500 text-sm">
+          <h1 className="font-head text-3xl sm:text-4xl font-extrabold text-[#12352f] tracking-tight">
+            Diário <span className="gradient-text">Alimentar</span>
+          </h1>
+          <p className="text-[#5b7a72] text-xs sm:text-sm mt-1">
             Registre suas refeições diárias e monitore seu balanço calórico em tempo real.
           </p>
         </div>
 
         {/* Date Selector Pill */}
-        <div className="flex items-center gap-2 bg-white p-1.5 rounded-2xl border border-neutral-200/80 shadow-sm self-start sm:self-auto">
+        <div className="flex items-center gap-1.5 bg-white p-1.5 rounded-full border border-[#e2f2ea] shadow-xs self-start sm:self-auto">
           <button
             type="button"
             onClick={() => changeDay(-1)}
-            className="p-2 rounded-xl text-neutral-500 hover:text-neutral-900 hover:bg-neutral-100 transition-colors cursor-pointer"
+            className="p-2 rounded-full text-[#5b7a72] hover:text-[#0e9f6e] hover:bg-[#f5faf7] transition-colors cursor-pointer"
             title="Dia anterior"
           >
             <ChevronLeft className="w-4 h-4" />
           </button>
 
-          <span className="text-xs sm:text-sm font-bold text-neutral-800 px-3 min-w-[140px] text-center flex items-center justify-center gap-1.5">
-            <Calendar className="w-3.5 h-3.5 text-emerald-600" />
+          <span className="text-xs sm:text-sm font-head font-extrabold text-[#12352f] px-3 min-w-[140px] text-center flex items-center justify-center gap-1.5">
+            <Calendar className="w-3.5 h-3.5 text-[#0e9f6e]" />
             {isToday ? `Hoje, ${formatDate(selectedDate)}` : formatDate(selectedDate)}
           </span>
 
           <button
             type="button"
             onClick={() => changeDay(1)}
-            className="p-2 rounded-xl text-neutral-500 hover:text-neutral-900 hover:bg-neutral-100 transition-colors cursor-pointer"
+            className="p-2 rounded-full text-[#5b7a72] hover:text-[#0e9f6e] hover:bg-[#f5faf7] transition-colors cursor-pointer"
             title="Próximo dia"
           >
             <ChevronRight className="w-4 h-4" />
@@ -126,21 +126,21 @@ export default function DiarioPage() {
       {/* Water & Weight Widgets */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
         {/* Water Tracker */}
-        <Card padding="md" className="flex flex-col justify-between space-y-4">
+        <div className="bg-white rounded-3xl border border-[#e2f2ea] p-6 shadow-[0_8px_25px_rgba(14,159,110,0.06)] flex flex-col justify-between space-y-4">
           <div>
-            <div className="flex items-center justify-between pb-3 border-b border-neutral-100">
-              <div className="flex items-center gap-2.5">
-                <div className="w-10 h-10 rounded-2xl bg-blue-500/10 border border-blue-500/20 flex items-center justify-center text-blue-600">
+            <div className="flex items-center justify-between pb-3.5 border-b border-[#eef4f1]">
+              <div className="flex items-center gap-3">
+                <div className="w-11 h-11 rounded-2xl bg-blue-500/10 border border-blue-500/20 flex items-center justify-center text-blue-600 shadow-xs">
                   <Droplets className="w-5 h-5" />
                 </div>
                 <div>
-                  <h3 className="font-extrabold text-neutral-900 text-sm sm:text-base">
+                  <h3 className="font-head font-extrabold text-[#12352f] text-base">
                     Registro de Água
                   </h3>
-                  <p className="text-xs text-neutral-400">Meta: {waterTargetMl} ml / dia</p>
+                  <p className="text-xs text-[#5b7a72] font-medium">Meta: {waterTargetMl} ml / dia</p>
                 </div>
               </div>
-              <span className="text-base font-black text-blue-600 font-[var(--font-heading)]">
+              <span className="text-base font-extrabold font-head text-[#0e9f6e]">
                 {dailyLog.waterMl} ml
               </span>
             </div>
@@ -156,46 +156,43 @@ export default function DiarioPage() {
             </div>
           </div>
 
-          <div className="grid grid-cols-3 gap-2 pt-2 border-t border-neutral-100">
-            <Button
-              variant="outline"
-              size="sm"
+          <div className="grid grid-cols-3 gap-2 pt-2 border-t border-[#eef4f1]">
+            <button
+              type="button"
               onClick={() => addWater(250)}
-              className="text-xs font-bold"
+              className="btn btn-ghost py-2.5 px-2 text-xs font-bold"
             >
               +250 ml 🥤
-            </Button>
-            <Button
-              variant="outline"
-              size="sm"
+            </button>
+            <button
+              type="button"
               onClick={() => addWater(500)}
-              className="text-xs font-bold"
+              className="btn btn-ghost py-2.5 px-2 text-xs font-bold"
             >
               +500 ml 🍶
-            </Button>
-            <Button
-              variant="outline"
-              size="sm"
+            </button>
+            <button
+              type="button"
               onClick={() => addWater(1000)}
-              className="text-xs font-bold"
+              className="btn btn-ghost py-2.5 px-2 text-xs font-bold"
             >
-              +1 Litro 💧
-            </Button>
+              +1L 💧
+            </button>
           </div>
-        </Card>
+        </div>
 
         {/* Daily Weight Check-in */}
-        <Card padding="md" className="flex flex-col justify-between space-y-4">
+        <div className="bg-white rounded-3xl border border-[#e2f2ea] p-6 shadow-[0_8px_25px_rgba(14,159,110,0.06)] flex flex-col justify-between space-y-4">
           <div>
-            <div className="flex items-center gap-2.5 pb-3 border-b border-neutral-100">
-              <div className="w-10 h-10 rounded-2xl bg-teal-500/10 border border-teal-500/20 flex items-center justify-center text-teal-600">
+            <div className="flex items-center gap-3 pb-3.5 border-b border-[#eef4f1]">
+              <div className="w-11 h-11 rounded-2xl bg-teal-500/10 border border-teal-500/20 flex items-center justify-center text-teal-600 shadow-xs">
                 <Scale className="w-5 h-5" />
               </div>
               <div>
-                <h3 className="font-extrabold text-neutral-900 text-sm sm:text-base">
+                <h3 className="font-head font-extrabold text-[#12352f] text-base">
                   Peso do Dia
                 </h3>
-                <p className="text-xs text-neutral-400">
+                <p className="text-xs text-[#5b7a72] font-medium">
                   {dailyLog.weight
                     ? `Registrado hoje: ${dailyLog.weight} kg`
                     : 'Nenhum peso registrado hoje'}
@@ -204,33 +201,41 @@ export default function DiarioPage() {
             </div>
 
             <form onSubmit={handleSaveWeight} className="py-4 flex gap-2">
-              <Input
-                type="number"
-                step="0.1"
-                placeholder={dailyLog.weight ? String(dailyLog.weight) : 'Ex: 68.5'}
-                value={weightInput}
-                onChange={(e) => setWeightInput(e.target.value)}
-                rightIcon={<span className="text-xs font-bold text-neutral-400">kg</span>}
-              />
-              <Button type="submit" size="md" className="font-bold shrink-0">
-                Salvar
-              </Button>
+              <div className="relative flex-1">
+                <input
+                  type="number"
+                  step="0.1"
+                  placeholder={dailyLog.weight ? String(dailyLog.weight) : 'Ex: 68.5'}
+                  value={weightInput}
+                  onChange={(e) => setWeightInput(e.target.value)}
+                  className="w-full h-11 px-4 bg-[#f5faf7] border border-[#e2f2ea] rounded-2xl text-sm font-medium text-[#12352f] placeholder:text-neutral-400 focus:outline-none focus:border-[#0e9f6e] focus:bg-white focus:ring-4 focus:ring-[#0e9f6e]/10 transition-all"
+                />
+                <span className="absolute right-4 top-1/2 -translate-y-1/2 text-xs font-head font-bold text-[#5b7a72]">
+                  kg
+                </span>
+              </div>
+              <button
+                type="submit"
+                className="btn btn-primary px-5 h-11 text-xs font-bold shrink-0 cursor-pointer"
+              >
+                Salvar Peso
+              </button>
             </form>
           </div>
 
           {weightSaved && (
-            <p className="text-xs text-emerald-700 bg-emerald-50 px-3 py-1.5 rounded-xl border border-emerald-200 font-bold flex items-center gap-1.5">
-              <CheckCircle2 className="w-4 h-4 text-emerald-600" />
-              Peso salvo com sucesso no seu histórico!
+            <p className="text-xs text-[#0f5e5a] bg-[#e6f6ef] px-3.5 py-2 rounded-2xl border border-[#c9eee0] font-head font-bold flex items-center gap-1.5">
+              <CheckCircle2 className="w-4 h-4 text-[#0e9f6e]" />
+              Peso registrado com sucesso no seu histórico!
             </p>
           )}
-        </Card>
+        </div>
       </div>
 
       {/* 4 Meal Cards Grid */}
       <div className="space-y-4">
-        <h2 className="text-lg font-black font-[var(--font-heading)] text-neutral-900">
-          Refeições do Dia
+        <h2 className="font-head text-xl font-extrabold text-[#12352f] flex items-center gap-2">
+          <span>Refeições do Dia</span>
         </h2>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
@@ -263,3 +268,4 @@ export default function DiarioPage() {
     </div>
   );
 }
+

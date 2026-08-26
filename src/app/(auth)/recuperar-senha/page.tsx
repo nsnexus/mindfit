@@ -46,7 +46,7 @@ export default function RecuperarSenhaPage() {
         <div className="w-16 h-16 bg-[#e6f6ef] text-[#0e9f6e] rounded-full flex items-center justify-center mx-auto text-2xl shadow-sm">
           ✉️
         </div>
-        <h2 className="text-2xl font-extrabold font-[var(--font-heading)] text-[#12352f]">
+        <h2 className="text-2xl font-extrabold font-head text-[#12352f]">
           E-mail enviado!
         </h2>
         <p className="text-sm text-[#5b7a72] max-w-sm mx-auto leading-relaxed">
@@ -73,7 +73,7 @@ export default function RecuperarSenhaPage() {
         ← Voltar para login
       </Link>
 
-      <h2 className="text-2xl sm:text-3xl font-extrabold font-[var(--font-heading)] text-[#12352f] mb-1.5">
+      <h2 className="text-2xl sm:text-3xl font-extrabold font-head text-[#12352f] mb-1.5">
         Recuperar senha 🔑
       </h2>
       <p className="text-sm text-[#5b7a72] mb-6">

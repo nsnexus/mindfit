@@ -1,11 +1,10 @@
 // ============================================
-// Workout Card Component — Mindfit
+// Workout Card Component — Mindfit Official
 // ============================================
 'use client';
 
 import Link from 'next/link';
-import { Clock, Flame, Play, ArrowRight, CheckCircle2 } from 'lucide-react';
-import { Card, Badge, Button } from '@/components/ui';
+import { Clock, Flame, Play, ArrowRight } from 'lucide-react';
 import { ROUTES } from '@/constants/routes';
 import type { Workout } from '@/types/workout';
 
@@ -15,14 +14,10 @@ interface WorkoutCardProps {
 
 export function WorkoutCard({ workout }: WorkoutCardProps) {
   return (
-    <Card
-      padding="none"
-      hoverable
-      className="overflow-hidden flex flex-col justify-between group h-full border border-neutral-200/80 hover:border-emerald-500/40"
-    >
+    <div className="bg-white rounded-3xl border border-[#e2f2ea] shadow-[0_8px_25px_rgba(14,159,110,0.06)] hover:border-[#0e9f6e] hover:shadow-[0_14px_35px_rgba(14,159,110,0.12)] hover:-translate-y-1.5 transition-all duration-300 overflow-hidden flex flex-col justify-between group h-full">
       <div>
         {/* Workout Thumbnail with Overlays */}
-        <div className="relative h-48 sm:h-52 w-full bg-neutral-900 overflow-hidden">
+        <div className="relative h-48 sm:h-52 w-full bg-[#12352f] overflow-hidden">
           <img
             src={workout.imageURL}
             alt={workout.title}
@@ -31,67 +26,57 @@ export function WorkoutCard({ workout }: WorkoutCardProps) {
           />
 
           {/* Dark gradient overlay */}
-          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-t from-[#12352f]/90 via-[#12352f]/30 to-transparent" />
 
           {/* Top Badges */}
           <div className="absolute top-3 left-3 flex gap-2">
-            <span className="bg-black/60 backdrop-blur-md px-3 py-1 rounded-full text-xs font-black text-white border border-white/20 flex items-center gap-1">
-              <Clock className="w-3.5 h-3.5 text-emerald-400" /> {workout.durationMinutes} min
+            <span className="bg-black/60 backdrop-blur-md px-3 py-1 rounded-full text-xs font-head font-bold text-white border border-white/20 flex items-center gap-1">
+              <Clock className="w-3.5 h-3.5 text-[#8bc34a]" /> {workout.durationMinutes} min
             </span>
-            <span className="bg-emerald-600/90 backdrop-blur-md px-3 py-1 rounded-full text-xs font-black text-white shadow-sm flex items-center gap-1">
+            <span className="bg-[#0e9f6e]/90 backdrop-blur-md px-3 py-1 rounded-full text-xs font-head font-bold text-white shadow-sm flex items-center gap-1">
               <Flame className="w-3.5 h-3.5 text-amber-300 fill-amber-300" /> ~{workout.caloriesBurned} kcal
             </span>
           </div>
 
           {/* Difficulty Badge */}
           <div className="absolute bottom-3 right-3">
-            <Badge
-              variant={
-                workout.difficulty === 'beginner'
-                  ? 'success'
-                  : workout.difficulty === 'intermediate'
-                  ? 'warning'
-                  : 'danger'
-              }
-              size="sm"
-            >
-              {workout.difficulty === 'beginner' && 'Iniciante'}
-              {workout.difficulty === 'intermediate' && 'Intermediário'}
-              {workout.difficulty === 'advanced' && 'Avançado'}
-            </Badge>
+            <span className="pill text-xs font-head font-bold bg-white/90 text-[#0f5e5a] shadow-sm">
+              {workout.difficulty === 'beginner' && '🌱 Iniciante'}
+              {workout.difficulty === 'intermediate' && '⚡ Intermediário'}
+              {workout.difficulty === 'advanced' && '🔥 Avançado'}
+            </span>
           </div>
         </div>
 
         {/* Content */}
         <div className="p-5 space-y-2">
-          <span className="text-[11px] font-black uppercase tracking-wider text-emerald-700 block">
+          <span className="text-[11px] font-head font-extrabold uppercase tracking-wider text-[#0e9f6e] block">
             Fase {workout.phase.join(', ')} • {workout.exercises.length} Exercícios Guiados
           </span>
 
-          <h3 className="font-black text-neutral-900 text-lg group-hover:text-emerald-700 transition-colors">
+          <h3 className="font-head font-extrabold text-[#12352f] text-lg group-hover:text-[#0e9f6e] transition-colors leading-tight">
             {workout.title}
           </h3>
 
-          <p className="text-xs text-neutral-500 line-clamp-2 leading-relaxed">
+          <p className="text-xs text-[#5b7a72] line-clamp-2 leading-relaxed font-medium">
             {workout.description}
           </p>
         </div>
       </div>
 
       {/* Footer Action */}
-      <div className="p-5 pt-3 border-t border-neutral-100">
+      <div className="p-5 pt-3.5 border-t border-[#eef4f1]">
         <Link href={ROUTES.TREINO_ATIVO(workout.id)}>
-          <Button
-            variant="primary"
-            size="md"
-            fullWidth
-            rightIcon={<Play className="w-4 h-4 fill-white" />}
-            className="font-bold shadow-md"
+          <button
+            type="button"
+            className="btn btn-primary w-full py-3 text-xs sm:text-sm font-head font-bold shadow-md shadow-[#0e9f6e]/20 flex items-center justify-center gap-2 cursor-pointer"
           >
-            Iniciar Treino
-          </Button>
+            <span>Iniciar Treino</span>
+            <Play className="w-3.5 h-3.5 fill-white" />
+          </button>
         </Link>
       </div>
-    </Card>
+    </div>
   );
 }
+
