@@ -1,14 +1,21 @@
 // ============================================
-// Firebase Firestore Generic Helpers (Edge/SSR Safe)
+// Firebase Firestore Generic Helpers
 // ============================================
-import type { DocumentData, QueryConstraint } from 'firebase/firestore';
-import { getDbInstance } from './config';
-
-async function getFs() {
-  const mod = await import('firebase/firestore');
-  const db = getDbInstance();
-  return { ...mod, db };
-}
+import {
+  doc,
+  getDoc,
+  getDocs,
+  setDoc,
+  updateDoc,
+  deleteDoc,
+  collection,
+  query,
+  onSnapshot,
+  serverTimestamp as firestoreServerTimestamp,
+  type DocumentData,
+  type QueryConstraint,
+} from 'firebase/firestore';
+import { db } from './config';
 
 /**
  * Buscar um documento por ID
@@ -17,15 +24,18 @@ export async function getDocument<T = DocumentData>(
   collectionName: string,
   docId: string
 ): Promise<T | null> {
-  if (typeof window === 'undefined') return null;
-  const { doc, getDoc, db } = await getFs();
-  const docRef = doc(db, collectionName, docId);
-  const docSnap = await getDoc(docRef);
+  try {
+    const docRef = doc(db, collectionName, docId);
+    const docSnap = await getDoc(docRef);
 
-  if (docSnap.exists()) {
-    return { id: docSnap.id, ...docSnap.data() } as T;
+    if (docSnap.exists()) {
+      return { id: docSnap.id, ...docSnap.data() } as T;
+    }
+    return null;
+  } catch (err) {
+    console.error(`Erro ao buscar documento em ${collectionName}/${docId}:`, err);
+    return null;
   }
-  return null;
 }
 
 /**
@@ -35,14 +45,17 @@ export async function getDocuments<T = DocumentData>(
   collectionName: string,
   constraints: QueryConstraint[] = []
 ): Promise<T[]> {
-  if (typeof window === 'undefined') return [];
-  const { query, collection, getDocs, db } = await getFs();
-  const q = query(collection(db, collectionName), ...constraints);
-  const querySnapshot = await getDocs(q);
+  try {
+    const q = query(collection(db, collectionName), ...constraints);
+    const querySnapshot = await getDocs(q);
 
-  return querySnapshot.docs.map(
-    (doc) => ({ id: doc.id, ...doc.data() }) as T
-  );
+    return querySnapshot.docs.map(
+      (docSnap) => ({ id: docSnap.id, ...docSnap.data() }) as T
+    );
+  } catch (err) {
+    console.error(`Erro ao buscar documentos em ${collectionName}:`, err);
+    return [];
+  }
 }
 
 /**
@@ -54,10 +67,12 @@ export async function setDocument(
   data: DocumentData,
   merge = true
 ): Promise<void> {
-  if (typeof window === 'undefined') return;
-  const { doc, setDoc, serverTimestamp, db } = await getFs();
-  const docRef = doc(db, collectionName, docId);
-  await setDoc(docRef, { ...data, updatedAt: serverTimestamp() }, { merge });
+  try {
+    const docRef = doc(db, collectionName, docId);
+    await setDoc(docRef, { ...data, updatedAt: firestoreServerTimestamp() }, { merge });
+  } catch (err) {
+    console.error(`Erro ao salvar documento em ${collectionName}/${docId}:`, err);
+  }
 }
 
 /**
@@ -68,10 +83,12 @@ export async function updateDocument(
   docId: string,
   data: Partial<DocumentData>
 ): Promise<void> {
-  if (typeof window === 'undefined') return;
-  const { doc, updateDoc, serverTimestamp, db } = await getFs();
-  const docRef = doc(db, collectionName, docId);
-  await updateDoc(docRef, { ...data, updatedAt: serverTimestamp() });
+  try {
+    const docRef = doc(db, collectionName, docId);
+    await updateDoc(docRef, { ...data, updatedAt: firestoreServerTimestamp() });
+  } catch (err) {
+    console.error(`Erro ao atualizar documento em ${collectionName}/${docId}:`, err);
+  }
 }
 
 /**
@@ -81,10 +98,12 @@ export async function deleteDocument(
   collectionName: string,
   docId: string
 ): Promise<void> {
-  if (typeof window === 'undefined') return;
-  const { doc, deleteDoc, db } = await getFs();
-  const docRef = doc(db, collectionName, docId);
-  await deleteDoc(docRef);
+  try {
+    const docRef = doc(db, collectionName, docId);
+    await deleteDoc(docRef);
+  } catch (err) {
+    console.error(`Erro ao deletar documento em ${collectionName}/${docId}:`, err);
+  }
 }
 
 /**
@@ -95,21 +114,26 @@ export function subscribeToDocument<T = DocumentData>(
   docId: string,
   callback: (data: T | null) => void
 ) {
-  if (typeof window === 'undefined') return () => {};
-  let unsub: (() => void) | null = null;
-  getFs().then(({ doc, onSnapshot, db }) => {
+  try {
     const docRef = doc(db, collectionName, docId);
-    unsub = onSnapshot(docRef, (docSnap) => {
-      if (docSnap.exists()) {
-        callback({ id: docSnap.id, ...docSnap.data() } as T);
-      } else {
+    return onSnapshot(
+      docRef,
+      (docSnap) => {
+        if (docSnap.exists()) {
+          callback({ id: docSnap.id, ...docSnap.data() } as T);
+        } else {
+          callback(null);
+        }
+      },
+      (error) => {
+        console.error(`Erro no listener de ${collectionName}/${docId}:`, error);
         callback(null);
       }
-    });
-  });
-  return () => {
-    if (unsub) unsub();
-  };
+    );
+  } catch (err) {
+    console.error(`Erro ao inicializar listener de ${collectionName}/${docId}:`, err);
+    return () => {};
+  }
 }
 
 /**
@@ -120,20 +144,25 @@ export function subscribeToCollection<T = DocumentData>(
   constraints: QueryConstraint[],
   callback: (data: T[]) => void
 ) {
-  if (typeof window === 'undefined') return () => {};
-  let unsub: (() => void) | null = null;
-  getFs().then(({ collection, query, onSnapshot, db }) => {
+  try {
     const q = query(collection(db, collectionName), ...constraints);
-    unsub = onSnapshot(q, (querySnapshot) => {
-      const data = querySnapshot.docs.map(
-        (doc) => ({ id: doc.id, ...doc.data() }) as T
-      );
-      callback(data);
-    });
-  });
-  return () => {
-    if (unsub) unsub();
-  };
+    return onSnapshot(
+      q,
+      (querySnapshot) => {
+        const data = querySnapshot.docs.map(
+          (docSnap) => ({ id: docSnap.id, ...docSnap.data() }) as T
+        );
+        callback(data);
+      },
+      (error) => {
+        console.error(`Erro no listener da coleção ${collectionName}:`, error);
+        callback([]);
+      }
+    );
+  } catch (err) {
+    console.error(`Erro ao inicializar listener da coleção ${collectionName}:`, err);
+    return () => {};
+  }
 }
 
 /**
@@ -145,15 +174,21 @@ export async function getSubDocument<T = DocumentData>(
   subCollection: string,
   docId: string
 ): Promise<T | null> {
-  if (typeof window === 'undefined') return null;
-  const { doc, getDoc, db } = await getFs();
-  const docRef = doc(db, parentCollection, parentId, subCollection, docId);
-  const docSnap = await getDoc(docRef);
+  try {
+    const docRef = doc(db, parentCollection, parentId, subCollection, docId);
+    const docSnap = await getDoc(docRef);
 
-  if (docSnap.exists()) {
-    return { id: docSnap.id, ...docSnap.data() } as T;
+    if (docSnap.exists()) {
+      return { id: docSnap.id, ...docSnap.data() } as T;
+    }
+    return null;
+  } catch (err) {
+    console.error(
+      `Erro ao buscar subdocumento em ${parentCollection}/${parentId}/${subCollection}/${docId}:`,
+      err
+    );
+    return null;
   }
-  return null;
 }
 
 /**
@@ -167,13 +202,17 @@ export async function setSubDocument(
   data: DocumentData,
   merge = true
 ): Promise<void> {
-  if (typeof window === 'undefined') return;
-  const { doc, setDoc, serverTimestamp, db } = await getFs();
-  const docRef = doc(db, parentCollection, parentId, subCollection, docId);
-  await setDoc(docRef, { ...data, updatedAt: serverTimestamp() }, { merge });
+  try {
+    const docRef = doc(db, parentCollection, parentId, subCollection, docId);
+    await setDoc(docRef, { ...data, updatedAt: firestoreServerTimestamp() }, { merge });
+  } catch (err) {
+    console.error(
+      `Erro ao salvar subdocumento em ${parentCollection}/${parentId}/${subCollection}/${docId}:`,
+      err
+    );
+  }
 }
 
 export async function serverTimestamp() {
-  const { serverTimestamp: st } = await import('firebase/firestore');
-  return st();
+  return firestoreServerTimestamp();
 }

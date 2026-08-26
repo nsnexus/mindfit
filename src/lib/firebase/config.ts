@@ -1,10 +1,10 @@
 // ============================================
-// Método 21 Dias — Firebase Client SDK Config (Edge/SSR Safe)
+// Método 21 Dias — Firebase Client SDK Config
 // ============================================
-import type { FirebaseApp } from 'firebase/app';
-import type { Auth } from 'firebase/auth';
-import type { Firestore } from 'firebase/firestore';
-import type { FirebaseStorage } from 'firebase/storage';
+import { initializeApp, getApps, getApp, type FirebaseApp } from 'firebase/app';
+import { getAuth, type Auth } from 'firebase/auth';
+import { getFirestore, type Firestore } from 'firebase/firestore';
+import { getStorage, type FirebaseStorage } from 'firebase/storage';
 
 export const firebaseConfig = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY || 'AIzaSyAGL6qNbWeyfCuyjB459yqOLKKTRAJlFDw',
@@ -16,59 +16,28 @@ export const firebaseConfig = {
   measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID || 'G-6TJFCRLX1N',
 };
 
-let _app: FirebaseApp | null = null;
-let _auth: Auth | null = null;
-let _db: Firestore | null = null;
-let _storage: FirebaseStorage | null = null;
+// Singleton App Instance
+export const app: FirebaseApp =
+  getApps().length > 0 ? getApp() : initializeApp(firebaseConfig);
 
-export function getFirebaseApp(): FirebaseApp {
-  if (_app) return _app;
-  // eslint-disable-next-line @typescript-eslint/no-require-imports
-  const { initializeApp, getApps, getApp } = require('firebase/app');
-  if (getApps().length > 0) {
-    _app = getApp();
-  } else {
-    _app = initializeApp(firebaseConfig);
-  }
-  return _app!;
-}
+// Firebase Services
+export const auth: Auth = getAuth(app);
+export const db: Firestore = getFirestore(app);
+export const storage: FirebaseStorage = getStorage(app);
 
-export function getAuthInstance(): Auth {
-  if (_auth) return _auth;
-  // eslint-disable-next-line @typescript-eslint/no-require-imports
-  const { getAuth } = require('firebase/auth');
-  _auth = getAuth(getFirebaseApp());
-  return _auth!;
-}
-
-export function getDbInstance(): Firestore {
-  if (_db) return _db;
-  // eslint-disable-next-line @typescript-eslint/no-require-imports
-  const { getFirestore } = require('firebase/firestore');
-  _db = getFirestore(getFirebaseApp());
-  return _db!;
-}
-
-export function getStorageInstance(): FirebaseStorage {
-  if (_storage) return _storage;
-  // eslint-disable-next-line @typescript-eslint/no-require-imports
-  const { getStorage } = require('firebase/storage');
-  _storage = getStorage(getFirebaseApp());
-  return _storage!;
-}
-
-export const auth = typeof window !== 'undefined' ? getAuthInstance() : (null as unknown as Auth);
-export const db = typeof window !== 'undefined' ? getDbInstance() : (null as unknown as Firestore);
-export const storage = typeof window !== 'undefined' ? getStorageInstance() : (null as unknown as FirebaseStorage);
+export const getFirebaseApp = () => app;
+export const getAuthInstance = () => auth;
+export const getDbInstance = () => db;
+export const getStorageInstance = () => storage;
 
 export const initAnalytics = async () => {
   if (typeof window !== 'undefined') {
     const { getAnalytics, isSupported } = await import('firebase/analytics');
     if (await isSupported()) {
-      return getAnalytics(getFirebaseApp());
+      return getAnalytics(app);
     }
   }
   return null;
 };
 
-export default getFirebaseApp;
+export default app;

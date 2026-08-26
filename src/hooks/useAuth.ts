@@ -36,18 +36,39 @@ export function useAuth() {
     const unsubscribe = onAuthChange(async (user) => {
       setLoading(true);
 
-      if (user) {
-        setFirebaseUser(user);
+      try {
+        if (user) {
+          setFirebaseUser(user);
 
-        // Busca dados do Firestore
-        const userData = await getDocument<AppUser>('users', user.uid);
-        setAppUser(userData);
-      } else {
-        reset();
+          // Busca dados do Firestore
+          try {
+            const userData = await getDocument<AppUser>('users', user.uid);
+            setAppUser(userData);
+          } catch (err) {
+            console.error('Erro ao buscar dados do usuário:', err);
+            const { Timestamp } = await import('firebase/firestore');
+            // Fallback para AppUser mínimo
+            setAppUser({
+              uid: user.uid,
+              email: user.email || '',
+              displayName: user.displayName || 'Aluno(a)',
+              role: 'user',
+              isPremium: false,
+              onboardingCompleted: true,
+              acceptedTerms: true,
+              acceptedPrivacy: true,
+              lgpdConsent: true,
+              createdAt: Timestamp.now(),
+              lastLoginAt: Timestamp.now(),
+            });
+          }
+        } else {
+          reset();
+        }
+      } finally {
+        setLoading(false);
+        setInitialized(true);
       }
-
-      setLoading(false);
-      setInitialized(true);
     });
 
     return () => unsubscribe();
