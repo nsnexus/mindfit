@@ -20,97 +20,98 @@ interface MacroChartProps {
 }
 
 export function MacroChart({ current, target }: MacroChartProps) {
+  const macros = [
+    {
+      id: 'protein',
+      name: 'Proteínas',
+      current: current.protein,
+      target: target.protein,
+      unit: 'g',
+      color: 'emerald',
+      icon: Beef,
+      iconBg: 'bg-emerald-500/10 text-emerald-600 border-emerald-500/20',
+      barColor: 'primary' as const,
+      textColor: 'text-emerald-600',
+    },
+    {
+      id: 'carbs',
+      name: 'Carboidratos',
+      current: current.carbs,
+      target: target.carbs,
+      unit: 'g',
+      color: 'amber',
+      icon: Wheat,
+      iconBg: 'bg-amber-500/10 text-amber-600 border-amber-500/20',
+      barColor: 'accent' as const,
+      textColor: 'text-amber-600',
+    },
+    {
+      id: 'fat',
+      name: 'Gorduras',
+      current: current.fat,
+      target: target.fat,
+      unit: 'g',
+      color: 'orange',
+      icon: Droplet,
+      iconBg: 'bg-orange-500/10 text-orange-600 border-orange-500/20',
+      barColor: 'warning' as const,
+      textColor: 'text-orange-600',
+    },
+  ];
+
   return (
-    <div className="space-y-3">
+    <div className="space-y-3.5">
       <div className="flex items-center justify-between">
-        <h3 className="text-sm font-extrabold text-neutral-900 uppercase tracking-wider flex items-center gap-1.5">
+        <h3 className="text-xs sm:text-sm font-extrabold text-neutral-800 uppercase tracking-wider flex items-center gap-1.5 font-[var(--font-heading)]">
           <Sparkles className="w-3.5 h-3.5 text-emerald-600" /> Distribuição de Macronutrientes
         </h3>
-        <span className="text-xs text-neutral-400 font-medium">Metas personalizadas</span>
+        <span className="text-xs text-neutral-400 font-semibold">Metas diárias</span>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        {/* Proteína */}
-        <div className="p-5 bg-white rounded-3xl border border-neutral-200/80 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.03)] space-y-3 hover:border-emerald-500/30 transition-colors">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2.5">
-              <div className="w-9 h-9 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-600">
-                <Beef className="w-4.5 h-4.5" />
-              </div>
-              <div>
-                <span className="text-xs font-bold text-neutral-500 uppercase tracking-wide block">Proteínas</span>
-                <span className="text-base font-extrabold text-neutral-900 font-[var(--font-heading)]">
-                  {current.protein}g <span className="text-xs text-neutral-400 font-normal">/ {target.protein}g</span>
-                </span>
-              </div>
-            </div>
-          </div>
-          <Progress
-            value={current.protein}
-            max={target.protein || 1}
-            color="primary"
-            size="sm"
-          />
-          <div className="flex justify-between items-center text-[11px] text-neutral-400 font-medium pt-0.5">
-            <span>{Math.round((current.protein / (target.protein || 1)) * 100)}% da meta</span>
-            <span className="text-emerald-600 font-bold">{Math.max(0, target.protein - current.protein)}g restam</span>
-          </div>
-        </div>
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5 sm:gap-4">
+        {macros.map((m) => {
+          const Icon = m.icon;
+          const pct = Math.min(Math.round((m.current / (m.target || 1)) * 100), 100);
+          const remaining = Math.max(0, m.target - m.current);
 
-        {/* Carboidratos */}
-        <div className="p-5 bg-white rounded-3xl border border-neutral-200/80 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.03)] space-y-3 hover:border-amber-500/30 transition-colors">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2.5">
-              <div className="w-9 h-9 rounded-2xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-600">
-                <Wheat className="w-4.5 h-4.5" />
+          return (
+            <div
+              key={m.id}
+              className="p-4 sm:p-5 bg-white rounded-3xl border border-emerald-100 shadow-[0_8px_25px_-5px_rgba(14,159,110,0.06)] space-y-3 hover:border-emerald-400 hover:shadow-lg hover:-translate-y-1 transition-all duration-200"
+            >
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <div className={`w-10 h-10 rounded-2xl border flex items-center justify-center ${m.iconBg}`}>
+                    <Icon className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <span className="text-[11px] font-extrabold text-neutral-400 uppercase tracking-wider block">
+                      {m.name}
+                    </span>
+                    <span className="text-base sm:text-lg font-black text-neutral-900 font-[var(--font-heading)] tracking-tight">
+                      {m.current}g <span className="text-xs text-neutral-400 font-semibold">/ {m.target}g</span>
+                    </span>
+                  </div>
+                </div>
               </div>
-              <div>
-                <span className="text-xs font-bold text-neutral-500 uppercase tracking-wide block">Carboidratos</span>
-                <span className="text-base font-extrabold text-neutral-900 font-[var(--font-heading)]">
-                  {current.carbs}g <span className="text-xs text-neutral-400 font-normal">/ {target.carbs}g</span>
-                </span>
-              </div>
-            </div>
-          </div>
-          <Progress
-            value={current.carbs}
-            max={target.carbs || 1}
-            color="accent"
-            size="sm"
-          />
-          <div className="flex justify-between items-center text-[11px] text-neutral-400 font-medium pt-0.5">
-            <span>{Math.round((current.carbs / (target.carbs || 1)) * 100)}% da meta</span>
-            <span className="text-amber-600 font-bold">{Math.max(0, target.carbs - current.carbs)}g restam</span>
-          </div>
-        </div>
 
-        {/* Gorduras */}
-        <div className="p-5 bg-white rounded-3xl border border-neutral-200/80 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.03)] space-y-3 hover:border-orange-500/30 transition-colors">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2.5">
-              <div className="w-9 h-9 rounded-2xl bg-orange-500/10 border border-orange-500/20 flex items-center justify-center text-orange-600">
-                <Droplet className="w-4.5 h-4.5" />
-              </div>
-              <div>
-                <span className="text-xs font-bold text-neutral-500 uppercase tracking-wide block">Gorduras</span>
-                <span className="text-base font-extrabold text-neutral-900 font-[var(--font-heading)]">
-                  {current.fat}g <span className="text-xs text-neutral-400 font-normal">/ {target.fat}g</span>
-                </span>
+              <div className="space-y-1.5 pt-1">
+                <Progress
+                  value={m.current}
+                  max={m.target || 1}
+                  color={m.barColor}
+                  size="sm"
+                />
+                <div className="flex justify-between items-center text-[11px] font-semibold pt-0.5">
+                  <span className="text-neutral-400">{pct}% da meta</span>
+                  <span className={`${m.textColor} font-bold`}>{remaining}g restam</span>
+                </div>
               </div>
             </div>
-          </div>
-          <Progress
-            value={current.fat}
-            max={target.fat || 1}
-            color="warning"
-            size="sm"
-          />
-          <div className="flex justify-between items-center text-[11px] text-neutral-400 font-medium pt-0.5">
-            <span>{Math.round((current.fat / (target.fat || 1)) * 100)}% da meta</span>
-            <span className="text-orange-600 font-bold">{Math.max(0, target.fat - current.fat)}g restam</span>
-          </div>
-        </div>
+          );
+        })}
       </div>
     </div>
   );
 }
+

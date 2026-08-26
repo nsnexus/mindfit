@@ -20,8 +20,8 @@ export function Navbar() {
     'U';
 
   return (
-    <header className="bg-white/85 backdrop-blur-xl border-b border-neutral-200/80 sticky top-0 z-30 px-4 sm:px-8 py-3 transition-all">
-      <div className="flex items-center justify-between max-w-7xl mx-auto">
+    <header className="bg-white/90 backdrop-blur-xl border-b border-emerald-950/10 sticky top-0 z-30 px-4 sm:px-8 py-3.5 transition-all">
+      <div className="flex items-center justify-between max-w-6xl mx-auto">
         {/* Left side: Hamburger & Logo */}
         <div className="flex items-center gap-3">
           <button

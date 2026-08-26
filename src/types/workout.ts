@@ -52,3 +52,65 @@ export interface WorkoutSessionState {
   isPaused: boolean;
   isCompleted: boolean;
 }
+
+// ============================================
+// Wger.de API v2 Types
+// ============================================
+
+export interface WgerCategory {
+  id: number;
+  name: string;
+}
+
+export interface WgerMuscle {
+  id: number;
+  name: string;
+  name_en?: string;
+  is_front?: boolean;
+  image_url_main?: string;
+  image_url_secondary?: string;
+}
+
+export interface WgerEquipment {
+  id: number;
+  name: string;
+}
+
+export interface WgerExerciseImage {
+  id: number;
+  image: string;
+  is_main?: boolean;
+}
+
+export interface WgerExerciseInfo {
+  id: number;
+  uuid?: string;
+  name: string;
+  category: {
+    id: number;
+    name: string;
+  };
+  description: string;
+  muscles: {
+    id: number;
+    name: string;
+    name_en?: string;
+    is_front?: boolean;
+  }[];
+  muscles_secondary: {
+    id: number;
+    name: string;
+    name_en?: string;
+  }[];
+  equipment: {
+    id: number;
+    name: string;
+  }[];
+  images: {
+    id: number;
+    image: string;
+    is_main?: boolean;
+  }[];
+  variations?: number[];
+}
+

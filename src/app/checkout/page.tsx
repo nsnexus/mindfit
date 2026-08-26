@@ -185,36 +185,28 @@ export default function CheckoutPage() {
                     </div>
                   </div>
 
-                  {/* Payment Method Selector */}
-                  <div style={{ marginTop: '24px', marginBottom: '24px' }}>
-                    <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 700, color: '#12352f', marginBottom: '8px' }}>
-                      Forma de Pagamento
-                    </label>
-
-                    <div className="payment-methods-box">
-                      <button
-                        type="button"
-                        onClick={() => setFormData({ ...formData, paymentMethod: 'pix' })}
-                        className={`payment-method-btn ${formData.paymentMethod === 'pix' ? 'active' : ''}`}
-                      >
-                        <span style={{ fontSize: '1.2rem' }}>⚡</span>
-                        <div style={{ textAlign: 'left' }}>
-                          <span className="name">Pix Instantâneo</span>
-                          <span className="desc">Aprovação em segundos</span>
-                        </div>
-                      </button>
-
-                      <button
-                        type="button"
-                        onClick={() => setFormData({ ...formData, paymentMethod: 'credit_card' })}
-                        className={`payment-method-btn ${formData.paymentMethod === 'credit_card' ? 'active' : ''}`}
-                      >
-                        <span style={{ fontSize: '1.2rem' }}>💳</span>
-                        <div style={{ textAlign: 'left' }}>
-                          <span className="name">Cartão de Crédito</span>
-                          <span className="desc">Até 12x</span>
-                        </div>
-                      </button>
+                  {/* Payment Method Badge (Pix Exclusivo) */}
+                  <div
+                    style={{
+                      marginTop: '20px',
+                      marginBottom: '24px',
+                      padding: '14px 16px',
+                      background: '#e6f6ef',
+                      borderRadius: '16px',
+                      border: '1.5px solid #bfe3d5',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '12px',
+                    }}
+                  >
+                    <span style={{ fontSize: '1.5rem' }}>⚡</span>
+                    <div>
+                      <div style={{ fontSize: '0.88rem', fontWeight: 800, color: '#0e9f6e' }}>
+                        Pagamento via Pix Instantâneo
+                      </div>
+                      <div style={{ fontSize: '0.75rem', color: '#0f5e5a', marginTop: '2px' }}>
+                        Aprovação em segundos e liberação imediata do seu acesso vitalício.
+                      </div>
                     </div>
                   </div>
 
@@ -225,11 +217,7 @@ export default function CheckoutPage() {
                     className="btn btn-primary"
                     style={{ width: '100%', padding: '16px', fontSize: '1.05rem', justifyContent: 'center' }}
                   >
-                    {isLoading
-                      ? 'Processando com segurança...'
-                      : formData.paymentMethod === 'pix'
-                      ? 'Gerar QR Code Pix →'
-                      : 'Ir para Pagamento com Cartão →'}
+                    {isLoading ? 'Gerando cobrança Pix...' : 'Gerar QR Code Pix →'}
                   </button>
 
                   <div style={{ textAlign: 'center', marginTop: '14px', fontSize: '0.78rem', color: '#5b7a72' }}>

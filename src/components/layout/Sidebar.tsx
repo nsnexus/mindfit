@@ -65,15 +65,15 @@ export function Sidebar() {
       {/* Sidebar Container */}
       <aside
         className={`
-          fixed top-0 bottom-0 left-0 z-50 w-72 bg-white/95 backdrop-blur-2xl border-r border-neutral-200/80
+          fixed top-0 bottom-0 left-0 z-50 w-72 bg-white border-r border-emerald-950/10
           flex flex-col justify-between transition-transform duration-300 ease-in-out shadow-2xl lg:shadow-none
-          lg:translate-x-0 lg:static lg:z-0
+          lg:translate-x-0 lg:sticky lg:top-0 lg:h-screen lg:z-30
           ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'}
         `}
       >
-        {/* Brand Header */}
-        <div>
-          <div className="p-6 border-b border-neutral-100/90 flex items-center justify-between">
+        {/* Top: Brand Header & Nav */}
+        <div className="flex flex-col flex-1 min-h-0">
+          <div className="p-5 sm:p-6 border-b border-neutral-100 flex items-center justify-between shrink-0">
             <Link
               href={ROUTES.DASHBOARD}
               onClick={() => setSidebarOpen(false)}
@@ -106,7 +106,7 @@ export function Sidebar() {
           </div>
 
           {/* Navigation Links */}
-          <nav className="p-4 space-y-1.5">
+          <nav className="p-3.5 space-y-1 overflow-y-auto flex-1">
             {filteredNavItems.map((item) => {
               const Icon = item.icon;
               const isActive =
@@ -119,10 +119,10 @@ export function Sidebar() {
                   href={item.href}
                   onClick={() => setSidebarOpen(false)}
                   className={`
-                    group relative flex items-center justify-between px-4 py-3 rounded-2xl font-bold text-sm transition-all duration-200
+                    group relative flex items-center justify-between px-3.5 py-2.5 rounded-2xl font-bold text-sm transition-all duration-200
                     ${
                       isActive
-                        ? 'bg-emerald-50 text-emerald-800 shadow-sm border border-emerald-500/20'
+                        ? 'bg-emerald-50 text-emerald-800 shadow-sm border border-emerald-500/25'
                         : 'text-neutral-600 hover:bg-neutral-50 hover:text-neutral-950'
                     }
                   `}
@@ -158,38 +158,29 @@ export function Sidebar() {
           </nav>
         </div>
 
-        {/* Footer / Cycle Card & Logout */}
-        <div className="p-4 border-t border-neutral-100/90 space-y-3">
-          {/* Quick cycle info widget */}
-          <div className="p-4 bg-[#0f5e5a] rounded-2xl border border-[#1aa8a0]/30 text-white shadow-md relative overflow-hidden">
-            <div className="absolute -right-4 -top-4 w-16 h-16 bg-[#8bc34a]/20 rounded-full blur-xl pointer-events-none" />
-            
-            <div className="flex items-center justify-between text-xs mb-2">
-              <span className="text-[#bfe0d5] font-bold uppercase tracking-wider text-[10px] flex items-center gap-1 font-[var(--font-heading)]">
-                <Flame className="w-3.5 h-3.5 text-[#8bc34a]" /> Ciclo Ativo
-              </span>
-              <span className="font-extrabold text-[#8bc34a] bg-white/10 px-2 py-0.5 rounded-full border border-white/20 text-[11px] font-[var(--font-heading)]">
-                Dia 1 de 21
-              </span>
+        {/* Bottom: User Profile & Logout */}
+        <div className="p-3.5 border-t border-neutral-100 flex items-center justify-between gap-2 shrink-0 bg-white">
+          <div className="flex items-center gap-2.5 min-w-0">
+            <div className="w-9 h-9 rounded-2xl bg-gradient-to-br from-emerald-600 to-emerald-800 text-white font-black flex items-center justify-center text-xs shrink-0 shadow-sm">
+              {appUser?.displayName?.[0]?.toUpperCase() || 'A'}
             </div>
-
-            <div className="w-full bg-white/15 h-2 rounded-full overflow-hidden p-[1px]">
-              <div className="bg-gradient-to-r from-[#8bc34a] to-[#0e9f6e] h-full w-[5%] rounded-full shadow-sm" />
-            </div>
-
-            <div className="flex items-center justify-between text-[11px] text-[#c7e5db] mt-2">
-              <span>Fase 1: Preparação</span>
-              <span className="text-[#8bc34a] font-bold">5% concluído</span>
+            <div className="min-w-0">
+              <span className="text-xs font-black text-neutral-900 block truncate leading-tight">
+                {appUser?.displayName || 'Aluno(a)'}
+              </span>
+              <span className="text-[10px] text-emerald-600 font-bold block leading-tight">
+                ⭐ Membro Vitalício
+              </span>
             </div>
           </div>
 
           <button
             type="button"
             onClick={logout}
-            className="w-full flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-bold text-neutral-500 hover:text-red-600 hover:bg-red-50/80 transition-colors"
+            title="Sair da conta"
+            className="p-2 rounded-xl text-neutral-400 hover:text-rose-600 hover:bg-rose-50 transition-colors shrink-0 cursor-pointer"
           >
-            <LogOut className="w-4 h-4 flex-shrink-0" />
-            <span>Sair da conta</span>
+            <LogOut className="w-4 h-4" />
           </button>
         </div>
       </aside>

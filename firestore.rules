@@ -103,6 +103,13 @@ service cloud.firestore {
     }
 
     // =========================================
+    // ORDERS (read & write for order tracking)
+    // =========================================
+    match /orders/{orderId} {
+      allow read, write: if true;
+    }
+
+    // =========================================
     // PAYMENTS (read own, write only via admin SDK)
     // =========================================
     match /payments/{paymentId} {
