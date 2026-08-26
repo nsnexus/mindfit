@@ -1,11 +1,10 @@
 // ============================================
-// Interactive Workout Timer Component
+// Interactive Workout Timer Component — Mindfit Reference Design
 // Utiliza Web Audio API para bips sem dependência externa
 // ============================================
 'use client';
 
 import { useEffect, useRef } from 'react';
-import { Button } from '@/components/ui';
 
 interface WorkoutTimerProps {
   timeRemaining: number;
@@ -71,64 +70,114 @@ export function WorkoutTimer({
 
   return (
     <div
-      className={`
-        p-6 sm:p-8 rounded-3xl text-center text-white transition-all duration-500 shadow-elevated
-        ${isResting ? 'bg-gradient-accent text-neutral-900' : 'bg-gradient-primary'}
-      `}
+      style={{
+        borderRadius: '24px',
+        padding: '32px 24px',
+        textAlign: 'center',
+        color: '#ffffff',
+        background: isResting
+          ? 'linear-gradient(135deg, #d97706 0%, #b45309 100%)'
+          : 'radial-gradient(600px 300px at 90% -20%, rgba(139,195,74,0.25), transparent 60%), linear-gradient(135deg, #0f5e5a 0%, #0a3d3a 100%)',
+        boxShadow: '0 18px 45px rgba(14, 159, 110, 0.20)',
+        border: '1px solid rgba(255, 255, 255, 0.15)',
+        position: 'relative',
+        overflow: 'hidden',
+      }}
     >
-      <div className="flex items-center justify-between mb-4">
-        <span className="text-xs uppercase font-bold tracking-widest px-3 py-1 rounded-full bg-white/20 backdrop-blur-sm">
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '16px' }}>
+        <span
+          style={{
+            fontSize: '0.78rem',
+            fontFamily: "'Poppins', sans-serif",
+            fontWeight: 700,
+            letterSpacing: '1px',
+            textTransform: 'uppercase',
+            padding: '6px 14px',
+            borderRadius: '50px',
+            background: 'rgba(255, 255, 255, 0.15)',
+            backdropFilter: 'blur(4px)',
+          }}
+        >
           {isResting ? '🧘 Intervalo de Descanso' : '⚡ Execução em Andamento'}
         </span>
 
-        <span className="text-xs font-semibold">
+        <span
+          style={{
+            fontSize: '0.82rem',
+            fontWeight: 600,
+            color: '#bfe9d5',
+          }}
+        >
           {isPaused ? '⏸️ Pausado' : '▶️ Em execução'}
         </span>
       </div>
 
       {/* Big Circular Counter */}
-      <div className="relative w-44 h-44 sm:w-52 sm:h-52 mx-auto my-4 flex items-center justify-center">
-        <svg className="w-full h-full -rotate-90" viewBox="0 0 36 36">
-          <path
-            className="text-white/20"
-            strokeWidth="3"
-            stroke="currentColor"
+      <div style={{ position: 'relative', width: '180px', height: '180px', margin: '16px auto', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <svg className="ring" width="180" height="180" viewBox="0 0 180 180">
+          <circle
+            cx="90"
+            cy="90"
+            r="75"
             fill="none"
-            d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+            stroke="rgba(255, 255, 255, 0.15)"
+            strokeWidth="12"
           />
-          <path
-            className={isResting ? 'text-neutral-900' : 'text-white'}
-            strokeDasharray={`${percentage}, 100`}
-            strokeWidth="3"
-            strokeLinecap="round"
-            stroke="currentColor"
+          <circle
+            cx="90"
+            cy="90"
+            r="75"
             fill="none"
-            d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+            stroke={isResting ? '#fde68a' : '#a9e34b'}
+            strokeWidth="12"
+            strokeLinecap="round"
+            strokeDasharray={471}
+            strokeDashoffset={471 - (percentage / 100) * 471}
+            style={{ transition: 'stroke-dashoffset 0.5s ease' }}
           />
         </svg>
 
-        <div className="absolute inset-0 flex flex-col items-center justify-center">
-          <span className="text-5xl sm:text-6xl font-black font-[var(--font-heading)] leading-none tracking-tight">
+        <div style={{ position: 'absolute', textAlign: 'center' }}>
+          <div
+            style={{
+              fontFamily: "'Poppins', sans-serif",
+              fontWeight: 800,
+              fontSize: '3.6rem',
+              lineHeight: 1,
+              color: '#ffffff',
+            }}
+          >
             {timeRemaining}
-          </span>
-          <span className="text-xs font-bold uppercase tracking-wider mt-1 opacity-80">
+          </div>
+          <div
+            style={{
+              fontSize: '0.75rem',
+              fontFamily: "'Poppins', sans-serif",
+              fontWeight: 700,
+              letterSpacing: '1px',
+              textTransform: 'uppercase',
+              color: '#bfe9d5',
+              marginTop: '4px',
+            }}
+          >
             segundos
-          </span>
+          </div>
         </div>
       </div>
 
       {/* Control Buttons */}
-      <div className="flex justify-center items-center gap-3 mt-6">
+      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '12px', marginTop: '24px' }}>
         <button
           type="button"
           onClick={onTogglePause}
-          className={`
-            px-8 py-3.5 rounded-2xl font-bold text-sm shadow-md transition-all active:scale-95 flex items-center gap-2
-            ${isResting
-              ? 'bg-neutral-900 text-white hover:bg-neutral-800'
-              : 'bg-white text-primary-800 hover:bg-white/90'
-            }
-          `}
+          className="btn"
+          style={{
+            background: '#ffffff',
+            color: '#12352f',
+            padding: '12px 28px',
+            fontSize: '0.95rem',
+            boxShadow: '0 8px 20px rgba(0, 0, 0, 0.15)',
+          }}
         >
           {isPaused ? '▶️ Continuar' : '⏸️ Pausar'}
         </button>
@@ -136,7 +185,14 @@ export function WorkoutTimer({
         <button
           type="button"
           onClick={onSkip}
-          className="px-5 py-3.5 rounded-2xl font-semibold text-sm bg-black/15 hover:bg-black/25 transition-all text-white active:scale-95"
+          className="btn"
+          style={{
+            background: 'rgba(255, 255, 255, 0.15)',
+            color: '#ffffff',
+            border: '1px solid rgba(255, 255, 255, 0.25)',
+            padding: '12px 22px',
+            fontSize: '0.95rem',
+          }}
         >
           Pular ⏩
         </button>

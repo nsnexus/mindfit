@@ -1,9 +1,8 @@
 // ============================================
-// Weight Progress Chart Component
+// Weight Progress Chart Component — Mindfit Reference Design
 // ============================================
 'use client';
 
-import { Card } from '@/components/ui';
 import type { ProgressEntry } from '@/types/progress';
 
 interface WeightChartProps {
@@ -17,132 +16,148 @@ export function WeightChart({
   startWeight,
   goalWeight,
 }: WeightChartProps) {
-  // Mock data if few entries exist yet
-  const chartData = entries.length > 0
-    ? entries
-    : [
-        { id: '1', date: 'Dia 1', weight: startWeight },
-        { id: '2', date: 'Dia 4', weight: startWeight - 0.6 },
-        { id: '3', date: 'Dia 7', weight: startWeight - 1.2 },
-        { id: '4', date: 'Dia 11', weight: startWeight - 1.8 },
-        { id: '5', date: 'Dia 15', weight: startWeight - 2.5 },
-        { id: '6', date: 'Dia 18', weight: startWeight - 3.1 },
-        { id: '7', date: 'Dia 21', weight: goalWeight },
-      ];
+  // Use real entries only. If none, initialize with the starting weight
+  const chartData =
+    entries.length > 0
+      ? entries
+      : startWeight > 0
+      ? [{ id: '1', date: 'Início', weight: startWeight }]
+      : [];
 
-  const currentWeight = chartData[chartData.length - 1]?.weight || startWeight;
-  const totalLost = Math.max(0, startWeight - currentWeight);
-  const remainingToGoal = Math.max(0, currentWeight - goalWeight);
+  const currentWeight =
+    chartData.length > 0 ? chartData[chartData.length - 1].weight : startWeight;
 
-  const minWeight = Math.min(...chartData.map((d) => d.weight), goalWeight) - 1;
-  const maxWeight = Math.max(...chartData.map((d) => d.weight), startWeight) + 1;
+  const totalLost = startWeight > 0 && currentWeight > 0 ? startWeight - currentWeight : 0;
+  const remainingToGoal =
+    goalWeight > 0 && currentWeight > 0 ? Math.max(0, currentWeight - goalWeight) : 0;
+
+  const allWeights = [
+    ...(chartData.map((d) => d.weight) || []),
+    ...(startWeight > 0 ? [startWeight] : []),
+    ...(goalWeight > 0 ? [goalWeight] : []),
+  ];
+
+  const minWeight = allWeights.length > 0 ? Math.min(...allWeights) - 1 : 50;
+  const maxWeight = allWeights.length > 0 ? Math.max(...allWeights) + 1 : 80;
   const range = maxWeight - minWeight || 1;
 
   return (
-    <Card padding="md" className="space-y-6">
-      {/* Header & Stats */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-neutral-100">
+    <div className="card weight-chart-card" style={{ marginBottom: '22px' }}>
+      <div className="wc-head">
         <div>
-          <h3 className="font-bold text-neutral-900 text-base sm:text-lg flex items-center gap-2">
-            <span>📈</span>
-            <span>Evolução de Peso Corporal</span>
-          </h3>
-          <p className="text-xs text-neutral-400 mt-0.5">
-            Meta: {goalWeight} kg • Peso Inicial: {startWeight} kg
+          <h3>📈 Evolução de Peso Corporal</h3>
+          <div className="wc-meta">
+            {goalWeight > 0 ? `Meta: ${goalWeight} kg` : 'Meta não definida'} •{' '}
+            {startWeight > 0 ? `Peso Inicial: ${startWeight} kg` : 'Peso inicial não definido'}
+          </div>
+        </div>
+
+        <div className="wc-stats">
+          <div className="st lost">
+            <small>ELIMINADO</small>
+            <b>{totalLost > 0 ? `-${totalLost.toFixed(1)} kg` : `${totalLost.toFixed(1)} kg`}</b>
+          </div>
+          <div className="st left">
+            <small>FALTAM</small>
+            <b>{remainingToGoal.toFixed(1)} kg</b>
+          </div>
+        </div>
+      </div>
+
+      {chartData.length <= 1 ? (
+        <div
+          style={{
+            textAlign: 'center',
+            padding: '36px 16px',
+            background: '#f6fbf8',
+            borderRadius: '16px',
+            marginTop: '14px',
+            border: '1px dashed #cdeadd',
+          }}
+        >
+          <span style={{ fontSize: '2rem', display: 'block', marginBottom: '6px' }}>⚖️</span>
+          <b style={{ color: '#12352f', fontSize: '1rem', fontFamily: "'Poppins', sans-serif" }}>
+            {startWeight > 0
+              ? `Peso inicial registrado: ${startWeight} kg`
+              : 'Nenhum peso registrado ainda'}
+          </b>
+          <p style={{ color: 'var(--muted)', fontSize: '0.85rem', marginTop: '4px', maxWidth: '420px', margin: '4px auto 0' }}>
+            Registre seu peso periodicamente na aba <b>Diário Alimentar</b> para ver seu gráfico de evolução real em tempo real.
           </p>
         </div>
+      ) : (
+        <div style={{ width: '100%', height: '200px', marginTop: '14px' }}>
+          <svg className="w-full h-full overflow-visible" viewBox="0 0 500 180" preserveAspectRatio="none">
+            {/* Grid lines */}
+            <line x1="0" y1="30" x2="500" y2="30" stroke="#eef4f1" strokeDasharray="4" />
+            <line x1="0" y1="90" x2="500" y2="90" stroke="#eef4f1" strokeDasharray="4" />
+            <line x1="0" y1="150" x2="500" y2="150" stroke="#eef4f1" strokeDasharray="4" />
 
-        <div className="flex items-center gap-4">
-          <div className="p-2.5 bg-emerald-50 rounded-2xl border border-emerald-100 text-center">
-            <span className="text-[10px] uppercase font-bold text-emerald-700 block">
-              Eliminado
-            </span>
-            <span className="text-lg font-black text-emerald-700 font-[var(--font-heading)]">
-              -{totalLost.toFixed(1)} kg
-            </span>
-          </div>
+            {/* Goal reference line */}
+            {goalWeight > 0 && (
+              <line
+                x1="0"
+                y1={170 - ((goalWeight - minWeight) / range) * 140}
+                x2="500"
+                y2={170 - ((goalWeight - minWeight) / range) * 140}
+                stroke="#0e9f6e"
+                strokeWidth="1.5"
+                strokeDasharray="6"
+              />
+            )}
 
-          <div className="p-2.5 bg-primary-50 rounded-2xl border border-primary-100 text-center">
-            <span className="text-[10px] uppercase font-bold text-primary-700 block">
-              Faltam
-            </span>
-            <span className="text-lg font-black text-primary-800 font-[var(--font-heading)]">
-              {remainingToGoal.toFixed(1)} kg
-            </span>
-          </div>
+            {/* Real Trendline */}
+            <polyline
+              fill="none"
+              stroke="#0e9f6e"
+              strokeWidth="3.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              points={chartData
+                .map((d, index) => {
+                  const x = (index / (chartData.length - 1 || 1)) * 480 + 10;
+                  const y = 170 - ((d.weight - minWeight) / range) * 140;
+                  return `${x},${y}`;
+                })
+                .join(' ')}
+            />
+
+            {/* Real Data Points */}
+            {chartData.map((d, index) => {
+              const x = (index / (chartData.length - 1 || 1)) * 480 + 10;
+              const y = 170 - ((d.weight - minWeight) / range) * 140;
+              return (
+                <g key={d.id || index}>
+                  <circle
+                    cx={x}
+                    cy={y}
+                    r="5"
+                    fill="#fff"
+                    stroke="#0e9f6e"
+                    strokeWidth="3"
+                  />
+                  <text
+                    x={x}
+                    y={y - 10}
+                    textAnchor="middle"
+                    fill="#12352f"
+                    fontSize="11"
+                    fontFamily="Poppins, sans-serif"
+                    fontWeight="700"
+                  >
+                    {d.weight}kg
+                  </text>
+                </g>
+              );
+            })}
+          </svg>
         </div>
+      )}
+
+      <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '12px', fontSize: '0.82rem', color: 'var(--muted)' }}>
+        <span>— Linha tracejada verde = Sua Meta ({goalWeight || '--'} kg)</span>
+        <span>Acompanhamento real</span>
       </div>
-
-      {/* SVG Responsive Trendline */}
-      <div className="w-full h-56 pt-4">
-        <svg className="w-full h-full overflow-visible" viewBox="0 0 500 180" preserveAspectRatio="none">
-          {/* Horizontal Grid lines */}
-          <line x1="0" y1="30" x2="500" y2="30" stroke="#f0f0f0" strokeDasharray="4" />
-          <line x1="0" y1="90" x2="500" y2="90" stroke="#f0f0f0" strokeDasharray="4" />
-          <line x1="0" y1="150" x2="500" y2="150" stroke="#f0f0f0" strokeDasharray="4" />
-
-          {/* Goal reference line */}
-          <line
-            x1="0"
-            y1={170 - ((goalWeight - minWeight) / range) * 140}
-            x2="500"
-            y2={170 - ((goalWeight - minWeight) / range) * 140}
-            stroke="#10b981"
-            strokeWidth="1.5"
-            strokeDasharray="6"
-          />
-
-          {/* Trendline Path */}
-          <polyline
-            fill="none"
-            stroke="#059669"
-            strokeWidth="3.5"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            points={chartData
-              .map((d, index) => {
-                const x = (index / (chartData.length - 1 || 1)) * 480 + 10;
-                const y = 170 - ((d.weight - minWeight) / range) * 140;
-                return `${x},${y}`;
-              })
-              .join(' ')}
-          />
-
-          {/* Data Points */}
-          {chartData.map((d, index) => {
-            const x = (index / (chartData.length - 1 || 1)) * 480 + 10;
-            const y = 170 - ((d.weight - minWeight) / range) * 140;
-            return (
-              <g key={d.id || index} className="group cursor-pointer">
-                <circle
-                  cx={x}
-                  cy={y}
-                  r="5"
-                  className="fill-white stroke-primary-600 stroke-[3] group-hover:r-7 transition-all"
-                />
-                {/* Weight label above point */}
-                <text
-                  x={x}
-                  y={y - 10}
-                  textAnchor="middle"
-                  className="text-[11px] font-bold fill-neutral-700"
-                >
-                  {d.weight}kg
-                </text>
-              </g>
-            );
-          })}
-        </svg>
-      </div>
-
-      {/* Goal reference label */}
-      <div className="flex items-center justify-between text-xs text-neutral-400 pt-2 border-t border-neutral-100">
-        <span className="flex items-center gap-1.5">
-          <span className="w-3 h-0.5 bg-emerald-500 rounded" />
-          Linha tracejada verde = Sua Meta ({goalWeight} kg)
-        </span>
-        <span>Acompanhamento semanal</span>
-      </div>
-    </Card>
+    </div>
   );
 }

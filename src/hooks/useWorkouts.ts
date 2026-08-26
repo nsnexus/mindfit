@@ -44,7 +44,9 @@ export function useActiveWorkout(workout: Workout) {
     workout.exercises[currentExerciseIndex] || workout.exercises[0];
 
   const currentExerciseData: Exercise =
-    EXERCISES_SEED.find((e) => e.id === currentExerciseConfig.exerciseId) || EXERCISES_SEED[0];
+    (workout as any).exercisesList?.[currentExerciseIndex] ||
+    EXERCISES_SEED.find((e) => e.id === currentExerciseConfig?.exerciseId) ||
+    EXERCISES_SEED[0];
 
   const initialTime = isResting
     ? currentExerciseConfig.restSeconds

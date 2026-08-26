@@ -6,6 +6,7 @@
 import Link from 'next/link';
 import { Menu, Flame, Crown, Sparkles } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
+import { useProgress } from '@/hooks/useProgress';
 import { useUIStore } from '@/stores/uiStore';
 import { APP_CONFIG } from '@/constants/config';
 import { ROUTES } from '@/constants/routes';
@@ -13,11 +14,14 @@ import { ROUTES } from '@/constants/routes';
 export function Navbar() {
   const { user, appUser } = useAuth();
   const { toggleSidebar } = useUIStore();
+  const { streakInfo } = useProgress();
 
   const userInitial =
     appUser?.displayName?.[0]?.toUpperCase() ||
     user?.email?.[0]?.toUpperCase() ||
     'A';
+
+  const streakDays = streakInfo.currentStreak || 1;
 
   return (
     <header className="bg-white/90 backdrop-blur-md border-b border-[#eef4f1] sticky top-0 z-30 px-4 sm:px-8 py-3.5 transition-all">
@@ -48,7 +52,7 @@ export function Navbar() {
           <div className="hidden lg:inline-flex">
             <span className="pill text-xs">
               <span className="w-2 h-2 rounded-full bg-[#0e9f6e] animate-pulse" />
-              Fase 1: Preparação & Limpeza
+              Fase 1: Preparação &amp; Limpeza
             </span>
           </div>
         </div>
@@ -57,7 +61,7 @@ export function Navbar() {
         <div className="flex items-center gap-3 sm:gap-4">
           <div className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-[#fff8e6] border border-[#fde68a] text-[#b45309] text-xs font-head font-bold shadow-xs">
             <Flame className="w-3.5 h-3.5 text-[#f59e0b] fill-[#f59e0b] animate-bounce" />
-            <span>1 Dia de Foco</span>
+            <span>{streakDays} {streakDays === 1 ? 'Dia de Foco' : 'Dias de Foco'}</span>
           </div>
 
           {appUser?.isPremium && (

@@ -265,6 +265,38 @@ export async function setSubDocument(
   }
 }
 
+/**
+ * Buscar todos os documentos em uma subcoleção
+ */
+export async function getSubDocuments<T = DocumentData>(
+  parentCollection: string,
+  parentId: string,
+  subCollection: string,
+  constraints: QueryConstraint[] = []
+): Promise<T[]> {
+  try {
+    const fs = await getFs();
+    if (!fs) return [];
+
+    const { collection, query, getDocs, db } = fs;
+    const q = query(
+      collection(db, parentCollection, parentId, subCollection),
+      ...constraints
+    );
+    const querySnapshot = await getDocs(q);
+
+    return querySnapshot.docs.map(
+      (docSnap) => ({ id: docSnap.id, ...docSnap.data() }) as T
+    );
+  } catch (err) {
+    console.error(
+      `Erro ao buscar subdocumentos em ${parentCollection}/${parentId}/${subCollection}:`,
+      err
+    );
+    return [];
+  }
+}
+
 export async function serverTimestamp() {
   const { serverTimestamp: st } = await import('firebase/firestore');
   return st();

@@ -1,8 +1,9 @@
 // ============================================
-// Active Workout Client Component — Mindfit Official
+// Active Workout Client Component — Mindfit Official & Custom wger
 // ============================================
 'use client';
 
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useActiveWorkout } from '@/hooks/useWorkouts';
 import { ExerciseDemo } from '@/components/workouts/ExerciseDemo';
@@ -11,7 +12,60 @@ import { Progress } from '@/components/ui';
 import { ROUTES } from '@/constants/routes';
 import type { Workout } from '@/types/workout';
 
-export function ActiveWorkoutClient({ workout }: { workout: Workout }) {
+interface ActiveWorkoutClientProps {
+  workout: Workout | null;
+  workoutId?: string;
+}
+
+export function ActiveWorkoutClient({ workout: initialWorkout, workoutId }: ActiveWorkoutClientProps) {
+  const [resolvedWorkout, setResolvedWorkout] = useState<Workout | null>(initialWorkout);
+  const [isCheckingCustom, setIsCheckingCustom] = useState(!initialWorkout);
+
+  useEffect(() => {
+    if (!initialWorkout && workoutId) {
+      try {
+        const saved = localStorage.getItem('mindfit_custom_workout');
+        if (saved) {
+          const parsed = JSON.parse(saved);
+          if (parsed.id === workoutId || workoutId.startsWith('custom-wger')) {
+            setResolvedWorkout(parsed);
+          }
+        }
+      } catch {
+        // storage policy
+      } finally {
+        setIsCheckingCustom(false);
+      }
+    }
+  }, [initialWorkout, workoutId]);
+
+  if (isCheckingCustom) {
+    return (
+      <div className="flex items-center justify-center min-h-[50vh]">
+        <div className="w-8 h-8 rounded-full border-2 border-emerald-500 border-t-transparent animate-spin" />
+      </div>
+    );
+  }
+
+  if (!resolvedWorkout) {
+    return (
+      <div className="text-center py-20 bg-white rounded-3xl border border-[#e2f2ea] shadow-sm max-w-lg mx-auto">
+        <span className="text-4xl block mb-2">🏋️</span>
+        <h2 className="text-lg font-bold text-[#12352f] font-head">Treino não encontrado</h2>
+        <p className="text-xs text-[#5b7a72] mt-1 mb-6">
+          O treino que você está procurando não existe ou expirou.
+        </p>
+        <Link href={ROUTES.TREINOS}>
+          <button className="btn btn-primary">Voltar aos Treinos</button>
+        </Link>
+      </div>
+    );
+  }
+
+  return <ActiveWorkoutRunner workout={resolvedWorkout} />;
+}
+
+function ActiveWorkoutRunner({ workout }: { workout: Workout }) {
   const {
     currentExerciseData,
     currentExerciseConfig,
@@ -144,4 +198,3 @@ export function ActiveWorkoutClient({ workout }: { workout: Workout }) {
     </div>
   );
 }
-

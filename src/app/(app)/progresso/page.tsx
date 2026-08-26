@@ -1,5 +1,5 @@
 // ============================================
-// Página de Progresso & Conquistas — Mindfit Reference Design
+// Página de Progresso & Conquistas — Mindfit Real Data
 // ============================================
 'use client';
 
@@ -10,10 +10,18 @@ import { PhotoComparison } from '@/components/progress/PhotoComparison';
 import { AchievementBadge } from '@/components/progress/AchievementBadge';
 
 export default function ProgressoPage() {
-  const { streakInfo, entries, badges } = useProgress();
+  const { profile, streakInfo, entries, badges, isLoading } = useProgress();
 
-  const startWeight = 72.5;
-  const goalWeight = 65.0;
+  const startWeight = profile?.weight || 0;
+  const goalWeight = profile?.goalWeight || 0;
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center min-h-[50vh]">
+        <div className="w-8 h-8 rounded-full border-2 border-emerald-500 border-t-transparent animate-spin" />
+      </div>
+    );
+  }
 
   return (
     <div>
@@ -23,10 +31,10 @@ export default function ProgressoPage() {
         Acompanhe sua trajetória corporal, evolução de peso e galeria de medalhas desbloqueadas no Método 21 Dias.
       </p>
 
-      {/* Streak Counter & Freeze Gentil */}
+      {/* Streak Counter & Freeze Gentil com dados reais */}
       <StreakCounter streak={streakInfo} />
 
-      {/* Weight Progress Chart */}
+      {/* Weight Progress Chart com dados reais */}
       <WeightChart
         entries={entries}
         startWeight={startWeight}
@@ -36,7 +44,7 @@ export default function ProgressoPage() {
       {/* Photo Comparison (Antes & Depois) */}
       <PhotoComparison />
 
-      {/* Badges / Conquistas */}
+      {/* Badges / Conquistas com dados reais */}
       <div className="section-title" style={{ fontSize: '1.35rem' }}>
         🏅 Galeria de Conquistas
       </div>

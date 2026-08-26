@@ -3,14 +3,20 @@
 // ============================================
 'use client';
 
-import { useState, Suspense } from 'react';
+import { useState, useEffect, Suspense } from 'react';
+import Link from 'next/link';
 import { useWorkouts } from '@/hooks/useWorkouts';
+import { useProgress } from '@/hooks/useProgress';
 import { WorkoutCard } from '@/components/workouts/WorkoutCard';
 import { ExerciseLibrary } from '@/components/workouts/ExerciseLibrary';
-import { PHASE_NAMES } from '@/constants/config';
+import { WorkoutQuestionnaireModal } from '@/components/workouts/WorkoutQuestionnaireModal';
+import { ROUTES } from '@/constants/routes';
 
 function TreinosPageContent() {
   const [activeTab, setActiveTab] = useState<'method' | 'library'>('method');
+  const [isQuestionnaireOpen, setIsQuestionnaireOpen] = useState(false);
+  const [customWorkout, setCustomWorkout] = useState<any>(null);
+
   const {
     workouts,
     selectedPhase,
@@ -18,6 +24,19 @@ function TreinosPageContent() {
     selectedDifficulty,
     setSelectedDifficulty,
   } = useWorkouts();
+
+  const { profile } = useProgress();
+
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem('mindfit_custom_workout');
+      if (saved) {
+        setCustomWorkout(JSON.parse(saved));
+      }
+    } catch {
+      // storage policy
+    }
+  }, []);
 
   return (
     <div>
@@ -29,7 +48,7 @@ function TreinosPageContent() {
             Treinos &amp; <span className="gradient-text">Exercícios</span>
           </h1>
           <p className="page-sub">
-            Treinos rápidos de 15 minutos em casa e enciclopédia completa de exercícios com anatomia e postura.
+            Treinos rápidos de 15 minutos em casa e enciclopédia completa com mais de 860 exercícios da API wger.de.
           </p>
         </div>
 
@@ -54,6 +73,61 @@ function TreinosPageContent() {
 
       {activeTab === 'method' ? (
         <>
+          {/* Custom Workout Generator Banner */}
+          <div
+            className="cal-hero"
+            style={{
+              marginTop: '18px',
+              marginBottom: '22px',
+              background: 'radial-gradient(600px 300px at 90% -20%, rgba(139,195,74,.3), transparent 60%), linear-gradient(135deg, #09312b 0%, #0d473e 50%, #06231f 100%)',
+            }}
+          >
+            <div>
+              <span className="ch-tag">⚡ Gerador Inteligente da API</span>
+              <div className="big" style={{ fontSize: '2.2rem' }}>
+                Treino Guiado por Medidas
+              </div>
+              <p style={{ maxWidth: '520px' }}>
+                Responda um questionário rápido com seu peso, altura e foco. Selecionamos os melhores exercícios da <b>API wger.de</b> sob medida para você.
+              </p>
+              <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap', marginTop: '14px' }}>
+                <button
+                  type="button"
+                  onClick={() => setIsQuestionnaireOpen(true)}
+                  className="btn"
+                  style={{
+                    background: 'var(--grad)',
+                    color: '#fff',
+                    padding: '12px 24px',
+                    fontSize: '0.92rem',
+                    boxShadow: '0 8px 22px rgba(14,159,110,0.3)',
+                  }}
+                >
+                  {customWorkout ? '🔄 Refazer Avaliação Física' : '📋 Preencher Questionário de Medidas'}
+                </button>
+                {customWorkout && (
+                  <Link href={`/treinos/${customWorkout.id}`}>
+                    <button
+                      type="button"
+                      className="btn"
+                      style={{
+                        background: '#ffffff',
+                        color: '#12352f',
+                        padding: '12px 22px',
+                        fontSize: '0.92rem',
+                      }}
+                    >
+                      ▶️ Iniciar Treino Sugerido ({customWorkout.durationMinutes} min)
+                    </button>
+                  </Link>
+                )}
+              </div>
+            </div>
+            <div style={{ fontSize: '4.5rem', opacity: 0.85, paddingRight: '20px' }}>
+              🤖
+            </div>
+          </div>
+
           {/* Phase Filter Row */}
           <div className="filter-row" style={{ marginTop: '14px' }}>
             <button
@@ -142,6 +216,16 @@ function TreinosPageContent() {
           <ExerciseLibrary />
         </div>
       )}
+
+      {/* Questionnaire Modal */}
+      <WorkoutQuestionnaireModal
+        isOpen={isQuestionnaireOpen}
+        onClose={() => setIsQuestionnaireOpen(false)}
+        onWorkoutGenerated={(workout) => setCustomWorkout(workout)}
+        initialWeight={profile?.weight || 70}
+        initialGoalWeight={profile?.goalWeight || 63}
+        initialHeight={profile?.height || 165}
+      />
     </div>
   );
 }

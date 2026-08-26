@@ -145,3 +145,110 @@ export async function fetchWgerMuscles(): Promise<WgerMuscle[]> {
     return [];
   }
 }
+
+export interface WorkoutQuestionnaireData {
+  weight?: number;
+  height?: number;
+  goalWeight?: number;
+  fitnessLevel: 'beginner' | 'intermediate' | 'advanced';
+  goal: 'lose' | 'tone' | 'strength';
+  focus: 'fullBody' | 'abs' | 'legs' | 'arms' | 'back';
+  equipment: 'none' | 'dumbbells' | 'gym';
+}
+
+/**
+ * Gera um treino guiado personalizado buscando exercícios reais da API wger.de
+ * de acordo com o perfil, foco e medidas do aluno.
+ */
+export async function generateCustomWorkoutFromWger(
+  profile: WorkoutQuestionnaireData
+) {
+  // Mapeamento de categorias da wger
+  const categoryMap: Record<string, number[]> = {
+    fullBody: [10, 9, 11, 12, 8],
+    abs: [10],
+    legs: [9, 14],
+    arms: [8, 13],
+    back: [12, 13],
+  };
+
+  const selectedCategories = categoryMap[profile.focus] || [10, 9, 11];
+  const targetExerciseCount = profile.fitnessLevel === 'beginner' ? 4 : profile.fitnessLevel === 'intermediate' ? 5 : 6;
+  const durationSeconds = profile.fitnessLevel === 'beginner' ? 30 : profile.fitnessLevel === 'intermediate' ? 40 : 45;
+  const restSeconds = profile.fitnessLevel === 'beginner' ? 20 : 15;
+  const sets = profile.fitnessLevel === 'beginner' ? 2 : 3;
+
+  // Busca exercícios nas categorias selecionadas
+  const rawExercises: WgerExerciseInfo[] = [];
+
+  for (const catId of selectedCategories) {
+    const res = await fetchWgerExercises({ limit: 8, category: catId });
+    if (res.results && res.results.length > 0) {
+      rawExercises.push(...res.results);
+    }
+  }
+
+  // Filtra e seleciona exercícios variados com imagens e instruções
+  const validExercises = rawExercises.filter((e) => e.name && e.description);
+  const picked = validExercises.slice(0, targetExerciseCount);
+
+  // Se a API retornar menos do que o desejado, usa os disponíveis
+  const selectedWgerList = picked.length > 0 ? picked : validExercises.slice(0, 4);
+
+  const fallbackImages = [
+    'https://images.unsplash.com/photo-1518611012118-696072aa579a?w=600&q=70',
+    'https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?w=600&q=70',
+    'https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=600&q=70',
+    'https://images.unsplash.com/photo-1574680096145-d05b474e2155?w=600&q=70',
+    'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=600&q=70',
+  ];
+
+  const focusLabels: Record<string, string> = {
+    fullBody: 'Corpo Inteiro (Queima Metabólica)',
+    abs: 'Abdômen & Core Definido',
+    legs: 'Pernas & Glúteos Firmes',
+    arms: 'Braços & Ombros',
+    back: 'Costas & Postura',
+  };
+
+  const levelLabels: Record<string, string> = {
+    beginner: 'Iniciante',
+    intermediate: 'Intermediário',
+    advanced: 'Avançado',
+  };
+
+  return {
+    id: `custom-wger-${Date.now()}`,
+    title: `Treino Personalizado: ${focusLabels[profile.focus] || 'Metabólico'}`,
+    description: `Treino guiado exclusivo gerado com base nas suas medidas e foco (${levelLabels[profile.fitnessLevel] || 'Iniciante'}).`,
+    imageURL: fallbackImages[Math.floor(Math.random() * fallbackImages.length)],
+    type: 'hiit' as const,
+    difficulty: profile.fitnessLevel,
+    durationMinutes: Math.round((targetExerciseCount * sets * (durationSeconds + restSeconds)) / 60) || 15,
+    equipment: profile.equipment === 'none' ? ('none' as const) : ('dumbbells' as const),
+    phase: [1, 2, 3] as (1 | 2 | 3)[],
+    caloriesBurned: profile.fitnessLevel === 'beginner' ? 140 : profile.fitnessLevel === 'intermediate' ? 180 : 230,
+    exercisesList: selectedWgerList.map((wgerEx, idx) => ({
+      id: `wger-${wgerEx.id}`,
+      name: wgerEx.name,
+      description: cleanHtml(wgerEx.description),
+      muscleGroup: (profile.focus === 'abs' ? 'core' : profile.focus === 'legs' ? 'legs' : 'fullBody') as any,
+      mediaURL: wgerEx.images && wgerEx.images.length > 0 ? wgerEx.images[0].image : fallbackImages[idx % fallbackImages.length],
+      equipment: profile.equipment === 'none' ? 'none' : 'dumbbells',
+      difficulty: profile.fitnessLevel,
+      cues: [
+        'Mantenha a postura alinhada e abdômen contraído.',
+        'Respire de forma contínua durante todo o movimento.',
+        'Controle a velocidade na fase de descida.',
+      ],
+      targetSeconds: durationSeconds,
+    })),
+    exercises: selectedWgerList.map((wgerEx) => ({
+      exerciseId: `wger-${wgerEx.id}`,
+      sets,
+      durationSeconds,
+      restSeconds,
+    })),
+  };
+}
+
