@@ -1,94 +1,262 @@
 // ============================================
-// Pix QR Code & Payment Instructions Component
+// Pix QR Code & Real-time Auto-Confirmation Component
 // ============================================
 'use client';
 
-import { useState } from 'react';
-import { Button, Card } from '@/components/ui';
-import type { PixChargeResponse } from '@/types/payment';
+import { useState, useEffect } from 'react';
+import { CheckCircle2, Copy, Check, Clock, ShieldCheck, Sparkles } from 'lucide-react';
+
+export interface PixDataView {
+  externalOrderId: string;
+  txid: string;
+  pixCopiaECola: string;
+  qrCodeUrl?: string;
+  amount: number;
+}
 
 interface PixQRCodeProps {
-  pixData: PixChargeResponse;
+  pixData: PixDataView;
   onConfirmSuccess: () => void;
 }
 
 export function PixQRCode({ pixData, onConfirmSuccess }: PixQRCodeProps) {
   const [copied, setCopied] = useState(false);
+  const [isChecking, setIsChecking] = useState(true);
+  const [isPaid, setIsPaid] = useState(false);
 
-  const handleCopy = () => {
-    navigator.clipboard.writeText(pixData.pixCopiaECola);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 3000);
+  // Copiar código Pix
+  const handleCopy = async () => {
+    try {
+      await navigator.clipboard.writeText(pixData.pixCopiaECola);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 3000);
+    } catch {
+      // Fallback
+    }
   };
 
-  return (
-    <Card padding="md" className="space-y-6 text-center animate-fade-in">
-      <div>
-        <div className="w-12 h-12 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center mx-auto text-2xl mb-2">
-          📱
+  // Polling automático de status do pagamento a cada 3 segundos
+  useEffect(() => {
+    if (!pixData.externalOrderId || isPaid) return;
+
+    const interval = setInterval(async () => {
+      try {
+        const res = await fetch(`/api/checkout/status?orderId=${pixData.externalOrderId}`);
+        if (res.ok) {
+          const data = await res.json();
+          if (data.isPaid || data.status === 'PAID') {
+            setIsPaid(true);
+            setIsChecking(false);
+            clearInterval(interval);
+            setTimeout(() => {
+              onConfirmSuccess();
+            }, 1500);
+          }
+        }
+      } catch (err) {
+        console.error('Erro ao verificar status do pagamento:', err);
+      }
+    }, 3000);
+
+    return () => clearInterval(interval);
+  }, [pixData.externalOrderId, isPaid, onConfirmSuccess]);
+
+  const qrImageUrl =
+    pixData.qrCodeUrl ||
+    `https://api.qrserver.com/v1/create-qr-code/?size=320x320&data=${encodeURIComponent(
+      pixData.pixCopiaECola
+    )}`;
+
+  if (isPaid) {
+    return (
+      <div className="checkout-form-card" style={{ textAlign: 'center', padding: '48px 24px' }}>
+        <div
+          style={{
+            width: '64px',
+            height: '64px',
+            borderRadius: '50%',
+            background: '#e6f6ef',
+            color: '#0e9f6e',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            margin: '0 auto 16px',
+          }}
+        >
+          <CheckCircle2 className="w-10 h-10" />
         </div>
-        <h3 className="text-xl font-bold text-neutral-900">
-          Pague com Pix (Aprovação Instantânea)
-        </h3>
-        <p className="text-xs text-neutral-500 mt-1 max-w-sm mx-auto">
-          Abra o app do seu banco, escaneie o QR Code abaixo ou use o código Copia e Cola.
+        <h2 style={{ fontSize: '1.5rem', fontWeight: 800, color: '#12352f', marginBottom: '8px' }}>
+          Pagamento Confirmado! 🎉
+        </h2>
+        <p style={{ color: '#5b7a72', fontSize: '0.9rem', marginBottom: '24px' }}>
+          Seu acesso vitalício ao Mindfit foi liberado com sucesso. Redirecionando para o seu plano...
+        </p>
+        <button
+          type="button"
+          onClick={onConfirmSuccess}
+          className="btn btn-primary"
+          style={{ width: '100%' }}
+        >
+          Acessar Meu Plano Agora →
+        </button>
+      </div>
+    );
+  }
+
+  return (
+    <div className="checkout-form-card" style={{ textAlign: 'center' }}>
+      <div style={{ marginBottom: '20px' }}>
+        <span className="pill" style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
+          <Sparkles className="w-3.5 h-3.5" /> Pix com Aprovação Instantânea
+        </span>
+        <h2 className="checkout-form-title" style={{ marginTop: '12px' }}>
+          Escaneie o QR Code ou Copie o Código
+        </h2>
+        <p className="checkout-form-sub">
+          Abra o app do seu banco, escolha <b>Pagar com Pix</b> e finalize em segundos.
         </p>
       </div>
 
-      {/* QR Code Container */}
-      <div className="p-4 bg-white rounded-2xl border-2 border-dashed border-emerald-500 inline-block shadow-sm">
+      {/* QR Code Frame */}
+      <div
+        style={{
+          background: '#ffffff',
+          padding: '20px',
+          borderRadius: '24px',
+          border: '2px dashed #0e9f6e',
+          display: 'inline-block',
+          boxShadow: '0 12px 30px rgba(14,159,110,0.12)',
+          marginBottom: '24px',
+        }}
+      >
         <img
-          src={pixData.qrCodeBase64}
+          src={qrImageUrl}
           alt="QR Code Pix"
-          className="w-48 h-48 mx-auto"
+          style={{
+            width: '210px',
+            height: '210px',
+            margin: '0 auto',
+            borderRadius: '12px',
+            display: 'block',
+          }}
         />
-        <span className="text-[11px] font-bold text-emerald-700 mt-2 block">
-          🍃 Mindfit Pagamentos • Éfi Bank
-        </span>
+        <div
+          style={{
+            marginTop: '12px',
+            fontSize: '0.8rem',
+            fontWeight: 700,
+            color: '#0f5e5a',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: '6px',
+          }}
+        >
+          <ShieldCheck className="w-4 h-4 text-[#0e9f6e]" />
+          <span>Valor: R$ {pixData.amount ? pixData.amount.toFixed(2).replace('.', ',') : '49,90'}</span>
+        </div>
       </div>
 
-      {/* Copia e Cola Field */}
-      <div className="space-y-2 text-left max-w-md mx-auto">
-        <label className="block text-xs font-bold uppercase tracking-wider text-neutral-500">
+      {/* Pix Copia e Cola Field */}
+      <div style={{ textAlign: 'left', marginBottom: '20px' }}>
+        <label
+          style={{
+            display: 'block',
+            fontSize: '0.75rem',
+            fontWeight: 700,
+            textTransform: 'uppercase',
+            color: '#5b7a72',
+            marginBottom: '6px',
+          }}
+        >
           Código Pix Copia e Cola
         </label>
-        <div className="flex gap-2">
+        <div style={{ display: 'flex', gap: '8px' }}>
           <input
             type="text"
             readOnly
             value={pixData.pixCopiaECola}
-            className="w-full text-xs p-3 bg-neutral-50 border border-neutral-200 rounded-xl text-neutral-600 select-all font-mono truncate"
+            style={{
+              flex: 1,
+              padding: '12px 14px',
+              fontSize: '0.82rem',
+              fontFamily: 'monospace',
+              background: '#f5faf7',
+              border: '1.5px solid #d4ece3',
+              borderRadius: '14px',
+              color: '#12352f',
+              outline: 'none',
+            }}
           />
-          <Button
-            variant="secondary"
-            size="sm"
+          <button
+            type="button"
             onClick={handleCopy}
-            className="whitespace-nowrap flex-shrink-0"
+            className="btn btn-primary"
+            style={{
+              padding: '10px 18px',
+              fontSize: '0.85rem',
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '6px',
+              whiteSpace: 'nowrap',
+            }}
           >
-            {copied ? '✓ Copiado!' : 'Copiar'}
-          </Button>
+            {copied ? (
+              <>
+                <Check className="w-4 h-4" /> Copiado!
+              </>
+            ) : (
+              <>
+                <Copy className="w-4 h-4" /> Copiar Pix
+              </>
+            )}
+          </button>
         </div>
       </div>
 
-      {/* Timer & Instructions */}
-      <div className="p-3 bg-amber-50 rounded-xl border border-amber-200 text-xs text-amber-900 max-w-md mx-auto text-left flex items-start gap-2">
-        <span>⏱️</span>
-        <p>
-          Este QR Code é válido por <strong>30 minutos</strong>. Assim que o pagamento for detectado, sua conta é liberada automaticamente.
-        </p>
+      {/* Auto-checking Indicator */}
+      <div
+        style={{
+          padding: '14px 18px',
+          background: '#f5faf7',
+          borderRadius: '16px',
+          border: '1px solid #d4ece3',
+          fontSize: '0.82rem',
+          color: '#12352f',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '10px',
+          textAlign: 'left',
+          marginBottom: '20px',
+        }}
+      >
+        <div
+          style={{
+            width: '10px',
+            height: '10px',
+            borderRadius: '50%',
+            background: '#0e9f6e',
+            boxShadow: '0 0 0 4px rgba(14,159,110,0.2)',
+            animation: 'pulse 2s infinite',
+          }}
+        />
+        <div>
+          <b>Aguardando pagamento...</b>
+          <span style={{ display: 'block', fontSize: '0.75rem', color: '#5b7a72' }}>
+            Assim que você pagar no app do banco, esta tela será liberada automaticamente.
+          </span>
+        </div>
       </div>
 
-      {/* Instant Demo Unlock for testing */}
-      <div className="pt-2 border-t border-neutral-100 max-w-md mx-auto">
-        <Button
-          variant="primary"
-          size="lg"
-          fullWidth
-          onClick={onConfirmSuccess}
-        >
-          Simular Pagamento Aprovado (Sandbox) →
-        </Button>
-      </div>
-    </Card>
+      {/* Simulation/Manual verification button */}
+      <button
+        type="button"
+        onClick={onConfirmSuccess}
+        className="btn btn-ghost"
+        style={{ width: '100%', fontSize: '0.85rem', padding: '12px' }}
+      >
+        Já realizei o pagamento →
+      </button>
+    </div>
   );
 }

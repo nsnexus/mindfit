@@ -8,12 +8,11 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useAuthStore } from '@/stores/authStore';
 import { PricingCard } from '@/components/checkout/PricingCard';
-import { PixQRCode } from '@/components/checkout/PixQRCode';
+import { PixQRCode, type PixDataView } from '@/components/checkout/PixQRCode';
 import { updateDocument } from '@/lib/firebase/firestore';
-import { APP_CONFIG, DISCLAIMER_TEXT } from '@/constants/config';
+import { DISCLAIMER_TEXT } from '@/constants/config';
 import { ROUTES } from '@/constants/routes';
-import { createPixCharge } from '@/lib/efi/payment';
-import type { PaymentMethod, CheckoutFormData, PixChargeResponse } from '@/types/payment';
+import type { PaymentMethod, CheckoutFormData } from '@/types/payment';
 
 export default function CheckoutPage() {
   const router = useRouter();
@@ -28,28 +27,47 @@ export default function CheckoutPage() {
   });
 
   const [isLoading, setIsLoading] = useState(false);
-  const [pixData, setPixData] = useState<PixChargeResponse | null>(null);
+  const [pixData, setPixData] = useState<PixDataView | null>(null);
   const [error, setError] = useState('');
 
   const handleCreatePayment = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
 
-    if (!formData.fullName || !formData.email || !formData.cpf) {
-      setError('Por favor, preencha todos os campos obrigatórios.');
+    if (!formData.fullName || !formData.email) {
+      setError('Por favor, preencha nome completo e e-mail.');
       return;
     }
 
     setIsLoading(true);
     try {
       if (formData.paymentMethod === 'pix') {
-        const pix = await createPixCharge(firebaseUser?.uid || 'anon', formData);
-        setPixData(pix);
+        const res = await fetch('/api/checkout/pix', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            ...formData,
+            userId: firebaseUser?.uid || null,
+          }),
+        });
+
+        const data = await res.json();
+        if (!res.ok || !data.success) {
+          throw new Error(data.error || 'Erro ao gerar Pix no gateway.');
+        }
+
+        setPixData({
+          externalOrderId: data.externalOrderId,
+          txid: data.txid,
+          pixCopiaECola: data.pixCopiaECola,
+          qrCodeUrl: data.qrCodeUrl,
+          amount: data.amount,
+        });
       } else {
         await handleUnlockAccess();
       }
-    } catch {
-      setError('Falha de comunicação com o gateway. Tente novamente.');
+    } catch (err: any) {
+      setError(err.message || 'Falha de comunicação com o gateway. Tente novamente.');
     } finally {
       setIsLoading(false);
     }
@@ -89,7 +107,7 @@ export default function CheckoutPage() {
 
         {/* Main Grid: Form + Pricing Summary */}
         <div className="checkout-grid">
-          {/* Left Column: Form */}
+          {/* Left Column: Form / Pix */}
           <div>
             {!pixData ? (
               <div className="checkout-form-card">
@@ -99,16 +117,18 @@ export default function CheckoutPage() {
                 </p>
 
                 {error && (
-                  <div style={{
-                    marginBottom: '18px',
-                    padding: '12px 16px',
-                    background: '#fef2f2',
-                    border: '1px solid #fecaca',
-                    borderRadius: '12px',
-                    color: '#dc2626',
-                    fontSize: '0.85rem',
-                    fontWeight: 600
-                  }}>
+                  <div
+                    style={{
+                      marginBottom: '18px',
+                      padding: '12px 16px',
+                      background: '#fef2f2',
+                      border: '1px solid #fecaca',
+                      borderRadius: '12px',
+                      color: '#dc2626',
+                      fontSize: '0.85rem',
+                      fontWeight: 600,
+                    }}
+                  >
                     {error}
                   </div>
                 )}
@@ -122,6 +142,7 @@ export default function CheckoutPage() {
                       placeholder="Ex: Maria da Silva"
                       value={formData.fullName}
                       onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
+                      required
                     />
                   </div>
 
@@ -133,6 +154,7 @@ export default function CheckoutPage() {
                       placeholder="seu@email.com"
                       value={formData.email}
                       onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                      required
                     />
                     <span style={{ fontSize: '0.75rem', color: '#5b7a72', marginTop: '4px', display: 'block' }}>
                       Você receberá a confirmação e o acesso neste e-mail.
@@ -141,7 +163,7 @@ export default function CheckoutPage() {
 
                   <div className="form-row-2">
                     <div className="form-group-clean">
-                      <label>CPF (para emissão)</label>
+                      <label>CPF (opcional)</label>
                       <input
                         type="text"
                         className="input-clean"
@@ -152,11 +174,11 @@ export default function CheckoutPage() {
                     </div>
 
                     <div className="form-group-clean">
-                      <label>WhatsApp / Celular</label>
+                      <label>WhatsApp (opcional)</label>
                       <input
-                        type="text"
+                        type="tel"
                         className="input-clean"
-                        placeholder="(11) 99999-9999"
+                        placeholder="(00) 00000-0000"
                         value={formData.phone}
                         onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                       />
@@ -164,17 +186,22 @@ export default function CheckoutPage() {
                   </div>
 
                   {/* Payment Method Selector */}
-                  <div className="payment-methods-box">
-                    <div className="payment-methods-title">Forma de Pagamento</div>
-                    <div className="payment-methods-grid">
+                  <div style={{ marginTop: '24px', marginBottom: '24px' }}>
+                    <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 700, color: '#12352f', marginBottom: '8px' }}>
+                      Forma de Pagamento
+                    </label>
+
+                    <div className="payment-methods-box">
                       <button
                         type="button"
                         onClick={() => setFormData({ ...formData, paymentMethod: 'pix' })}
                         className={`payment-method-btn ${formData.paymentMethod === 'pix' ? 'active' : ''}`}
                       >
-                        <span className="payment-tag-fast">MAIS RÁPIDO</span>
-                        <span style={{ fontSize: '1.4rem' }}>📱</span>
-                        <span style={{ fontSize: '0.8rem', fontWeight: 700 }}>Pix Instantâneo</span>
+                        <span style={{ fontSize: '1.2rem' }}>⚡</span>
+                        <div style={{ textAlign: 'left' }}>
+                          <span className="name">Pix Instantâneo</span>
+                          <span className="desc">Aprovação em segundos</span>
+                        </div>
                       </button>
 
                       <button
@@ -182,54 +209,51 @@ export default function CheckoutPage() {
                         onClick={() => setFormData({ ...formData, paymentMethod: 'credit_card' })}
                         className={`payment-method-btn ${formData.paymentMethod === 'credit_card' ? 'active' : ''}`}
                       >
-                        <span style={{ fontSize: '1.4rem', marginTop: '16px' }}>💳</span>
-                        <span style={{ fontSize: '0.8rem', fontWeight: 700 }}>Cartão de Crédito</span>
-                      </button>
-
-                      <button
-                        type="button"
-                        onClick={() => setFormData({ ...formData, paymentMethod: 'boleto' })}
-                        className={`payment-method-btn ${formData.paymentMethod === 'boleto' ? 'active' : ''}`}
-                      >
-                        <span style={{ fontSize: '1.4rem', marginTop: '16px' }}>📄</span>
-                        <span style={{ fontSize: '0.8rem', fontWeight: 700 }}>Boleto Bancário</span>
+                        <span style={{ fontSize: '1.2rem' }}>💳</span>
+                        <div style={{ textAlign: 'left' }}>
+                          <span className="name">Cartão de Crédito</span>
+                          <span className="desc">Até 12x</span>
+                        </div>
                       </button>
                     </div>
                   </div>
 
+                  {/* Submit Button */}
                   <button
                     type="submit"
                     disabled={isLoading}
                     className="btn btn-primary"
-                    style={{ width: '100%', padding: '16px', fontSize: '1.1rem', marginTop: '10px' }}
+                    style={{ width: '100%', padding: '16px', fontSize: '1.05rem', justifyContent: 'center' }}
                   >
                     {isLoading
-                      ? 'Processando...'
+                      ? 'Processando com segurança...'
                       : formData.paymentMethod === 'pix'
-                      ? 'Gerar QR Code Pix (R$ 49,90) →'
-                      : 'Finalizar Pagamento (R$ 49,90) →'}
+                      ? 'Gerar QR Code Pix →'
+                      : 'Ir para Pagamento com Cartão →'}
                   </button>
+
+                  <div style={{ textAlign: 'center', marginTop: '14px', fontSize: '0.78rem', color: '#5b7a72' }}>
+                    🔒 Ambiente 100% criptografado com tecnologia SSL.
+                  </div>
                 </form>
               </div>
             ) : (
-              <PixQRCode pixData={pixData} onConfirmSuccess={handleUnlockAccess} />
+              <PixQRCode
+                pixData={pixData}
+                onConfirmSuccess={handleUnlockAccess}
+              />
             )}
-
-            <p style={{
-              fontSize: '0.75rem',
-              color: '#5b7a72',
-              textAlign: 'center',
-              marginTop: '16px',
-              lineHeight: 1.5
-            }}>
-              {DISCLAIMER_TEXT}
-            </p>
           </div>
 
-          {/* Right Column: Pricing Summary */}
+          {/* Right Column: Pricing & Order Summary */}
           <div>
             <PricingCard />
           </div>
+        </div>
+
+        {/* Security & Disclaimer Footer */}
+        <div style={{ maxWidth: '820px', margin: '40px auto 0', textAlign: 'center', fontSize: '0.78rem', color: '#5b7a72', lineHeight: 1.6 }}>
+          <p>{DISCLAIMER_TEXT}</p>
         </div>
       </div>
     </div>
