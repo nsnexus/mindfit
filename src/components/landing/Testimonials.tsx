@@ -1,96 +1,71 @@
 // ============================================
-// Landing Page: Social Proof & Transformations — Mindfit
+// Landing Page: Testimonials — Mindfit (Clean Design)
 // ============================================
-import { Star, CheckCircle2, TrendingDown, Sparkles } from 'lucide-react';
-
 const TESTIMONIALS = [
   {
-    name: 'Juliana Mendes',
-    age: 34,
-    city: 'São Paulo, SP',
-    result: '-4.8 kg em 21 dias',
-    photo: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=200&q=80',
+    initials: 'AC',
+    name: 'Ana Clara',
+    time: 'Usa há 3 meses',
     comment:
-      'Eu vivia no efeito sanfona porque não conseguia cortar o arroz e o feijão. O Mindfit me ensinou a técnica da volumetria e eu emagreci comendo comida normal junto com a minha família!',
+      'Em 21 dias eu não só perdi medida como criei uma rotina que consigo manter. As receitas salvaram meus dias corridos!',
   },
   {
-    name: 'Rodrigo Silveira',
-    age: 41,
-    city: 'Belo Horizonte, MG',
-    result: '-6.2 kg em 21 dias',
-    photo: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=200&q=80',
+    initials: 'RM',
+    name: 'Rafael Moura',
+    time: 'Usa há 5 meses',
     comment:
-      'Com rotina corrida de trabalho e dois filhos pequenos, os treinos de 15 minutos e a lista de compras automática me pouparam horas na semana e me deram uma disposição que eu não sentia há anos.',
+      'O que mais gostei é que não é dieta maluca. É reeducação de verdade. Os treinos em casa cabem na minha rotina.',
   },
   {
-    name: 'Camila Ferreira',
-    age: 28,
-    city: 'Curitiba, PR',
-    result: '-3.9 kg em 21 dias',
-    photo: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80',
+    initials: 'JS',
+    name: 'Juliana Souza',
+    time: 'Usa há 6 meses',
     comment:
-      'O que mais me surpreendeu foi a mecânica de streak sem culpa. Nos dias de descanso eu usei o freeze e não desisti. A plataforma é intuitiva, linda e te mantém motivada todos os dias!',
+      'Paguei uma vez e uso todo dia. As conquistas me motivam a não perder a sequência. Melhor investimento que fiz.',
   },
 ];
 
 export function Testimonials() {
   return (
-    <section className="py-24 px-4 sm:px-6 relative z-10 bg-neutral-950/90 border-t border-white/10 text-white">
-      <div className="max-w-6xl mx-auto space-y-16">
-        <div className="text-center space-y-3 max-w-2xl mx-auto">
-          <span className="inline-flex items-center gap-1.5 text-xs uppercase font-extrabold tracking-widest text-amber-400 bg-amber-950/80 px-4 py-1.5 rounded-full border border-amber-500/30">
-            <Sparkles className="w-3.5 h-3.5" /> Histórias Reais
-          </span>
-          <h2 className="text-3xl sm:text-5xl font-black font-[var(--font-heading)] text-white tracking-tight">
-            Resultados que falam por si
-          </h2>
-          <p className="text-base text-neutral-400">
-            Pessoas reais que alcançaram consistência, desincharam e transformaram sua saúde no Método 21 Dias.
-          </p>
+    <section className="py-24 px-6 bg-white">
+      <div className="max-w-[1180px] mx-auto text-center space-y-4">
+        <div className="inline-flex">
+          <span className="pill">💬 Quem usa, aprova</span>
         </div>
+        <h2 className="text-3xl sm:text-4xl font-extrabold font-[var(--font-heading)] text-[#12352f] tracking-tight">
+          Histórias reais de transformação
+        </h2>
+        <p className="text-base sm:text-lg text-[#5b7a72] max-w-xl mx-auto pb-10">
+          Resultados variam de pessoa para pessoa — mas a consistência sempre compensa.
+        </p>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-left">
           {TESTIMONIALS.map((t) => (
             <div
               key={t.name}
-              className="p-6 sm:p-8 rounded-3xl bg-neutral-900/60 border border-white/10 hover:border-emerald-500/40 transition-all duration-300 flex flex-col justify-between space-y-6 hover:-translate-y-1.5 hover:shadow-2xl hover:shadow-emerald-950/40 group"
+              className="bg-white rounded-[20px] p-8 border border-[#eaf3ef] shadow-sm flex flex-col justify-between space-y-5"
             >
-              <div className="space-y-4">
-                <div className="flex items-center gap-3.5">
-                  <img
-                    src={t.photo}
-                    alt={t.name}
-                    className="w-14 h-14 rounded-2xl object-cover border-2 border-emerald-400/80 shadow-md"
-                  />
-                  <div>
-                    <h4 className="font-extrabold text-base text-white font-[var(--font-heading)]">
-                      {t.name}
-                    </h4>
-                    <p className="text-xs text-neutral-400">
-                      {t.age} anos • {t.city}
-                    </p>
-                  </div>
+              <div className="space-y-3">
+                <div className="text-[#f5b301] text-base tracking-wider font-bold">
+                  ★★★★★
                 </div>
-
-                <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-black bg-emerald-500/15 text-emerald-300 border border-emerald-500/30">
-                  <TrendingDown className="w-3.5 h-3.5" />
-                  <span>{t.result}</span>
-                </div>
-
-                <p className="text-xs sm:text-sm text-neutral-300 leading-relaxed italic">
+                <p className="text-sm sm:text-base text-[#37564e] italic leading-relaxed">
                   "{t.comment}"
                 </p>
               </div>
 
-              <div className="pt-4 border-t border-white/10 flex items-center justify-between text-xs">
-                <div className="flex text-amber-400">
-                  {[...Array(5)].map((_, i) => (
-                    <Star key={i} className="w-3.5 h-3.5 fill-amber-400" />
-                  ))}
+              <div className="flex items-center gap-3 pt-2">
+                <div className="w-11 h-11 rounded-full bg-gradient-to-br from-[#8bc34a] via-[#0e9f6e] to-[#1aa8a0] flex items-center justify-center text-white font-bold font-[var(--font-heading)] text-sm shadow-md">
+                  {t.initials}
                 </div>
-                <span className="text-[11px] text-emerald-400 font-bold flex items-center gap-1">
-                  <CheckCircle2 className="w-3.5 h-3.5" /> Aluna Verificada
-                </span>
+                <div>
+                  <b className="font-[var(--font-heading)] text-sm text-[#12352f] block font-bold">
+                    {t.name}
+                  </b>
+                  <span className="text-xs text-[#5b7a72] block">
+                    {t.time}
+                  </span>
+                </div>
               </div>
             </div>
           ))}

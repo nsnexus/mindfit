@@ -1,53 +1,54 @@
 // ============================================
-// Landing Page: Footer & Medical Disclaimer
+// Landing Page: Footer — Mindfit (Clean Design)
 // ============================================
 import Link from 'next/link';
-import { APP_CONFIG, DISCLAIMER_TEXT } from '@/constants/config';
 import { ROUTES } from '@/constants/routes';
 
 export function Disclaimer() {
   return (
-    <footer className="bg-neutral-950 text-neutral-400 py-16 px-4 sm:px-6 border-t border-white/10 text-xs relative z-10">
-      <div className="max-w-6xl mx-auto space-y-10">
-        {/* Top brand & links */}
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-6 pb-6 border-b border-white/5">
-          <Link href={ROUTES.HOME} className="flex items-center gap-2.5 text-white font-extrabold text-xl font-[var(--font-heading)]">
+    <footer className="bg-[#0a3d3a] text-[#9fc7bd] py-14 px-6 text-sm">
+      <div className="max-w-[1180px] mx-auto space-y-6">
+        {/* Top Header */}
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-6 pb-6 border-b border-[#14524d]">
+          <Link href={ROUTES.HOME} className="flex items-center gap-2.5 font-[var(--font-heading)] font-extrabold text-xl text-white">
             <img
               src="/icons/mindfit-simbolo.png"
               alt="Mindfit"
-              className="w-7 h-7 object-contain"
+              className="w-8 h-8 object-contain"
             />
-            <span>{APP_CONFIG.name}</span>
+            <span>
+              Mind<span className="text-[#0e9f6e]">fit</span>
+            </span>
           </Link>
 
-          <div className="flex flex-wrap items-center justify-center gap-6 text-neutral-400 text-xs">
-            <Link href={ROUTES.LOGIN} className="hover:text-emerald-400 transition-colors">
+          <div className="flex flex-wrap items-center justify-center gap-6 text-xs sm:text-sm">
+            <a href="#recursos" className="hover:text-white transition-colors">
+              Recursos
+            </a>
+            <a href="#metodo" className="hover:text-white transition-colors">
+              Método 21
+            </a>
+            <a href="#planos" className="hover:text-white transition-colors">
+              Planos
+            </a>
+            <a href="#faq" className="hover:text-white transition-colors">
+              Dúvidas
+            </a>
+            <Link href={ROUTES.LOGIN} className="hover:text-white transition-colors">
               Área do Aluno
             </Link>
-            <Link href={ROUTES.CHECKOUT} className="hover:text-emerald-400 transition-colors">
-              Garantir Vaga Vitalícia
-            </Link>
-            <span className="text-neutral-700">•</span>
-            <span className="text-neutral-500">Pagamento 100% Seguro via Pix</span>
           </div>
         </div>
 
-        {/* Medical & Legal Disclaimer */}
-        <div className="p-5 rounded-2xl bg-white/[0.02] border border-white/5 space-y-2 text-neutral-500 leading-relaxed text-[11px] max-w-4xl mx-auto">
-          <p className="font-semibold text-neutral-400 flex items-center gap-1.5">
-            <span>⚠️</span>
-            <span>Aviso Ético & Legal de Saúde:</span>
-          </p>
-          <p>{DISCLAIMER_TEXT}</p>
-          <p>
-            O acompanhamento médico e nutricional individualizado é insubstituível. Este aplicativo é uma ferramenta de apoio educacional e organização de hábitos de estilo de vida. Consulte sempre seu médico antes de iniciar novos exercícios físicos ou alterações alimentares.
-          </p>
-        </div>
+        {/* Disclaimer Note */}
+        <p className="text-xs text-[#6fa093] leading-relaxed max-w-4xl">
+          ⚠️ Aviso: Os resultados variam de pessoa para pessoa e dependem de fatores individuais como dedicação, rotina e organismo. O conteúdo do Mindfit tem caráter educativo e não substitui acompanhamento médico, nutricional ou de outro profissional de saúde. Consulte sempre um profissional antes de iniciar qualquer dieta ou programa de exercícios.
+        </p>
 
         {/* Copyright */}
-        <div className="text-center text-neutral-600 text-[11px] pt-4">
-          © {new Date().getFullYear()} {APP_CONFIG.name} — Método 21 Dias. Todos os direitos reservados.
-        </div>
+        <p className="text-xs text-[#6fa093] pt-2">
+          © {new Date().getFullYear()} Mindfit. Todos os direitos reservados. Feito com 💚 para a sua saúde.
+        </p>
       </div>
     </footer>
   );

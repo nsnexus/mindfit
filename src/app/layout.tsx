@@ -1,12 +1,12 @@
 import type { Metadata, Viewport } from 'next';
-import { Outfit, Inter } from 'next/font/google';
+import { Poppins, Inter } from 'next/font/google';
 import { Providers } from './providers';
 import { APP_CONFIG } from '@/constants/config';
 import './globals.css';
 
-const outfit = Outfit({
+const poppins = Poppins({
   subsets: ['latin'],
-  weight: ['400', '500', '600', '700', '800', '900'],
+  weight: ['400', '500', '600', '700', '800'],
   variable: '--font-heading',
   display: 'swap',
 });
@@ -21,10 +21,10 @@ const inter = Inter({
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || 'https://mindfit.pages.dev'),
   title: {
-    default: `${APP_CONFIG.name} — Emagrecimento Saudável em 21 Dias`,
+    default: `${APP_CONFIG.name} — Emagreça de forma saudável em ciclos de 21 dias`,
     template: `%s | ${APP_CONFIG.name}`,
   },
-  description: APP_CONFIG.description,
+  description: 'Plano alimentar, receitas, treinos guiados e acompanhamento para você criar hábitos saudáveis e emagrecer de forma sustentável. Acesso vitalício por um valor único.',
   keywords: [
     'emagrecimento saudável',
     'perder peso',
@@ -49,8 +49,8 @@ export const metadata: Metadata = {
     type: 'website',
     locale: 'pt_BR',
     siteName: APP_CONFIG.name,
-    title: `${APP_CONFIG.name} — Transforme seus hábitos. Transforme seu corpo.`,
-    description: APP_CONFIG.description,
+    title: `${APP_CONFIG.name} — Sua mente e seu corpo em forma`,
+    description: 'Emagreça de forma saudável em ciclos de 21 dias. Acesso vitalício.',
     images: ['/icons/og-image.png'],
   },
   robots: {
@@ -72,8 +72,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="pt-BR" className={`${outfit.variable} ${inter.variable}`}>
-      <body className="antialiased font-[var(--font-body)] bg-neutral-50 text-neutral-800 selection:bg-emerald-500 selection:text-white">
+    <html lang="pt-BR" className={`${poppins.variable} ${inter.variable}`}>
+      <body className="antialiased font-[var(--font-body)] bg-white text-[#12352f] selection:bg-[#0e9f6e] selection:text-white">
         <Providers>{children}</Providers>
       </body>
     </html>
