@@ -13,19 +13,20 @@ interface WeightChartProps {
 
 export function WeightChart({
   entries,
-  startWeight,
+  startWeight: propStartWeight,
   goalWeight,
 }: WeightChartProps) {
-  // Use real entries only. If none, initialize with the starting weight
-  const chartData =
-    entries.length > 0
-      ? entries
-      : startWeight > 0
-      ? [{ id: '1', date: 'Início', weight: startWeight }]
-      : [];
+  const chartData = entries && entries.length > 0 ? entries : [];
 
   const currentWeight =
-    chartData.length > 0 ? chartData[chartData.length - 1].weight : startWeight;
+    chartData.length > 0 ? chartData[chartData.length - 1].weight : propStartWeight || 0;
+
+  const startWeight =
+    propStartWeight > 0
+      ? propStartWeight
+      : chartData.length > 0
+      ? chartData[0].weight
+      : 0;
 
   const totalLost = startWeight > 0 && currentWeight > 0 ? startWeight - currentWeight : 0;
   const remainingToGoal =
@@ -35,7 +36,7 @@ export function WeightChart({
     ...(chartData.map((d) => d.weight) || []),
     ...(startWeight > 0 ? [startWeight] : []),
     ...(goalWeight > 0 ? [goalWeight] : []),
-  ];
+  ].filter((w) => w > 0);
 
   const minWeight = allWeights.length > 0 ? Math.min(...allWeights) - 1 : 50;
   const maxWeight = allWeights.length > 0 ? Math.max(...allWeights) + 1 : 80;
@@ -48,23 +49,31 @@ export function WeightChart({
           <h3>📈 Evolução de Peso Corporal</h3>
           <div className="wc-meta">
             {goalWeight > 0 ? `Meta: ${goalWeight} kg` : 'Meta não definida'} •{' '}
-            {startWeight > 0 ? `Peso Inicial: ${startWeight} kg` : 'Peso inicial não definido'}
+            {startWeight > 0 ? `Peso Inicial: ${startWeight} kg` : currentWeight > 0 ? `Peso Atual: ${currentWeight} kg` : 'Peso inicial não definido'}
           </div>
         </div>
 
         <div className="wc-stats">
           <div className="st lost">
-            <small>ELIMINADO</small>
-            <b>{totalLost > 0 ? `-${totalLost.toFixed(1)} kg` : `${totalLost.toFixed(1)} kg`}</b>
+            <small>PESO ATUAL</small>
+            <b>{currentWeight > 0 ? `${currentWeight.toFixed(1)} kg` : '--'}</b>
           </div>
-          <div className="st left">
-            <small>FALTAM</small>
-            <b>{remainingToGoal.toFixed(1)} kg</b>
-          </div>
+          {startWeight > 0 && totalLost !== 0 && (
+            <div className="st lost">
+              <small>ELIMINADO</small>
+              <b>{totalLost > 0 ? `-${totalLost.toFixed(1)} kg` : `+${Math.abs(totalLost).toFixed(1)} kg`}</b>
+            </div>
+          )}
+          {goalWeight > 0 && (
+            <div className="st left">
+              <small>FALTAM</small>
+              <b>{remainingToGoal.toFixed(1)} kg</b>
+            </div>
+          )}
         </div>
       </div>
 
-      {chartData.length <= 1 ? (
+      {chartData.length === 0 ? (
         <div
           style={{
             textAlign: 'center',
@@ -77,13 +86,58 @@ export function WeightChart({
         >
           <span style={{ fontSize: '2rem', display: 'block', marginBottom: '6px' }}>⚖️</span>
           <b style={{ color: '#12352f', fontSize: '1rem', fontFamily: "'Poppins', sans-serif" }}>
-            {startWeight > 0
-              ? `Peso inicial registrado: ${startWeight} kg`
-              : 'Nenhum peso registrado ainda'}
+            Nenhum peso registrado ainda
           </b>
           <p style={{ color: 'var(--muted)', fontSize: '0.85rem', marginTop: '4px', maxWidth: '420px', margin: '4px auto 0' }}>
-            Registre seu peso periodicamente na aba <b>Diário Alimentar</b> para ver seu gráfico de evolução real em tempo real.
+            Registre seu peso periodicamente na aba <b>Diário Alimentar</b> para ver seu gráfico de evolução em tempo real.
           </p>
+        </div>
+      ) : chartData.length === 1 ? (
+        <div
+          style={{
+            padding: '24px 20px',
+            background: '#f6fbf8',
+            borderRadius: '16px',
+            marginTop: '14px',
+            border: '1.5px solid #cdeadd',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            flexWrap: 'wrap',
+            gap: '12px',
+          }}
+        >
+          <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
+            <div
+              style={{
+                width: '48px',
+                height: '48px',
+                borderRadius: '14px',
+                background: 'var(--grad)',
+                color: '#fff',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                fontSize: '1.5rem',
+              }}
+            >
+              ⚖️
+            </div>
+            <div>
+              <b style={{ color: '#12352f', fontSize: '1.15rem', fontFamily: "'Poppins', sans-serif" }}>
+                Primeiro peso registrado: {chartData[0].weight} kg
+              </b>
+              <p style={{ color: 'var(--muted)', fontSize: '0.82rem', marginTop: '2px' }}>
+                Registro efetuado em {chartData[0].date}. Conforme você adicionar novas pesagens no Diário, a linha de evolução será traçada automaticamente.
+              </p>
+            </div>
+          </div>
+          <span
+            className="badge badge-green"
+            style={{ fontSize: '0.85rem', padding: '6px 14px' }}
+          >
+            ✅ Registrado Hoje
+          </span>
         </div>
       ) : (
         <div style={{ width: '100%', height: '200px', marginTop: '14px' }}>

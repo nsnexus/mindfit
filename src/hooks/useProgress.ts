@@ -29,22 +29,46 @@ export function useProgress() {
   const userUid = firebaseUser?.uid;
 
   const loadProgressData = useCallback(async () => {
-    if (!userUid) {
-      setIsLoading(false);
-      return;
-    }
-
     setIsLoading(true);
 
     try {
-      // 1. Carrega Perfil do Usuário
-      const userProfile = await getSubDocument<UserProfile>('users', userUid, 'profile', 'current');
+      let userProfile: UserProfile | null = null;
+      let logs: DailyLogData[] = [];
+
+      // 1. Carrega Perfil do Usuário (Firestore ou localStorage)
+      if (userUid) {
+        userProfile = await getSubDocument<UserProfile>('users', userUid, 'profile', 'current');
+      }
+
+      if (!userProfile && typeof window !== 'undefined') {
+        const localProfile = localStorage.getItem('mindfit_profile');
+        if (localProfile) {
+          userProfile = JSON.parse(localProfile);
+        }
+      }
+
       if (userProfile) {
         setProfile(userProfile);
       }
 
-      // 2. Carrega todos os DailyLogs reais do usuário
-      const logs = await getSubDocuments<DailyLogData>('users', userUid, 'dailyLogs');
+      // 2. Carrega todos os DailyLogs (Firestore + localStorage)
+      if (userUid) {
+        logs = await getSubDocuments<DailyLogData>('users', userUid, 'dailyLogs');
+      }
+
+      if (typeof window !== 'undefined') {
+        const localLogs = localStorage.getItem('mindfit_daily_logs');
+        if (localLogs) {
+          const parsed = JSON.parse(localLogs);
+          const parsedList = Object.values(parsed) as DailyLogData[];
+
+          // Mescla logs locais com Firestore
+          const logsMap = new Map<string, DailyLogData>();
+          logs.forEach((l) => logsMap.set(l.date, l));
+          parsedList.forEach((l) => logsMap.set(l.date, l));
+          logs = Array.from(logsMap.values());
+        }
+      }
 
       // 3. Monta histórico de peso real
       const weightLogs = logs
@@ -53,9 +77,21 @@ export function useProgress() {
 
       const realEntries: ProgressEntry[] = weightLogs.map((l) => ({
         id: l.date,
-        date: l.date,
+        date: l.date === getTodayString() ? 'Hoje' : l.date,
         weight: l.weight as number,
       }));
+
+      // Se há peso salvo avulso no localStorage
+      if (typeof window !== 'undefined') {
+        const directWeight = localStorage.getItem('mindfit_current_weight');
+        if (directWeight && realEntries.length === 0) {
+          realEntries.push({
+            id: 'today',
+            date: 'Hoje',
+            weight: Number(directWeight),
+          });
+        }
+      }
 
       // Se o usuário tem peso de perfil inicial mas não registrou no diário ainda, inclui como ponto inicial
       if (realEntries.length === 0 && userProfile?.weight) {
@@ -70,9 +106,6 @@ export function useProgress() {
 
       // 4. Calcula Streak Real com base nas datas de atividade
       const activeDates = new Set<string>();
-      let hydratedDays = 0;
-      let workoutsCount = 0;
-      let mealDays = 0;
 
       logs.forEach((log) => {
         const hasMeal = Object.values(log.meals || {}).some((m) => m.foods && m.foods.length > 0);
@@ -83,13 +116,8 @@ export function useProgress() {
         if (hasMeal || hasWater || hasWeight || hasWorkout || (log.totalCalories || 0) > 0) {
           activeDates.add(log.date);
         }
-
-        if ((log.waterMl || 0) >= 2000) hydratedDays += 1;
-        if (hasWorkout) workoutsCount += 1;
-        if (hasMeal) mealDays += 1;
       });
 
-      // Inclui hoje se o usuário estiver navegando logado
       const today = getTodayString();
       activeDates.add(today);
 
@@ -103,7 +131,6 @@ export function useProgress() {
           currentStreak += 1;
           checkDate.setDate(checkDate.getDate() - 1);
         } else if (i === 0) {
-          // Se hoje ainda não teve registro, checa a partir de ontem
           checkDate.setDate(checkDate.getDate() - 1);
         } else {
           break;
@@ -117,7 +144,7 @@ export function useProgress() {
         currentStreak,
         longestStreak,
         lastActivityDate: today,
-        freezesAvailable: Math.max(0, 2 - (userProfile ? 0 : 0)),
+        freezesAvailable: 2,
         freezesUsed: 0,
         isActiveToday: true,
       });
@@ -130,6 +157,19 @@ export function useProgress() {
 
   useEffect(() => {
     loadProgressData();
+
+    // Listener para sincronização instantânea
+    const handleUpdate = () => {
+      loadProgressData();
+    };
+
+    window.addEventListener('mindfit_data_updated', handleUpdate);
+    window.addEventListener('storage', handleUpdate);
+
+    return () => {
+      window.removeEventListener('mindfit_data_updated', handleUpdate);
+      window.removeEventListener('storage', handleUpdate);
+    };
   }, [loadProgressData]);
 
   // Avaliação de Badges baseada nos dados reais

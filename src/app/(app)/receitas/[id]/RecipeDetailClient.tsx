@@ -1,5 +1,5 @@
 // ============================================
-// Recipe Detail Client Component — Mindfit Official
+// Recipe Detail Client Component — Mindfit Reference Design
 // ============================================
 'use client';
 
@@ -9,6 +9,16 @@ import { useRecipes } from '@/hooks/useRecipes';
 import { ROUTES } from '@/constants/routes';
 import type { Recipe } from '@/types/recipe';
 
+const TAG_TRANSLATIONS: Record<string, { label: string; bg: string; color: string }> = {
+  quick: { label: '⚡ Rápido', bg: '#e6f6ef', color: '#0e9f6e' },
+  vegetarian: { label: '🌱 Vegetariano', bg: '#eef7e2', color: '#5a8a1e' },
+  vegan: { label: '🌿 Vegano', bg: '#eef7e2', color: '#5a8a1e' },
+  highProtein: { label: '🥩 Proteico', bg: '#fff4e0', color: '#c47f0a' },
+  glutenFree: { label: '🌾 Sem Glúten', bg: '#e2f5f3', color: '#0f7f78' },
+  lactoseFree: { label: '🥛 Sem Lactose', bg: '#e5f1fa', color: '#1f6fa8' },
+  lowCarb: { label: '🥑 Low Carb', bg: '#e6f6ef', color: '#0e9f6e' },
+};
+
 export function RecipeDetailClient({ recipe }: { recipe: Recipe }) {
   const { favorites, toggleFavorite, shoppingListIds, toggleShoppingList } = useRecipes();
 
@@ -16,9 +26,9 @@ export function RecipeDetailClient({ recipe }: { recipe: Recipe }) {
   const isInShoppingList = shoppingListIds.includes(recipe.id);
 
   return (
-    <div className="space-y-6 sm:space-y-8 animate-fade-in max-w-5xl mx-auto">
+    <div className="space-y-6 animate-fade-in max-w-5xl mx-auto">
       {/* Back Button & Actions */}
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between flex-wrap gap-3">
         <Link
           href={ROUTES.RECEITAS}
           className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-head font-bold text-[#5b7a72] hover:text-[#0e9f6e] transition-colors"
@@ -31,47 +41,62 @@ export function RecipeDetailClient({ recipe }: { recipe: Recipe }) {
           <button
             type="button"
             onClick={() => toggleShoppingList(recipe.id)}
-            className="btn btn-ghost py-2.5 px-4 text-xs font-head font-bold flex items-center gap-1.5 cursor-pointer"
+            className="btn btn-ghost btn-sm"
+            style={{ fontSize: '0.85rem' }}
           >
-            <ShoppingCart className="w-3.5 h-3.5" />
+            <ShoppingCart className="w-4 h-4" />
             <span>{isInShoppingList ? '✓ Na Lista de Compras' : '+ Lista de Compras'}</span>
           </button>
 
           <button
             type="button"
             onClick={() => toggleFavorite(recipe.id)}
-            className={`
-              btn py-2.5 px-4 text-xs font-head font-bold flex items-center gap-1.5 cursor-pointer rounded-full transition-all
-              ${isFavorite ? 'bg-red-50 text-red-600 border border-red-200' : 'btn-ghost'}
-            `}
+            className="btn btn-ghost btn-sm"
+            style={{
+              fontSize: '0.85rem',
+              color: isFavorite ? '#e02424' : 'var(--green)',
+              borderColor: isFavorite ? '#fca5a5' : '#d7ede3',
+              background: isFavorite ? '#fde8e8' : '#fff',
+            }}
           >
-            <Heart className={`w-3.5 h-3.5 ${isFavorite ? 'fill-red-500 text-red-500' : ''}`} />
+            <Heart className={`w-4 h-4 ${isFavorite ? 'fill-red-500 text-red-500' : ''}`} />
             <span>{isFavorite ? 'Favoritada' : 'Favoritar'}</span>
           </button>
         </div>
       </div>
 
       {/* Hero Card */}
-      <div className="bg-white rounded-3xl border border-[#e2f2ea] shadow-[0_8px_25px_rgba(14,159,110,0.06)] overflow-hidden">
-        <div className="relative h-64 sm:h-80 w-full bg-[#12352f]">
+      <div className="card" style={{ padding: 0, overflow: 'hidden' }}>
+        <div className="relative h-64 sm:h-80 w-full">
           <img
             src={recipe.imageURL}
             alt={recipe.title}
             className="w-full h-full object-cover"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-[#12352f]/95 via-[#12352f]/35 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-t from-[#09312b]/90 via-[#09312b]/30 to-transparent" />
 
           {/* Title Over Image */}
           <div className="absolute bottom-4 left-4 right-4 sm:bottom-6 sm:left-6 sm:right-6 text-white">
-            <div className="flex flex-wrap gap-1.5 mb-2">
-              {recipe.tags.map((tag) => (
-                <span
-                  key={tag}
-                  className="pill text-[11px] bg-white/20 text-white border border-white/20 font-head font-bold uppercase tracking-wider"
-                >
-                  {tag}
-                </span>
-              ))}
+            <div className="flex flex-wrap gap-2 mb-2.5">
+              {recipe.tags.map((tag) => {
+                const t = TAG_TRANSLATIONS[tag] || { label: tag, bg: 'rgba(255,255,255,0.2)', color: '#fff' };
+                return (
+                  <span
+                    key={tag}
+                    style={{
+                      background: t.bg,
+                      color: t.color,
+                      fontFamily: "'Poppins', sans-serif",
+                      fontWeight: 700,
+                      fontSize: '0.75rem',
+                      padding: '4px 12px',
+                      borderRadius: '50px',
+                    }}
+                  >
+                    {t.label}
+                  </span>
+                );
+              })}
             </div>
             <h1 className="text-2xl sm:text-3xl md:text-4xl font-extrabold font-head leading-tight text-white">
               {recipe.title}
@@ -80,24 +105,26 @@ export function RecipeDetailClient({ recipe }: { recipe: Recipe }) {
         </div>
 
         {/* Overview Bar */}
-        <div className="p-4 sm:p-6 bg-white border-b border-[#eef4f1] flex flex-wrap items-center justify-around gap-4 text-center">
-          <div>
-            <span className="text-xs text-[#5b7a72] font-head font-extrabold uppercase block">Tempo</span>
-            <span className="text-base sm:text-lg font-extrabold font-head text-[#12352f]">
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-around', padding: '18px 24px', background: '#fff', borderTop: '1px solid #eef4f1' }}>
+          <div style={{ textAlign: 'center' }}>
+            <span style={{ fontSize: '0.72rem', color: 'var(--muted)', fontFamily: "'Poppins', sans-serif", fontWeight: 700, letterSpacing: '1px', textTransform: 'uppercase', display: 'block' }}>TEMPO</span>
+            <span style={{ fontSize: '1.1rem', fontFamily: "'Poppins', sans-serif", fontWeight: 800, color: '#12352f' }}>
               ⏱️ {recipe.prepTimeMinutes} min
             </span>
           </div>
-          <div className="border-l border-[#eef4f1] pl-4">
-            <span className="text-xs text-[#5b7a72] font-head font-extrabold uppercase block">Dificuldade</span>
-            <span className="text-base sm:text-lg font-extrabold font-head text-[#12352f] capitalize">
+          <div style={{ height: '36px', width: '1px', background: '#eef4f1' }} />
+          <div style={{ textAlign: 'center' }}>
+            <span style={{ fontSize: '0.72rem', color: 'var(--muted)', fontFamily: "'Poppins', sans-serif", fontWeight: 700, letterSpacing: '1px', textTransform: 'uppercase', display: 'block' }}>DIFICULDADE</span>
+            <span style={{ fontSize: '1.1rem', fontFamily: "'Poppins', sans-serif", fontWeight: 800, color: '#12352f', textTransform: 'capitalize' }}>
               {recipe.difficulty === 'easy' && 'Fácil'}
               {recipe.difficulty === 'medium' && 'Média'}
               {recipe.difficulty === 'hard' && 'Avançada'}
             </span>
           </div>
-          <div className="border-l border-[#eef4f1] pl-4">
-            <span className="text-xs text-[#5b7a72] font-head font-extrabold uppercase block">Rendimento</span>
-            <span className="text-base sm:text-lg font-extrabold font-head text-[#12352f]">
+          <div style={{ height: '36px', width: '1px', background: '#eef4f1' }} />
+          <div style={{ textAlign: 'center' }}>
+            <span style={{ fontSize: '0.72rem', color: 'var(--muted)', fontFamily: "'Poppins', sans-serif", fontWeight: 700, letterSpacing: '1px', textTransform: 'uppercase', display: 'block' }}>RENDIMENTO</span>
+            <span style={{ fontSize: '1.1rem', fontFamily: "'Poppins', sans-serif", fontWeight: 800, color: '#12352f' }}>
               🍽️ {recipe.servings} {recipe.servings === 1 ? 'porção' : 'porções'}
             </span>
           </div>
@@ -105,87 +132,112 @@ export function RecipeDetailClient({ recipe }: { recipe: Recipe }) {
       </div>
 
       {/* Macronutrient Highlights */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3.5 text-center">
-        <div className="p-4 bg-white rounded-3xl border border-[#e2f2ea] shadow-xs">
-          <span className="text-xs text-[#5b7a72] uppercase font-head font-extrabold block">Calorias</span>
-          <span className="text-2xl font-extrabold text-[#0e9f6e] font-head block mt-0.5">
+      <div className="grid g-4" style={{ textAlign: 'center' }}>
+        <div className="card" style={{ padding: '18px 14px' }}>
+          <span style={{ fontSize: '0.72rem', color: 'var(--muted)', fontWeight: 700, letterSpacing: '1px', textTransform: 'uppercase', display: 'block' }}>CALORIAS</span>
+          <span style={{ fontSize: '1.8rem', fontWeight: 800, color: 'var(--green)', fontFamily: "'Poppins', sans-serif", display: 'block', marginTop: '2px' }}>
             {recipe.calories}
           </span>
-          <span className="text-[10px] text-[#5b7a72] font-medium">kcal/porção</span>
+          <span style={{ fontSize: '0.75rem', color: 'var(--muted)' }}>kcal/porção</span>
         </div>
 
-        <div className="p-4 bg-white rounded-3xl border border-[#e2f2ea] shadow-xs">
-          <span className="text-xs text-[#5b7a72] uppercase font-head font-extrabold block">Proteína</span>
-          <span className="text-2xl font-extrabold text-[#0e9f6e] font-head block mt-0.5">
+        <div className="card" style={{ padding: '18px 14px' }}>
+          <span style={{ fontSize: '0.72rem', color: 'var(--muted)', fontWeight: 700, letterSpacing: '1px', textTransform: 'uppercase', display: 'block' }}>PROTEÍNA</span>
+          <span style={{ fontSize: '1.8rem', fontWeight: 800, color: 'var(--green)', fontFamily: "'Poppins', sans-serif", display: 'block', marginTop: '2px' }}>
             {recipe.protein}g
           </span>
-          <span className="text-[10px] text-[#5b7a72] font-medium">por porção</span>
+          <span style={{ fontSize: '0.75rem', color: 'var(--muted)' }}>por porção</span>
         </div>
 
-        <div className="p-4 bg-white rounded-3xl border border-[#e2f2ea] shadow-xs">
-          <span className="text-xs text-[#5b7a72] uppercase font-head font-extrabold block">Carbos</span>
-          <span className="text-2xl font-extrabold text-[#d97706] font-head block mt-0.5">
+        <div className="card" style={{ padding: '18px 14px' }}>
+          <span style={{ fontSize: '0.72rem', color: 'var(--muted)', fontWeight: 700, letterSpacing: '1px', textTransform: 'uppercase', display: 'block' }}>CARBOS</span>
+          <span style={{ fontSize: '1.8rem', fontWeight: 800, color: 'var(--amber)', fontFamily: "'Poppins', sans-serif", display: 'block', marginTop: '2px' }}>
             {recipe.carbs}g
           </span>
-          <span className="text-[10px] text-[#5b7a72] font-medium">por porção</span>
+          <span style={{ fontSize: '0.75rem', color: 'var(--muted)' }}>por porção</span>
         </div>
 
-        <div className="p-4 bg-white rounded-3xl border border-[#e2f2ea] shadow-xs">
-          <span className="text-xs text-[#5b7a72] uppercase font-head font-extrabold block">Gorduras</span>
-          <span className="text-2xl font-extrabold text-[#ea580c] font-head block mt-0.5">
+        <div className="card" style={{ padding: '18px 14px' }}>
+          <span style={{ fontSize: '0.72rem', color: 'var(--muted)', fontWeight: 700, letterSpacing: '1px', textTransform: 'uppercase', display: 'block' }}>GORDURAS</span>
+          <span style={{ fontSize: '1.8rem', fontWeight: 800, color: 'var(--orange)', fontFamily: "'Poppins', sans-serif", display: 'block', marginTop: '2px' }}>
             {recipe.fat}g
           </span>
-          <span className="text-[10px] text-[#5b7a72] font-medium">por porção</span>
+          <span style={{ fontSize: '0.75rem', color: 'var(--muted)' }}>por porção</span>
         </div>
       </div>
 
       {/* Split Grid: Ingredients & Instructions */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="grid g-2">
         {/* Ingredients */}
-        <div className="bg-white rounded-3xl border border-[#e2f2ea] p-6 shadow-[0_8px_25px_rgba(14,159,110,0.06)]">
-          <h2 className="text-lg font-extrabold font-head text-[#12352f] mb-4 flex items-center gap-2">
+        <div className="card" style={{ padding: '24px' }}>
+          <h2 style={{ fontFamily: "'Poppins', sans-serif", fontSize: '1.2rem', color: '#12352f', marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '8px' }}>
             <span>🥗</span>
             <span>Ingredientes</span>
           </h2>
 
-          <ul className="space-y-2.5">
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
             {recipe.ingredients.map((ing, i) => (
-              <li
+              <div
                 key={i}
-                className="flex items-center justify-between p-3 bg-[#f5faf7] rounded-2xl text-xs sm:text-sm text-[#12352f] border border-[#eef4f1]"
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  padding: '12px 14px',
+                  background: '#f6fbf8',
+                  borderRadius: '12px',
+                  border: '1px solid #eef4f1',
+                  fontSize: '0.9rem',
+                }}
               >
-                <div className="flex items-center gap-2">
-                  <span className="w-2 h-2 bg-[#0e9f6e] rounded-full" />
-                  <span className="font-medium">{ing.name}</span>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <span style={{ width: '8px', height: '8px', background: 'var(--green)', borderRadius: '50%' }} />
+                  <span style={{ fontWeight: 600, color: '#12352f' }}>{ing.name}</span>
                 </div>
-                <span className="text-xs text-[#5b7a72] font-head font-bold bg-white px-2.5 py-1 rounded-xl border border-[#e2f2ea]">
+                <span style={{ fontSize: '0.82rem', fontFamily: "'Poppins', sans-serif", fontWeight: 700, color: 'var(--muted)', background: '#fff', padding: '4px 10px', borderRadius: '8px', border: '1px solid #e2f2ea' }}>
                   {ing.quantity}
                 </span>
-              </li>
+              </div>
             ))}
-          </ul>
+          </div>
         </div>
 
         {/* Instructions */}
-        <div className="bg-white rounded-3xl border border-[#e2f2ea] p-6 shadow-[0_8px_25px_rgba(14,159,110,0.06)]">
-          <h2 className="text-lg font-extrabold font-head text-[#12352f] mb-4 flex items-center gap-2">
+        <div className="card" style={{ padding: '24px' }}>
+          <h2 style={{ fontFamily: "'Poppins', sans-serif", fontSize: '1.2rem', color: '#12352f', marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '8px' }}>
             <span>👩‍🍳</span>
             <span>Modo de Preparo</span>
           </h2>
 
-          <ol className="space-y-3.5">
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
             {recipe.instructions.map((step, index) => (
-              <li key={index} className="flex items-start gap-3 text-xs sm:text-sm text-[#12352f] leading-relaxed">
-                <span className="w-6 h-6 rounded-full bg-[#e6f6ef] text-[#0e9f6e] font-head font-extrabold text-xs flex items-center justify-center flex-shrink-0 mt-0.5 border border-[#c9eee0]">
+              <div key={index} style={{ display: 'flex', alignItems: 'flex-start', gap: '12px', fontSize: '0.92rem', color: '#12352f', lineHeight: 1.6 }}>
+                <span
+                  style={{
+                    width: '26px',
+                    height: '26px',
+                    borderRadius: '50%',
+                    background: '#e6f6ef',
+                    color: 'var(--green)',
+                    fontFamily: "'Poppins', sans-serif",
+                    fontWeight: 800,
+                    fontSize: '0.8rem',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    flexShrink: 0,
+                    marginTop: '2px',
+                    border: '1px solid #c9eee0',
+                  }}
+                >
                   {index + 1}
                 </span>
-                <span className="font-medium">{step}</span>
-              </li>
+                <span style={{ fontWeight: 500 }}>{step}</span>
+              </div>
             ))}
-          </ol>
+          </div>
         </div>
       </div>
     </div>
   );
 }
-

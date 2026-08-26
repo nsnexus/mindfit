@@ -1,5 +1,5 @@
 // ============================================
-// useMeals Hook — Diário Alimentar & Hidratação
+// useMeals Hook — Diário Alimentar & Hidratação (Firestore + LocalStorage Sync)
 // ============================================
 'use client';
 
@@ -33,13 +33,29 @@ export function useMeals(initialDate = getTodayString()) {
 
   const userUid = firebaseUser?.uid;
 
-  // Carrega os dados do dia
+  // Carrega os dados do dia (Firestore e fallback LocalStorage)
   const loadDayLog = useCallback(async (date: string) => {
-    if (!userUid) return;
     setIsLoading(true);
 
     try {
-      const doc = await getSubDocument<DailyLogData>('users', userUid, 'dailyLogs', date);
+      let doc: DailyLogData | null = null;
+
+      // 1. Tenta carregar do Firestore se logado
+      if (userUid) {
+        doc = await getSubDocument<DailyLogData>('users', userUid, 'dailyLogs', date);
+      }
+
+      // 2. Se não houver no Firestore, tenta carregar do LocalStorage
+      if (!doc && typeof window !== 'undefined') {
+        const localLogs = localStorage.getItem('mindfit_daily_logs');
+        if (localLogs) {
+          const parsed = JSON.parse(localLogs);
+          if (parsed[date]) {
+            doc = parsed[date];
+          }
+        }
+      }
+
       if (doc) {
         setDailyLog({
           ...createEmptyDayLog(date),
@@ -60,15 +76,34 @@ export function useMeals(initialDate = getTodayString()) {
     loadDayLog(selectedDate);
   }, [selectedDate, loadDayLog]);
 
-  // Salva no Firestore
+  // Salva no LocalStorage e no Firestore
   const persistLog = async (updatedLog: DailyLogData) => {
     setDailyLog(updatedLog);
-    if (!firebaseUser) return;
 
-    try {
-      await setSubDocument('users', firebaseUser.uid, 'dailyLogs', updatedLog.date, updatedLog);
-    } catch (err) {
-      console.error('Erro ao salvar no Firestore:', err);
+    // 1. Salva sempre no LocalStorage
+    if (typeof window !== 'undefined') {
+      try {
+        const localLogs = JSON.parse(localStorage.getItem('mindfit_daily_logs') || '{}');
+        localLogs[updatedLog.date] = updatedLog;
+        localStorage.setItem('mindfit_daily_logs', JSON.stringify(localLogs));
+
+        if (typeof updatedLog.weight === 'number') {
+          localStorage.setItem('mindfit_current_weight', String(updatedLog.weight));
+        }
+
+        window.dispatchEvent(new Event('mindfit_data_updated'));
+      } catch (e) {
+        console.warn('Erro ao salvar no localStorage:', e);
+      }
+    }
+
+    // 2. Salva no Firestore se autenticado
+    if (firebaseUser) {
+      try {
+        await setSubDocument('users', firebaseUser.uid, 'dailyLogs', updatedLog.date, updatedLog);
+      } catch (err) {
+        console.error('Erro ao salvar no Firestore:', err);
+      }
     }
   };
 
