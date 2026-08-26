@@ -48,9 +48,6 @@ export function PricingSection() {
             <Link href={ROUTES.CHECKOUT} className="btn btn-primary">
               Garantir meu acesso vitalício →
             </Link>
-            <div className="guarantee">
-              🛡️ Garantia incondicional de 7 dias — ou seu dinheiro de volta
-            </div>
           </div>
         </div>
       </div>

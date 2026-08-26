@@ -36,10 +36,6 @@ export function PricingCard() {
             <span className="chk">✓</span> Todas as atualizações futuras incluídas
           </li>
         </ul>
-
-        <div className="guarantee" style={{ borderTop: '1px solid #eef4f1', paddingTop: '16px' }}>
-          🛡️ Garantia incondicional de 7 dias — ou seu dinheiro de volta
-        </div>
       </div>
     </div>
   );

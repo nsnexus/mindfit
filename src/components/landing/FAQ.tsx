@@ -19,10 +19,6 @@ const FAQS = [
     a: 'O Mindfit é focado em emagrecimento saudável e criação de hábitos. Você personaliza suas metas no onboarding de acordo com o seu perfil.',
   },
   {
-    q: 'E se eu não gostar?',
-    a: 'Você tem 7 dias de garantia incondicional. Se não for para você, devolvemos 100% do valor, sem burocracia.',
-  },
-  {
     q: 'Substitui um nutricionista ou médico?',
     a: 'Não. O Mindfit é uma ferramenta educativa de apoio à sua jornada. Recomendamos sempre acompanhamento profissional, especialmente se você tem alguma condição de saúde.',
   },
