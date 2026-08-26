@@ -33,48 +33,34 @@ export function getFirebaseApp(): FirebaseApp {
 
 export function getAuthInstance(): Auth {
   if (_auth) return _auth;
+  if (typeof window === 'undefined') {
+    return {} as Auth;
+  }
   _auth = getAuth(getFirebaseApp());
   return _auth;
 }
 
 export function getDbInstance(): Firestore {
   if (_db) return _db;
+  if (typeof window === 'undefined') {
+    return {} as Firestore;
+  }
   _db = getFirestore(getFirebaseApp());
   return _db;
 }
 
 export function getStorageInstance(): FirebaseStorage {
   if (_storage) return _storage;
+  if (typeof window === 'undefined') {
+    return {} as FirebaseStorage;
+  }
   _storage = getStorage(getFirebaseApp());
   return _storage;
 }
 
-export const auth: Auth = new Proxy({} as Auth, {
-  get(_, prop) {
-    if (typeof window === 'undefined') return undefined;
-    const target = getAuthInstance();
-    const val = (target as any)[prop];
-    return typeof val === 'function' ? val.bind(target) : val;
-  },
-});
-
-export const db: Firestore = new Proxy({} as Firestore, {
-  get(_, prop) {
-    if (typeof window === 'undefined') return undefined;
-    const target = getDbInstance();
-    const val = (target as any)[prop];
-    return typeof val === 'function' ? val.bind(target) : val;
-  },
-});
-
-export const storage: FirebaseStorage = new Proxy({} as FirebaseStorage, {
-  get(_, prop) {
-    if (typeof window === 'undefined') return undefined;
-    const target = getStorageInstance();
-    const val = (target as any)[prop];
-    return typeof val === 'function' ? val.bind(target) : val;
-  },
-});
+export const auth = typeof window !== 'undefined' ? getAuthInstance() : ({} as Auth);
+export const db = typeof window !== 'undefined' ? getDbInstance() : ({} as Firestore);
+export const storage = typeof window !== 'undefined' ? getStorageInstance() : ({} as FirebaseStorage);
 
 export const initAnalytics = async () => {
   if (typeof window !== 'undefined') {
