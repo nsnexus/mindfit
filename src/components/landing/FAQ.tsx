@@ -1,9 +1,10 @@
 // ============================================
-// Landing Page: Perguntas Frequentes (FAQ)
+// Landing Page: Perguntas Frequentes (FAQ) — Mindfit
 // ============================================
 'use client';
 
 import { useState } from 'react';
+import { ChevronDown, HelpCircle, Sparkles } from 'lucide-react';
 
 const FAQS = [
   {
@@ -32,11 +33,11 @@ export function FAQ() {
   const [openIndex, setOpenIndex] = useState<number | null>(0);
 
   return (
-    <section className="py-24 px-4 sm:px-6 relative z-10 bg-neutral-950/90 border-t border-white/10">
+    <section className="py-24 px-4 sm:px-6 relative z-10 bg-neutral-950 border-t border-white/10 text-white">
       <div className="max-w-4xl mx-auto space-y-16">
         <div className="text-center space-y-3">
-          <span className="inline-flex items-center gap-1.5 text-xs uppercase font-bold tracking-widest text-emerald-400 bg-emerald-950/80 px-3.5 py-1.5 rounded-full border border-emerald-500/30">
-            Dúvidas Comuns
+          <span className="inline-flex items-center gap-1.5 text-xs uppercase font-extrabold tracking-widest text-emerald-400 bg-emerald-950/80 px-4 py-1.5 rounded-full border border-emerald-500/30">
+            <HelpCircle className="w-3.5 h-3.5" /> Dúvidas Comuns
           </span>
           <h2 className="text-3xl sm:text-5xl font-black font-[var(--font-heading)] text-white tracking-tight">
             Perguntas Frequentes
@@ -52,17 +53,17 @@ export function FAQ() {
             return (
               <div
                 key={faq.q}
-                className="rounded-2xl bg-white/[0.03] border border-white/10 overflow-hidden transition-all duration-200"
+                className="rounded-2xl sm:rounded-3xl bg-neutral-900/60 border border-white/10 hover:border-white/20 overflow-hidden transition-all duration-200"
               >
                 <button
                   type="button"
                   onClick={() => setOpenIndex(isOpen ? null : index)}
-                  className="w-full p-5 sm:p-6 text-left font-bold text-base sm:text-lg text-white flex items-center justify-between gap-4 hover:bg-white/[0.02] transition-colors cursor-pointer"
+                  className="w-full p-5 sm:p-6 text-left font-extrabold text-base sm:text-lg text-white flex items-center justify-between gap-4 transition-colors cursor-pointer"
                 >
                   <span className="font-[var(--font-heading)]">{faq.q}</span>
-                  <span className="text-2xl text-emerald-400 font-light shrink-0">
-                    {isOpen ? '−' : '+'}
-                  </span>
+                  <div className={`w-8 h-8 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-emerald-400 shrink-0 transition-transform duration-300 ${isOpen ? 'rotate-180 bg-emerald-500/20 text-emerald-300' : ''}`}>
+                    <ChevronDown className="w-4 h-4" />
+                  </div>
                 </button>
 
                 {isOpen && (

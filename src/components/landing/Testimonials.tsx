@@ -1,6 +1,8 @@
 // ============================================
-// Landing Page: Social Proof & Transformations
+// Landing Page: Social Proof & Transformations — Mindfit
 // ============================================
+import { Star, CheckCircle2, TrendingDown, Sparkles } from 'lucide-react';
+
 const TESTIMONIALS = [
   {
     name: 'Juliana Mendes',
@@ -9,7 +11,7 @@ const TESTIMONIALS = [
     result: '-4.8 kg em 21 dias',
     photo: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=200&q=80',
     comment:
-      'Eu vivia no efeito sanfona porque não conseguia cortar arroz e feijão. O Mindfit me ensinou o semáforo volumétrico e eu emagreci comendo comida de verdade com a minha família!',
+      'Eu vivia no efeito sanfona porque não conseguia cortar o arroz e o feijão. O Mindfit me ensinou a técnica da volumetria e eu emagreci comendo comida normal junto com a minha família!',
   },
   {
     name: 'Rodrigo Silveira',
@@ -18,7 +20,7 @@ const TESTIMONIALS = [
     result: '-6.2 kg em 21 dias',
     photo: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=200&q=80',
     comment:
-      'Rotina corrida de trabalho e filhos. Os treinos de 15 minutos e a lista de compras automática salvaram meu tempo e me deram uma disposição que eu não sentia há 10 anos.',
+      'Com rotina corrida de trabalho e dois filhos pequenos, os treinos de 15 minutos e a lista de compras automática me pouparam horas na semana e me deram uma disposição que eu não sentia há anos.',
   },
   {
     name: 'Camila Ferreira',
@@ -27,23 +29,23 @@ const TESTIMONIALS = [
     result: '-3.9 kg em 21 dias',
     photo: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80',
     comment:
-      'O que mais amei foi a mecânica de streak sem culpa. Nos dias difíceis usei o freeze e não desisti. A plataforma é linda, fácil e super motivadora!',
+      'O que mais me surpreendeu foi a mecânica de streak sem culpa. Nos dias de descanso eu usei o freeze e não desisti. A plataforma é intuitiva, linda e te mantém motivada todos os dias!',
   },
 ];
 
 export function Testimonials() {
   return (
-    <section className="py-24 px-4 sm:px-6 relative z-10 bg-neutral-900/90 border-t border-white/10">
+    <section className="py-24 px-4 sm:px-6 relative z-10 bg-neutral-950/90 border-t border-white/10 text-white">
       <div className="max-w-6xl mx-auto space-y-16">
         <div className="text-center space-y-3 max-w-2xl mx-auto">
-          <span className="inline-flex items-center gap-1.5 text-xs uppercase font-bold tracking-widest text-amber-400 bg-amber-950/80 px-3.5 py-1.5 rounded-full border border-amber-500/30">
-            Histórias Reais
+          <span className="inline-flex items-center gap-1.5 text-xs uppercase font-extrabold tracking-widest text-amber-400 bg-amber-950/80 px-4 py-1.5 rounded-full border border-amber-500/30">
+            <Sparkles className="w-3.5 h-3.5" /> Histórias Reais
           </span>
           <h2 className="text-3xl sm:text-5xl font-black font-[var(--font-heading)] text-white tracking-tight">
-            Quem experimentou, transformou.
+            Resultados que falam por si
           </h2>
           <p className="text-base text-neutral-400">
-            Alunas e alunos reais que conquistaram constância e resultados duradouros no Método 21 Dias.
+            Pessoas reais que alcançaram consistência, desincharam e transformaram sua saúde no Método 21 Dias.
           </p>
         </div>
 
@@ -51,17 +53,17 @@ export function Testimonials() {
           {TESTIMONIALS.map((t) => (
             <div
               key={t.name}
-              className="p-6 sm:p-8 rounded-2xl bg-white/[0.04] border border-white/10 hover:border-emerald-500/30 transition-all duration-300 flex flex-col justify-between space-y-6 hover:-translate-y-1 hover:shadow-2xl hover:shadow-emerald-950/30"
+              className="p-6 sm:p-8 rounded-3xl bg-neutral-900/60 border border-white/10 hover:border-emerald-500/40 transition-all duration-300 flex flex-col justify-between space-y-6 hover:-translate-y-1.5 hover:shadow-2xl hover:shadow-emerald-950/40 group"
             >
               <div className="space-y-4">
                 <div className="flex items-center gap-3.5">
                   <img
                     src={t.photo}
                     alt={t.name}
-                    className="w-13 h-13 rounded-full object-cover border-2 border-emerald-400 shadow-md"
+                    className="w-14 h-14 rounded-2xl object-cover border-2 border-emerald-400/80 shadow-md"
                   />
                   <div>
-                    <h4 className="font-bold text-base text-white font-[var(--font-heading)]">
+                    <h4 className="font-extrabold text-base text-white font-[var(--font-heading)]">
                       {t.name}
                     </h4>
                     <p className="text-xs text-neutral-400">
@@ -70,8 +72,8 @@ export function Testimonials() {
                   </div>
                 </div>
 
-                <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-black bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">
-                  <span>⚡</span>
+                <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-black bg-emerald-500/15 text-emerald-300 border border-emerald-500/30">
+                  <TrendingDown className="w-3.5 h-3.5" />
                   <span>{t.result}</span>
                 </div>
 
@@ -80,12 +82,14 @@ export function Testimonials() {
                 </p>
               </div>
 
-              <div className="pt-4 border-t border-white/10 flex items-center justify-between text-xs text-neutral-400">
-                <span className="text-amber-400 font-bold text-sm tracking-widest">
-                  ★★★★★
-                </span>
-                <span className="text-[11px] text-emerald-400 font-medium flex items-center gap-1">
-                  ✓ Aluna Verificada
+              <div className="pt-4 border-t border-white/10 flex items-center justify-between text-xs">
+                <div className="flex text-amber-400">
+                  {[...Array(5)].map((_, i) => (
+                    <Star key={i} className="w-3.5 h-3.5 fill-amber-400" />
+                  ))}
+                </div>
+                <span className="text-[11px] text-emerald-400 font-bold flex items-center gap-1">
+                  <CheckCircle2 className="w-3.5 h-3.5" /> Aluna Verificada
                 </span>
               </div>
             </div>

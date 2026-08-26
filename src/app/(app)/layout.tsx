@@ -1,5 +1,5 @@
 // ============================================
-// Authenticated App Shell Layout
+// Authenticated App Shell Layout — Mindfit
 // ============================================
 import type { ReactNode } from 'react';
 import { AuthGuard } from '@/components/auth/AuthGuard';
@@ -10,14 +10,14 @@ import { BottomNav } from '@/components/layout/BottomNav';
 export default function AppLayout({ children }: { children: ReactNode }) {
   return (
     <AuthGuard requireAuth requireOnboarding>
-      <div className="min-h-screen flex bg-neutral-50 text-neutral-800">
+      <div className="min-h-screen flex bg-gradient-mesh text-neutral-900 selection:bg-emerald-500 selection:text-neutral-950">
         {/* Desktop & Drawer Sidebar */}
         <Sidebar />
 
         {/* Main Content Area */}
-        <div className="flex-1 flex flex-col min-w-0 pb-16 lg:pb-0">
+        <div className="flex-1 flex flex-col min-w-0 pb-20 lg:pb-8">
           <Navbar />
-          <main className="flex-1 p-4 sm:p-6 lg:p-8 max-w-7xl w-full mx-auto">
+          <main className="flex-1 p-4 sm:p-6 lg:p-8 max-w-7xl w-full mx-auto animate-fade-in">
             {children}
           </main>
         </div>

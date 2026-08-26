@@ -4,6 +4,19 @@
 'use client';
 
 import Link from 'next/link';
+import {
+  Flame,
+  Sparkles,
+  UtensilsCrossed,
+  Salad,
+  Dumbbell,
+  LineChart,
+  Droplets,
+  Zap,
+  ArrowRight,
+  Quote,
+  CheckCircle2,
+} from 'lucide-react';
 import { useAuthStore } from '@/stores/authStore';
 import { useMeals } from '@/hooks/useMeals';
 import { Card, Button, Badge, Progress } from '@/components/ui';
@@ -21,36 +34,38 @@ export default function DashboardPage() {
   const waterTargetMl = 2500;
 
   return (
-    <div className="space-y-6 animate-fade-in max-w-5xl mx-auto">
+    <div className="space-y-6 sm:space-y-8 animate-fade-in max-w-5xl mx-auto">
       {/* Welcome Banner */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <div className="flex items-center gap-2 mb-1">
             <span className="text-2xl">🌱</span>
-            <h1 className="text-2xl sm:text-3xl font-extrabold font-[var(--font-heading)] text-neutral-900">
+            <h1 className="text-2xl sm:text-3xl font-black font-[var(--font-heading)] text-neutral-900 tracking-tight">
               Olá, {userName}!
             </h1>
           </div>
           <p className="text-neutral-500 text-sm">
-            Bem-vindo ao seu painel diário do Método 21 Dias.
+            Bem-vindo ao seu painel diário do Método 21 Dias. Vamos juntos rumo à sua meta!
           </p>
         </div>
 
         <div className="flex items-center gap-2 self-start sm:self-auto">
-          <Badge variant="success" size="md">
-            🔥 Streak: 1 Dia
+          <Badge variant="warning" size="md" icon={<Flame className="w-3.5 h-3.5 fill-amber-500 text-amber-500" />}>
+            Streak: 1 Dia
           </Badge>
-          <Badge variant="default" size="md">
+          <Badge variant="emerald" size="md" pulse>
             Fase 1: Preparação
           </Badge>
         </div>
       </div>
 
       {/* Daily Motivational Quote */}
-      <div className="p-4 bg-primary-50/80 border border-primary-100 rounded-2xl flex items-center gap-3">
-        <span className="text-2xl flex-shrink-0">💬</span>
-        <p className="text-xs sm:text-sm text-primary-900 leading-relaxed font-medium">
-          "A consistência supera a perfeição. Cada refeição consciente e cada copo d'água são passos firmes rumo à sua melhor versão."
+      <div className="p-4 sm:p-5 bg-gradient-to-r from-emerald-50 to-teal-50/60 border border-emerald-500/20 rounded-3xl flex items-start gap-3.5 shadow-sm">
+        <div className="w-9 h-9 rounded-2xl bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center text-emerald-700 shrink-0 mt-0.5">
+          <Quote className="w-4 h-4" />
+        </div>
+        <p className="text-xs sm:text-sm text-emerald-950 leading-relaxed font-medium">
+          "A constância vence a perfeição. Cada copo d'água, cada prato volumoso e consciente te deixam mais perto da sua melhor versão."
         </p>
       </div>
 
@@ -60,49 +75,53 @@ export default function DashboardPage() {
         targetCalories={targetCalories}
       />
 
-      {/* Quick Action Shortcuts */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-        <Link href={ROUTES.DIARIO}>
-          <div className="p-4 bg-white rounded-2xl border border-neutral-200 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all text-center group">
-            <span className="text-2xl block mb-1 group-hover:scale-110 transition-transform">
-              📝
-            </span>
-            <span className="text-xs font-bold text-neutral-800 block">
+      {/* Quick Action Shortcuts Grid */}
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
+        <Link href={ROUTES.DIARIO} className="group">
+          <div className="p-4 sm:p-5 bg-white rounded-3xl border border-neutral-200/80 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.03)] hover:border-emerald-500/40 hover:-translate-y-1 hover:shadow-xl hover:shadow-emerald-900/5 transition-all duration-300 text-center">
+            <div className="w-11 h-11 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-600 flex items-center justify-center mx-auto mb-2.5 group-hover:scale-110 group-hover:bg-emerald-500 group-hover:text-white transition-all">
+              <UtensilsCrossed className="w-5 h-5" />
+            </div>
+            <span className="text-xs sm:text-sm font-extrabold text-neutral-900 block tracking-tight">
               Registrar Refeição
             </span>
+            <span className="text-[11px] text-neutral-400 block mt-0.5">Diário diário</span>
           </div>
         </Link>
 
-        <Link href={ROUTES.PLANO_ALIMENTAR}>
-          <div className="p-4 bg-white rounded-2xl border border-neutral-200 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all text-center group">
-            <span className="text-2xl block mb-1 group-hover:scale-110 transition-transform">
-              🥗
-            </span>
-            <span className="text-xs font-bold text-neutral-800 block">
+        <Link href={ROUTES.PLANO_ALIMENTAR} className="group">
+          <div className="p-4 sm:p-5 bg-white rounded-3xl border border-neutral-200/80 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.03)] hover:border-emerald-500/40 hover:-translate-y-1 hover:shadow-xl hover:shadow-emerald-900/5 transition-all duration-300 text-center">
+            <div className="w-11 h-11 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-600 flex items-center justify-center mx-auto mb-2.5 group-hover:scale-110 group-hover:bg-emerald-500 group-hover:text-white transition-all">
+              <Salad className="w-5 h-5" />
+            </div>
+            <span className="text-xs sm:text-sm font-extrabold text-neutral-900 block tracking-tight">
               Ver Cardápio
             </span>
+            <span className="text-[11px] text-neutral-400 block mt-0.5">Plano 21 dias</span>
           </div>
         </Link>
 
-        <Link href={ROUTES.TREINOS}>
-          <div className="p-4 bg-white rounded-2xl border border-neutral-200 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all text-center group">
-            <span className="text-2xl block mb-1 group-hover:scale-110 transition-transform">
-              🏋️
-            </span>
-            <span className="text-xs font-bold text-neutral-800 block">
+        <Link href={ROUTES.TREINOS} className="group">
+          <div className="p-4 sm:p-5 bg-white rounded-3xl border border-neutral-200/80 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.03)] hover:border-emerald-500/40 hover:-translate-y-1 hover:shadow-xl hover:shadow-emerald-900/5 transition-all duration-300 text-center">
+            <div className="w-11 h-11 rounded-2xl bg-amber-500/10 border border-amber-500/20 text-amber-600 flex items-center justify-center mx-auto mb-2.5 group-hover:scale-110 group-hover:bg-amber-500 group-hover:text-white transition-all">
+              <Dumbbell className="w-5 h-5" />
+            </div>
+            <span className="text-xs sm:text-sm font-extrabold text-neutral-900 block tracking-tight">
               Treino de Hoje
             </span>
+            <span className="text-[11px] text-neutral-400 block mt-0.5">15 min em casa</span>
           </div>
         </Link>
 
-        <Link href={ROUTES.PROGRESSO}>
-          <div className="p-4 bg-white rounded-2xl border border-neutral-200 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all text-center group">
-            <span className="text-2xl block mb-1 group-hover:scale-110 transition-transform">
-              📊
-            </span>
-            <span className="text-xs font-bold text-neutral-800 block">
+        <Link href={ROUTES.PROGRESSO} className="group">
+          <div className="p-4 sm:p-5 bg-white rounded-3xl border border-neutral-200/80 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.03)] hover:border-emerald-500/40 hover:-translate-y-1 hover:shadow-xl hover:shadow-emerald-900/5 transition-all duration-300 text-center">
+            <div className="w-11 h-11 rounded-2xl bg-teal-500/10 border border-teal-500/20 text-teal-600 flex items-center justify-center mx-auto mb-2.5 group-hover:scale-110 group-hover:bg-teal-500 group-hover:text-white transition-all">
+              <LineChart className="w-5 h-5" />
+            </div>
+            <span className="text-xs sm:text-sm font-extrabold text-neutral-900 block tracking-tight">
               Minha Evolução
             </span>
+            <span className="text-[11px] text-neutral-400 block mt-0.5">Pesos & fotos</span>
           </div>
         </Link>
       </div>
@@ -118,32 +137,36 @@ export default function DashboardPage() {
       />
 
       {/* Split Section: Water & Today's Workout */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
         {/* Water Tracker */}
-        <Card padding="md">
-          <div className="flex items-center justify-between pb-3 border-b border-neutral-100">
-            <div className="flex items-center gap-2">
-              <span className="text-2xl">💧</span>
-              <div>
-                <h3 className="font-bold text-neutral-900 text-sm sm:text-base">
-                  Hidratação do Dia
-                </h3>
-                <p className="text-xs text-neutral-400">Meta: {waterTargetMl} ml</p>
+        <Card padding="md" className="flex flex-col justify-between space-y-4">
+          <div>
+            <div className="flex items-center justify-between pb-3 border-b border-neutral-100">
+              <div className="flex items-center gap-2.5">
+                <div className="w-10 h-10 rounded-2xl bg-blue-500/10 border border-blue-500/20 flex items-center justify-center text-blue-600">
+                  <Droplets className="w-5 h-5" />
+                </div>
+                <div>
+                  <h3 className="font-extrabold text-neutral-900 text-sm sm:text-base">
+                    Hidratação do Dia
+                  </h3>
+                  <p className="text-xs text-neutral-400">Meta: {waterTargetMl} ml</p>
+                </div>
               </div>
+              <span className="text-sm sm:text-base font-black text-blue-600 font-[var(--font-heading)]">
+                {dailyLog.waterMl} / {waterTargetMl} ml
+              </span>
             </div>
-            <span className="text-sm font-extrabold text-blue-600">
-              {dailyLog.waterMl} / {waterTargetMl} ml
-            </span>
-          </div>
 
-          <div className="py-4">
-            <Progress
-              value={dailyLog.waterMl}
-              max={waterTargetMl}
-              color="accent"
-              size="md"
-              showLabel
-            />
+            <div className="py-4">
+              <Progress
+                value={dailyLog.waterMl}
+                max={waterTargetMl}
+                color="info"
+                size="md"
+                showLabel
+              />
+            </div>
           </div>
 
           <div className="grid grid-cols-2 gap-2 pt-2 border-t border-neutral-100">
@@ -151,7 +174,7 @@ export default function DashboardPage() {
               variant="outline"
               size="sm"
               onClick={() => addWater(250)}
-              className="text-xs"
+              className="text-xs font-bold"
             >
               +250 ml 🥤
             </Button>
@@ -159,7 +182,7 @@ export default function DashboardPage() {
               variant="outline"
               size="sm"
               onClick={() => addWater(500)}
-              className="text-xs"
+              className="text-xs font-bold"
             >
               +500 ml 🍶
             </Button>
@@ -167,33 +190,37 @@ export default function DashboardPage() {
         </Card>
 
         {/* Workout Preview */}
-        <Card padding="md">
-          <div className="flex items-center justify-between pb-3 border-b border-neutral-100">
-            <div className="flex items-center gap-2">
-              <span className="text-2xl">⚡</span>
-              <div>
-                <h3 className="font-bold text-neutral-900 text-sm sm:text-base">
-                  Treino do Dia
-                </h3>
-                <p className="text-xs text-neutral-400">Fase 1 • Mobilidade e Ativação</p>
+        <Card padding="md" className="flex flex-col justify-between space-y-4">
+          <div>
+            <div className="flex items-center justify-between pb-3 border-b border-neutral-100">
+              <div className="flex items-center gap-2.5">
+                <div className="w-10 h-10 rounded-2xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-600">
+                  <Zap className="w-5 h-5" />
+                </div>
+                <div>
+                  <h3 className="font-extrabold text-neutral-900 text-sm sm:text-base">
+                    Treino do Dia
+                  </h3>
+                  <p className="text-xs text-neutral-400">Fase 1 • Mobilidade e Ativação</p>
+                </div>
               </div>
+              <Badge variant="warning" size="sm">15 min</Badge>
             </div>
-            <Badge variant="warning">15 min</Badge>
-          </div>
 
-          <div className="py-3 space-y-1">
-            <p className="font-semibold text-neutral-800 text-sm">
-              Alongamento Dinâmico & Caminhada Ativa
-            </p>
-            <p className="text-xs text-neutral-500">
-              Exercícios suaves de mobilidade articular para destravar o corpo e acelerar o metabolismo.
-            </p>
+            <div className="py-3 space-y-1.5">
+              <p className="font-extrabold text-neutral-900 text-sm">
+                Alongamento Dinâmico & Caminhada Ativa
+              </p>
+              <p className="text-xs text-neutral-500 leading-relaxed">
+                Exercícios suaves de mobilidade articular para destravar o corpo e acelerar o gasto calórico diário.
+              </p>
+            </div>
           </div>
 
           <div className="pt-2 border-t border-neutral-100">
             <Link href={ROUTES.TREINOS}>
-              <Button variant="primary" size="sm" fullWidth>
-                Iniciar Treino Guiado →
+              <Button variant="primary" size="md" fullWidth rightIcon={<ArrowRight className="w-4 h-4" />}>
+                Iniciar Treino Guiado
               </Button>
             </Link>
           </div>

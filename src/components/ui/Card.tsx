@@ -3,7 +3,7 @@
 // ============================================
 import type { ReactNode, HTMLAttributes } from 'react';
 
-export type CardVariant = 'default' | 'elevated' | 'outlined' | 'glass' | 'emerald' | 'dark';
+export type CardVariant = 'default' | 'elevated' | 'outlined' | 'glass' | 'emerald' | 'dark' | 'interactive';
 
 export interface CardProps extends HTMLAttributes<HTMLDivElement> {
   variant?: CardVariant;
@@ -14,17 +14,19 @@ export interface CardProps extends HTMLAttributes<HTMLDivElement> {
 
 const variantStyles: Record<CardVariant, string> = {
   default:
-    'bg-white border border-neutral-200/80 shadow-sm hover:border-neutral-300',
+    'bg-white border border-neutral-200/80 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.03)]',
   elevated:
-    'bg-white border border-neutral-100 shadow-lg shadow-neutral-900/5',
+    'bg-white border border-neutral-100/90 shadow-[0_10px_30px_-5px_rgba(0,0,0,0.05),0_2px_6px_-2px_rgba(0,0,0,0.02)]',
   outlined:
     'bg-white border-2 border-neutral-200/90',
   glass:
-    'bg-white/80 backdrop-blur-xl border border-white/60 shadow-xl shadow-neutral-900/5',
+    'glass-panel',
   emerald:
-    'bg-gradient-to-br from-emerald-900/40 via-emerald-950/60 to-neutral-950 border border-emerald-500/20 shadow-xl shadow-emerald-950/40 text-white',
+    'bg-gradient-to-br from-emerald-950 via-neutral-950 to-neutral-950 border border-emerald-500/25 shadow-2xl shadow-emerald-950/60 text-white',
   dark:
     'bg-neutral-900/90 backdrop-blur-xl border border-white/10 shadow-2xl text-white',
+  interactive:
+    'bg-white border border-neutral-200/90 hover:border-emerald-500/50 hover:shadow-xl hover:shadow-emerald-900/5 transition-all duration-300',
 };
 
 const paddingStyles: Record<string, string> = {
@@ -46,7 +48,7 @@ export function Card({
   return (
     <div
       className={`
-        rounded-2xl transition-all duration-300
+        rounded-2xl sm:rounded-3xl transition-all duration-300
         ${variantStyles[variant]}
         ${paddingStyles[padding]}
         ${hoverable ? 'hover:-translate-y-1 hover:shadow-xl hover:shadow-emerald-900/10 cursor-pointer' : ''}

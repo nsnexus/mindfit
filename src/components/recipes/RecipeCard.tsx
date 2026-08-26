@@ -1,10 +1,10 @@
 // ============================================
-// Recipe Card Component
+// Recipe Card Component — Mindfit
 // ============================================
 'use client';
 
 import Link from 'next/link';
-import Image from 'next/image';
+import { Clock, Heart, ArrowRight } from 'lucide-react';
 import { Card, Badge } from '@/components/ui';
 import { ROUTES } from '@/constants/routes';
 import type { Recipe } from '@/types/recipe';
@@ -25,22 +25,22 @@ export function RecipeCard({
     <Card
       padding="none"
       hoverable
-      className="overflow-hidden flex flex-col justify-between group h-full"
+      className="overflow-hidden flex flex-col justify-between group h-full border border-neutral-200/80 hover:border-emerald-500/40"
     >
       <div>
         {/* Recipe Image with Overlays */}
-        <div className="relative h-48 w-full bg-neutral-100 overflow-hidden">
+        <div className="relative h-48 w-full bg-neutral-900 overflow-hidden">
           <img
             src={recipe.imageURL}
             alt={recipe.title}
-            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 opacity-95 group-hover:opacity-100"
             loading="lazy"
           />
 
-          {/* Top Overlays: Prep time badge & Favorite button */}
+          {/* Top Overlays */}
           <div className="absolute top-3 left-3 right-3 flex items-center justify-between pointer-events-none">
-            <span className="bg-white/90 backdrop-blur-md px-2.5 py-1 rounded-full text-xs font-bold text-neutral-800 shadow-sm">
-              ⏱️ {recipe.prepTimeMinutes} min
+            <span className="bg-black/60 backdrop-blur-md px-3 py-1 rounded-full text-xs font-black text-white border border-white/20 flex items-center gap-1 shadow-sm">
+              <Clock className="w-3.5 h-3.5 text-emerald-400" /> {recipe.prepTimeMinutes} min
             </span>
 
             {onToggleFavorite && (
@@ -51,65 +51,64 @@ export function RecipeCard({
                   e.stopPropagation();
                   onToggleFavorite(recipe.id);
                 }}
-                className="pointer-events-auto w-8 h-8 rounded-full bg-white/90 backdrop-blur-md flex items-center justify-center text-neutral-400 hover:text-red-500 hover:scale-110 active:scale-95 transition-all shadow-sm"
+                className="pointer-events-auto w-9 h-9 rounded-2xl bg-white/90 backdrop-blur-md flex items-center justify-center text-neutral-400 hover:text-red-500 hover:scale-110 active:scale-95 transition-all shadow-md cursor-pointer"
                 aria-label={isFavorite ? 'Remover dos favoritos' : 'Favoritar receita'}
               >
-                <svg
-                  className={`w-4 h-4 ${isFavorite ? 'fill-red-500 text-red-500' : 'fill-none stroke-current'}`}
-                  viewBox="0 0 24 24"
-                  strokeWidth={2}
-                >
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
-                </svg>
+                <Heart
+                  className={`w-4.5 h-4.5 ${
+                    isFavorite ? 'fill-red-500 text-red-500' : 'text-neutral-500 stroke-current'
+                  }`}
+                />
               </button>
             )}
           </div>
         </div>
 
         {/* Content */}
-        <div className="p-4 sm:p-5">
+        <div className="p-5 space-y-2">
           {/* Tags */}
-          <div className="flex flex-wrap gap-1.5 mb-2">
+          <div className="flex flex-wrap gap-1.5 mb-1">
             {recipe.tags.includes('quick') && (
-              <Badge variant="warning" size="sm">Rápido</Badge>
+              <Badge variant="warning" size="xs">Rápido</Badge>
             )}
             {recipe.tags.includes('highProtein') && (
-              <Badge variant="success" size="sm">Proteico</Badge>
+              <Badge variant="success" size="xs">Proteico</Badge>
             )}
             {recipe.tags.includes('lowCarb') && (
-              <Badge variant="info" size="sm">Low-Carb</Badge>
+              <Badge variant="info" size="xs">Low-Carb</Badge>
             )}
             {recipe.tags.includes('vegan') && (
-              <Badge variant="default" size="sm">Vegano</Badge>
+              <Badge variant="default" size="xs">Vegano</Badge>
             )}
           </div>
 
-          <h3 className="font-bold text-neutral-900 text-base line-clamp-1 group-hover:text-primary-600 transition-colors">
+          <h3 className="font-extrabold text-neutral-900 text-base line-clamp-1 group-hover:text-emerald-700 transition-colors">
             {recipe.title}
           </h3>
 
-          <p className="text-xs text-neutral-500 mt-1 line-clamp-2 leading-relaxed">
+          <p className="text-xs text-neutral-500 line-clamp-2 leading-relaxed">
             {recipe.description}
           </p>
         </div>
       </div>
 
       {/* Footer Nutrition Summary & Link */}
-      <div className="px-4 sm:px-5 pb-4 pt-3 border-t border-neutral-100 flex items-center justify-between">
+      <div className="px-5 pb-5 pt-3 border-t border-neutral-100 flex items-center justify-between">
         <div>
-          <span className="text-sm font-extrabold text-primary-700 font-[var(--font-heading)]">
+          <span className="text-sm font-black text-emerald-700 font-[var(--font-heading)]">
             {recipe.calories} kcal
           </span>
-          <span className="text-[11px] text-neutral-400 block font-medium">
+          <span className="text-[11px] text-neutral-400 block font-bold">
             P: {recipe.protein}g • C: {recipe.carbs}g • G: {recipe.fat}g
           </span>
         </div>
 
         <Link
           href={ROUTES.RECEITA_DETALHE(recipe.id)}
-          className="text-xs font-bold text-primary-600 hover:text-primary-700 flex items-center gap-1 group-hover:translate-x-0.5 transition-transform"
+          className="text-xs font-extrabold text-emerald-600 hover:text-emerald-800 flex items-center gap-1 group-hover:translate-x-0.5 transition-transform"
         >
-          Ver Receita →
+          <span>Ver Receita</span>
+          <ArrowRight className="w-3.5 h-3.5" />
         </Link>
       </div>
     </Card>

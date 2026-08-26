@@ -1,9 +1,10 @@
 // ============================================
-// Onboarding Wizard Page
+// Onboarding Wizard Page — Mindfit
 // ============================================
 'use client';
 
 import Link from 'next/link';
+import { Sparkles, ChevronLeft, ArrowRight } from 'lucide-react';
 import { AuthGuard } from '@/components/auth/AuthGuard';
 import { useOnboardingStore } from '@/stores/onboardingStore';
 import { Button, Progress } from '@/components/ui';
@@ -39,17 +40,24 @@ function OnboardingWizardContent() {
   };
 
   return (
-    <div className="min-h-screen bg-neutral-50 flex flex-col justify-between">
+    <div className="min-h-screen bg-gradient-mesh flex flex-col justify-between selection:bg-emerald-500 selection:text-neutral-950">
       {/* Top Header */}
-      <header className="px-6 py-4 bg-white border-b border-neutral-200 sticky top-0 z-20">
+      <header className="px-6 py-4 bg-white/90 backdrop-blur-xl border-b border-neutral-200/80 sticky top-0 z-20">
         <div className="max-w-2xl mx-auto flex items-center justify-between">
-          <Link href={ROUTES.HOME} className="flex items-center gap-2">
-            <span className="text-xl font-bold font-[var(--font-heading)] text-primary-600">
-              🍃 {APP_CONFIG.name}
+          <Link href={ROUTES.HOME} className="flex items-center gap-2.5 group">
+            <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-emerald-500 to-emerald-700 flex items-center justify-center shadow-sm">
+              <img
+                src="/icons/mindfit-simbolo.png"
+                alt="Mindfit"
+                className="w-5 h-5 object-contain brightness-0 invert"
+              />
+            </div>
+            <span className="text-xl font-black font-[var(--font-heading)] text-neutral-900">
+              {APP_CONFIG.name}
             </span>
           </Link>
 
-          <span className="text-xs font-semibold text-neutral-500 bg-neutral-100 px-3 py-1 rounded-full">
+          <span className="text-xs font-black text-emerald-800 bg-emerald-50 px-3.5 py-1 rounded-full border border-emerald-200">
             Etapa {currentStep} de {totalSteps}
           </span>
         </div>
@@ -58,7 +66,7 @@ function OnboardingWizardContent() {
         <div className="max-w-2xl mx-auto mt-3">
           <Progress
             value={(currentStep / totalSteps) * 100}
-            size="sm"
+            size="xs"
             color="primary"
             animated
           />
@@ -66,8 +74,8 @@ function OnboardingWizardContent() {
       </header>
 
       {/* Main Step Container */}
-      <main className="flex-1 max-w-2xl w-full mx-auto px-4 py-8 sm:py-12">
-        <div className="bg-white rounded-3xl p-6 sm:p-10 border border-neutral-200 shadow-card">
+      <main className="flex-1 max-w-2xl w-full mx-auto px-4 py-8 sm:py-12 animate-fade-in">
+        <div className="bg-white rounded-3xl p-6 sm:p-10 border border-neutral-200/80 shadow-xl space-y-6">
           {currentStep === 1 && <StepPersonalInfo />}
           {currentStep === 2 && <StepGoals />}
           {currentStep === 3 && <StepDiet />}
@@ -76,16 +84,13 @@ function OnboardingWizardContent() {
 
           {/* Navigation Controls (Steps 1 to 4) */}
           {currentStep < 5 && (
-            <div className="flex items-center justify-between mt-10 pt-6 border-t border-neutral-100 gap-4">
+            <div className="flex items-center justify-between pt-6 border-t border-neutral-100 gap-4">
               {currentStep > 1 ? (
                 <Button
                   variant="ghost"
                   onClick={prevStep}
-                  leftIcon={
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-                    </svg>
-                  }
+                  leftIcon={<ChevronLeft className="w-4 h-4" />}
+                  className="font-bold text-sm"
                 >
                   Voltar
                 </Button>
@@ -98,11 +103,8 @@ function OnboardingWizardContent() {
                 size="lg"
                 onClick={nextStep}
                 disabled={!canProceed()}
-                rightIcon={
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                  </svg>
-                }
+                rightIcon={<ArrowRight className="w-4 h-4" />}
+                className="font-black text-sm shadow-md"
               >
                 Avançar
               </Button>
@@ -113,7 +115,7 @@ function OnboardingWizardContent() {
 
       {/* Footer */}
       <footer className="py-4 text-center text-xs text-neutral-400">
-        © {new Date().getFullYear()} {APP_CONFIG.name}. Todos os direitos reservados.
+        © {new Date().getFullYear()} {APP_CONFIG.name} — Método 21 Dias. Todos os direitos reservados.
       </footer>
     </div>
   );

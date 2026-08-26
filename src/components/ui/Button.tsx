@@ -5,8 +5,8 @@
 
 import { forwardRef, type ButtonHTMLAttributes, type ReactNode } from 'react';
 
-export type ButtonVariant = 'primary' | 'secondary' | 'outline' | 'ghost' | 'danger' | 'accent' | 'glass';
-export type ButtonSize = 'sm' | 'md' | 'lg' | 'xl';
+export type ButtonVariant = 'primary' | 'accent' | 'secondary' | 'outline' | 'ghost' | 'danger' | 'glass';
+export type ButtonSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
 
 export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: ButtonVariant;
@@ -19,26 +19,27 @@ export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 
 const variantStyles: Record<ButtonVariant, string> = {
   primary:
-    'bg-emerald-600 hover:bg-emerald-500 active:bg-emerald-700 text-white font-semibold shadow-md hover:shadow-emerald-500/20 active:scale-[0.98]',
+    'bg-gradient-to-r from-emerald-600 to-emerald-500 hover:from-emerald-500 hover:to-emerald-400 text-white font-bold shadow-lg shadow-emerald-600/25 hover:shadow-emerald-500/35 active:scale-[0.98] border border-emerald-400/30',
   accent:
-    'bg-gradient-to-r from-amber-400 via-amber-500 to-amber-600 hover:from-amber-300 hover:via-amber-400 hover:to-amber-500 text-neutral-950 font-bold shadow-lg shadow-amber-500/25 active:scale-[0.98]',
+    'bg-gradient-to-r from-amber-400 via-amber-500 to-amber-600 hover:from-amber-300 hover:via-amber-400 hover:to-amber-500 text-neutral-950 font-black shadow-xl shadow-amber-500/25 hover:shadow-amber-500/40 hover:scale-[1.02] active:scale-[0.98] border border-amber-300/40 tracking-tight',
   secondary:
-    'bg-neutral-100 hover:bg-neutral-200 active:bg-neutral-300 text-neutral-800 font-medium active:scale-[0.98]',
+    'bg-white hover:bg-neutral-100/90 text-neutral-800 font-semibold border border-neutral-200/80 shadow-sm active:scale-[0.98]',
   outline:
-    'border-2 border-emerald-600/30 hover:border-emerald-600 text-emerald-700 hover:bg-emerald-50 active:bg-emerald-100 font-semibold active:scale-[0.98]',
+    'border-2 border-emerald-600/40 hover:border-emerald-600 text-emerald-700 bg-emerald-50/50 hover:bg-emerald-100/60 font-bold active:scale-[0.98]',
   ghost:
-    'text-neutral-600 hover:text-neutral-900 hover:bg-neutral-100/80 active:bg-neutral-200 font-medium active:scale-[0.98]',
+    'text-neutral-600 hover:text-neutral-900 hover:bg-neutral-100/80 active:bg-neutral-200 font-semibold active:scale-[0.98]',
   danger:
-    'bg-red-600 hover:bg-red-500 active:bg-red-700 text-white font-semibold shadow-md active:scale-[0.98]',
+    'bg-gradient-to-r from-red-600 to-rose-500 hover:from-red-500 hover:to-rose-400 text-white font-bold shadow-md shadow-red-500/25 active:scale-[0.98]',
   glass:
-    'bg-white/10 hover:bg-white/20 active:bg-white/25 text-white border border-white/20 backdrop-blur-md font-semibold active:scale-[0.98]',
+    'bg-white/10 hover:bg-white/20 active:bg-white/25 text-white border border-white/20 backdrop-blur-xl font-bold shadow-lg shadow-black/10 active:scale-[0.98]',
 };
 
 const sizeStyles: Record<ButtonSize, string> = {
-  sm: 'px-3 py-1.5 text-xs rounded-lg gap-1.5',
-  md: 'px-4 py-2 text-sm rounded-xl gap-2',
-  lg: 'px-6 py-3 text-base rounded-xl gap-2.5',
-  xl: 'px-8 py-4 text-base sm:text-lg rounded-2xl gap-3',
+  xs: 'px-2.5 py-1 text-[11px] rounded-lg gap-1',
+  sm: 'px-3.5 py-1.5 text-xs rounded-xl gap-1.5',
+  md: 'px-4.5 py-2.5 text-sm rounded-xl gap-2',
+  lg: 'px-6 py-3.5 text-base rounded-2xl gap-2.5',
+  xl: 'px-8 py-4.5 text-base sm:text-lg rounded-2xl gap-3',
 };
 
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
@@ -97,7 +98,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         ) : (
           <>
             {leftIcon && <span className="flex-shrink-0">{leftIcon}</span>}
-            {children}
+            <span>{children}</span>
             {rightIcon && <span className="flex-shrink-0">{rightIcon}</span>}
           </>
         )}
