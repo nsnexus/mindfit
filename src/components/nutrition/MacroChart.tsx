@@ -62,10 +62,10 @@ export function MacroChart({ current, target }: MacroChartProps) {
   return (
     <div className="space-y-3.5">
       <div className="flex items-center justify-between">
-        <h3 className="text-xs sm:text-sm font-extrabold text-neutral-800 uppercase tracking-wider flex items-center gap-1.5 font-[var(--font-heading)]">
-          <Sparkles className="w-3.5 h-3.5 text-emerald-600" /> Distribuição de Macronutrientes
+        <h3 className="text-xs sm:text-sm font-extrabold font-head text-[#12352f] uppercase tracking-wider flex items-center gap-1.5">
+          <Sparkles className="w-3.5 h-3.5 text-[#0e9f6e]" /> Distribuição de Macronutrientes
         </h3>
-        <span className="text-xs text-neutral-400 font-semibold">Metas diárias</span>
+        <span className="text-xs text-[#5b7a72] font-semibold">Metas diárias</span>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5 sm:gap-4">
@@ -77,7 +77,7 @@ export function MacroChart({ current, target }: MacroChartProps) {
           return (
             <div
               key={m.id}
-              className="p-4 sm:p-5 bg-white rounded-3xl border border-emerald-100 shadow-[0_8px_25px_-5px_rgba(14,159,110,0.06)] space-y-3 hover:border-emerald-400 hover:shadow-lg hover:-translate-y-1 transition-all duration-200"
+              className="p-5 bg-white rounded-3xl border border-[#e2f2ea] shadow-[0_8px_25px_rgba(14,159,110,0.06)] space-y-3 hover:border-[#0e9f6e] hover:shadow-[0_14px_35px_rgba(14,159,110,0.12)] hover:-translate-y-1 transition-all duration-200"
             >
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
@@ -85,11 +85,11 @@ export function MacroChart({ current, target }: MacroChartProps) {
                     <Icon className="w-5 h-5" />
                   </div>
                   <div>
-                    <span className="text-[11px] font-extrabold text-neutral-400 uppercase tracking-wider block">
+                    <span className="text-[11px] font-extrabold font-head text-[#5b7a72] uppercase tracking-wider block">
                       {m.name}
                     </span>
-                    <span className="text-base sm:text-lg font-black text-neutral-900 font-[var(--font-heading)] tracking-tight">
-                      {m.current}g <span className="text-xs text-neutral-400 font-semibold">/ {m.target}g</span>
+                    <span className="text-base sm:text-lg font-extrabold font-head text-[#12352f] tracking-tight">
+                      {m.current}g <span className="text-xs text-[#5b7a72] font-semibold">/ {m.target}g</span>
                     </span>
                   </div>
                 </div>
@@ -103,8 +103,8 @@ export function MacroChart({ current, target }: MacroChartProps) {
                   size="sm"
                 />
                 <div className="flex justify-between items-center text-[11px] font-semibold pt-0.5">
-                  <span className="text-neutral-400">{pct}% da meta</span>
-                  <span className={`${m.textColor} font-bold`}>{remaining}g restam</span>
+                  <span className="text-[#5b7a72]">{pct}% da meta</span>
+                  <span className={`${m.textColor} font-bold font-head`}>{remaining}g restam</span>
                 </div>
               </div>
             </div>

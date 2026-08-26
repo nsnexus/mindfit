@@ -32,34 +32,34 @@ function TreinosPageContent() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <div className="flex items-center gap-2.5 mb-1">
-            <div className="w-9 h-9 rounded-2xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-600 shadow-sm">
-              <Dumbbell className="w-5 h-5" />
-            </div>
-            <h1 className="text-2xl sm:text-3xl font-black font-[var(--font-heading)] text-neutral-900 tracking-tight">
-              Treinos & Exercícios
-            </h1>
+          <div className="flex items-center gap-2.5 mb-1.5">
+            <span className="pill text-xs">
+              ⚡ Treinos Rápidos & Eficientes
+            </span>
           </div>
-          <p className="text-neutral-500 text-xs sm:text-sm">
+          <h1 className="font-head text-3xl sm:text-4xl font-extrabold text-[#12352f] tracking-tight">
+            Treinos & <span className="gradient-text">Exercícios</span>
+          </h1>
+          <p className="text-[#5b7a72] text-xs sm:text-sm mt-1">
             Treinos rápidos de 15 minutos em casa e enciclopédia completa de exercícios com anatomia e postura.
           </p>
         </div>
 
         {/* Tab Switcher Pills */}
-        <div className="flex p-1 bg-neutral-200/60 rounded-2xl gap-1 shrink-0 self-start sm:self-auto border border-neutral-300/40">
+        <div className="flex p-1.5 bg-white rounded-full gap-1 shrink-0 self-start sm:self-auto border border-[#e2f2ea] shadow-xs">
           <button
             type="button"
             onClick={() => setActiveTab('method')}
             className={`
-              flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-black transition-all cursor-pointer
+              flex items-center gap-2 px-4 py-2 rounded-full text-xs font-head font-bold transition-all cursor-pointer
               ${
                 activeTab === 'method'
-                  ? 'bg-white text-neutral-950 shadow-sm'
-                  : 'text-neutral-600 hover:text-neutral-900'
+                  ? 'btn-primary text-white shadow-sm'
+                  : 'text-[#5b7a72] hover:text-[#0e9f6e]'
               }
             `}
           >
-            <Flame className="w-3.5 h-3.5 text-amber-500 fill-amber-500" />
+            <Flame className="w-3.5 h-3.5" />
             <span>Método 21 Dias</span>
           </button>
 
@@ -67,15 +67,15 @@ function TreinosPageContent() {
             type="button"
             onClick={() => setActiveTab('library')}
             className={`
-              flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-black transition-all cursor-pointer
+              flex items-center gap-2 px-4 py-2 rounded-full text-xs font-head font-bold transition-all cursor-pointer
               ${
                 activeTab === 'library'
-                  ? 'bg-white text-emerald-800 shadow-sm'
-                  : 'text-neutral-600 hover:text-neutral-900'
+                  ? 'btn-primary text-white shadow-sm'
+                  : 'text-[#5b7a72] hover:text-[#0e9f6e]'
               }
             `}
           >
-            <BookOpen className="w-3.5 h-3.5 text-emerald-600" />
+            <BookOpen className="w-3.5 h-3.5" />
             <span>Biblioteca (wger)</span>
           </button>
         </div>

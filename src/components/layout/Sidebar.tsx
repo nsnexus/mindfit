@@ -65,7 +65,7 @@ export function Sidebar() {
       {/* Sidebar Container */}
       <aside
         className={`
-          fixed top-0 bottom-0 left-0 z-50 w-72 bg-white border-r border-emerald-950/10
+          fixed top-0 bottom-0 left-0 z-50 w-72 bg-white border-r border-[#eef4f1]
           flex flex-col justify-between transition-transform duration-300 ease-in-out shadow-2xl lg:shadow-none
           lg:translate-x-0 lg:sticky lg:top-0 lg:h-screen lg:z-30
           ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'}
@@ -73,25 +73,24 @@ export function Sidebar() {
       >
         {/* Top: Brand Header & Nav */}
         <div className="flex flex-col flex-1 min-h-0">
-          <div className="p-5 sm:p-6 border-b border-neutral-100 flex items-center justify-between shrink-0">
+          <div className="p-5 sm:p-6 border-b border-[#eef4f1] flex items-center justify-between shrink-0">
             <Link
               href={ROUTES.DASHBOARD}
               onClick={() => setSidebarOpen(false)}
               className="flex items-center gap-3 group"
             >
-              <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-emerald-500 to-emerald-700 flex items-center justify-center shadow-md shadow-emerald-600/30 group-hover:scale-105 transition-transform">
-                <img
-                  src="/icons/mindfit-simbolo.png"
-                  alt="Mindfit"
-                  className="w-6 h-6 object-contain brightness-0 invert"
-                />
-              </div>
+              <img
+                src="/icons/mindfit-simbolo.png"
+                alt="Mindfit"
+                className="w-9 h-9 object-contain group-hover:scale-105 transition-transform"
+              />
               <div>
-                <span className="text-xl font-black font-[var(--font-heading)] text-neutral-900 block leading-none tracking-tight">
-                  {APP_CONFIG.name}
+                <span className="text-2xl font-extrabold font-head leading-none tracking-tight block">
+                  <span className="text-[#0f5e5a]">Mind</span>
+                  <span className="text-[#0e9f6e]">fit</span>
                 </span>
-                <span className="text-[11px] text-emerald-600 font-bold tracking-wider uppercase flex items-center gap-1 mt-1">
-                  <Sparkles className="w-3 h-3" /> Método 21 Dias
+                <span className="pill text-[10px] py-0.5 px-2 mt-1 inline-flex font-bold">
+                  Método 21 Dias
                 </span>
               </div>
             </Link>
@@ -106,7 +105,7 @@ export function Sidebar() {
           </div>
 
           {/* Navigation Links */}
-          <nav className="p-3.5 space-y-1 overflow-y-auto flex-1">
+          <nav className="p-3.5 space-y-1.5 overflow-y-auto flex-1">
             {filteredNavItems.map((item) => {
               const Icon = item.icon;
               const isActive =
@@ -119,26 +118,22 @@ export function Sidebar() {
                   href={item.href}
                   onClick={() => setSidebarOpen(false)}
                   className={`
-                    group relative flex items-center justify-between px-3.5 py-2.5 rounded-2xl font-bold text-sm transition-all duration-200
+                    group relative flex items-center justify-between px-4 py-3 rounded-2xl font-head font-bold text-sm transition-all duration-200
                     ${
                       isActive
-                        ? 'bg-emerald-50 text-emerald-800 shadow-sm border border-emerald-500/25'
-                        : 'text-neutral-600 hover:bg-neutral-50 hover:text-neutral-950'
+                        ? 'bg-[#e6f6ef] text-[#0e9f6e] shadow-xs'
+                        : 'text-[#5b7a72] hover:bg-[#f5faf7] hover:text-[#0e9f6e]'
                     }
                   `}
                 >
-                  {isActive && (
-                    <div className="absolute left-0 top-2 bottom-2 w-1.5 bg-emerald-600 rounded-r-full" />
-                  )}
-
                   <div className="flex items-center gap-3">
                     <div
                       className={`
                         w-8 h-8 rounded-xl flex items-center justify-center transition-colors
                         ${
                           isActive
-                            ? 'bg-emerald-600 text-white shadow-sm shadow-emerald-600/30'
-                            : 'bg-neutral-100 text-neutral-500 group-hover:bg-emerald-100 group-hover:text-emerald-700'
+                            ? 'bg-[#0e9f6e] text-white shadow-sm shadow-[#0e9f6e]/30'
+                            : 'bg-neutral-100 text-[#5b7a72] group-hover:bg-[#e6f6ef] group-hover:text-[#0e9f6e]'
                         }
                       `}
                     >
@@ -148,9 +143,9 @@ export function Sidebar() {
                   </div>
 
                   {item.badge && (
-                    <Badge variant="success" size="xs">
+                    <span className="pill text-[10px] py-0.5 px-2">
                       {item.badge}
-                    </Badge>
+                    </span>
                   )}
                 </Link>
               );
@@ -159,16 +154,16 @@ export function Sidebar() {
         </div>
 
         {/* Bottom: User Profile & Logout */}
-        <div className="p-3.5 border-t border-neutral-100 flex items-center justify-between gap-2 shrink-0 bg-white">
+        <div className="p-4 border-t border-[#eef4f1] flex items-center justify-between gap-2 shrink-0 bg-white">
           <div className="flex items-center gap-2.5 min-w-0">
-            <div className="w-9 h-9 rounded-2xl bg-gradient-to-br from-emerald-600 to-emerald-800 text-white font-black flex items-center justify-center text-xs shrink-0 shadow-sm">
+            <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-[#8bc34a] via-[#0e9f6e] to-[#1aa8a0] text-white font-extrabold font-head flex items-center justify-center text-sm shrink-0 shadow-md shadow-[#0e9f6e]/20">
               {appUser?.displayName?.[0]?.toUpperCase() || 'A'}
             </div>
             <div className="min-w-0">
-              <span className="text-xs font-black text-neutral-900 block truncate leading-tight">
+              <span className="text-xs font-extrabold font-head text-[#12352f] block truncate leading-tight">
                 {appUser?.displayName || 'Aluno(a)'}
               </span>
-              <span className="text-[10px] text-emerald-600 font-bold block leading-tight">
+              <span className="text-[11px] text-[#0e9f6e] font-semibold block leading-tight">
                 ⭐ Membro Vitalício
               </span>
             </div>

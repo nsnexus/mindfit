@@ -10,7 +10,7 @@ import { BottomNav } from '@/components/layout/BottomNav';
 export default function AppLayout({ children }: { children: ReactNode }) {
   return (
     <AuthGuard requireAuth requireOnboarding>
-      <div className="min-h-screen flex bg-[#eef6f2] text-[#12352f]">
+      <div className="min-h-screen flex bg-[#f5faf7] text-[#12352f] font-[family-name:var(--font-body)]">
         {/* Desktop & Drawer Sidebar */}
         <Sidebar />
 
@@ -28,4 +28,5 @@ export default function AppLayout({ children }: { children: ReactNode }) {
     </AuthGuard>
   );
 }
+
 
