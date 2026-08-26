@@ -1,0 +1,23 @@
+{
+  "/(admin)/admin/page": "app/(admin)/admin/page.js",
+  "/(admin)/admin/receitas/page": "app/(admin)/admin/receitas/page.js",
+  "/(admin)/admin/treinos/page": "app/(admin)/admin/treinos/page.js",
+  "/(admin)/admin/usuarios/page": "app/(admin)/admin/usuarios/page.js",
+  "/(app)/dashboard/page": "app/(app)/dashboard/page.js",
+  "/(app)/diario/page": "app/(app)/diario/page.js",
+  "/(app)/plano-alimentar/page": "app/(app)/plano-alimentar/page.js",
+  "/(app)/progresso/page": "app/(app)/progresso/page.js",
+  "/(app)/receitas/[id]/page": "app/(app)/receitas/[id]/page.js",
+  "/(app)/receitas/page": "app/(app)/receitas/page.js",
+  "/(app)/treinos/[id]/page": "app/(app)/treinos/[id]/page.js",
+  "/(app)/treinos/page": "app/(app)/treinos/page.js",
+  "/(auth)/cadastro/page": "app/(auth)/cadastro/page.js",
+  "/(auth)/login/page": "app/(auth)/login/page.js",
+  "/(auth)/recuperar-senha/page": "app/(auth)/recuperar-senha/page.js",
+  "/(onboarding)/onboarding/page": "app/(onboarding)/onboarding/page.js",
+  "/_global-error/page": "app/_global-error/page.js",
+  "/_not-found/page": "app/_not-found/page.js",
+  "/checkout/page": "app/checkout/page.js",
+  "/favicon.ico/route": "app/favicon.ico/route.js",
+  "/page": "app/page.js"
+}

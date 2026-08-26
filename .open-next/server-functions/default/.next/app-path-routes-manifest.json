@@ -1,0 +1,23 @@
+{
+  "/(admin)/admin/page": "/admin",
+  "/(admin)/admin/receitas/page": "/admin/receitas",
+  "/(admin)/admin/treinos/page": "/admin/treinos",
+  "/(admin)/admin/usuarios/page": "/admin/usuarios",
+  "/(app)/dashboard/page": "/dashboard",
+  "/(app)/diario/page": "/diario",
+  "/(app)/plano-alimentar/page": "/plano-alimentar",
+  "/(app)/progresso/page": "/progresso",
+  "/(app)/receitas/[id]/page": "/receitas/[id]",
+  "/(app)/receitas/page": "/receitas",
+  "/(app)/treinos/[id]/page": "/treinos/[id]",
+  "/(app)/treinos/page": "/treinos",
+  "/(auth)/cadastro/page": "/cadastro",
+  "/(auth)/login/page": "/login",
+  "/(auth)/recuperar-senha/page": "/recuperar-senha",
+  "/(onboarding)/onboarding/page": "/onboarding",
+  "/_global-error/page": "/_global-error",
+  "/_not-found/page": "/_not-found",
+  "/checkout/page": "/checkout",
+  "/favicon.ico/route": "/favicon.ico",
+  "/page": "/"
+}
