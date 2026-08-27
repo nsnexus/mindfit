@@ -75,39 +75,41 @@ export async function fetchWgerExercises(
 ): Promise<WgerApiResponse<WgerExerciseInfo>> {
   const { limit = 20, offset = 0, category, term } = params;
 
-  try {
-    const queryParams = new URLSearchParams();
-    queryParams.set('limit', String(limit));
-    queryParams.set('offset', String(offset));
-    queryParams.set('language', '2'); // Idioma com base de dados mais rica
+  const queryParams = new URLSearchParams();
+  queryParams.set('limit', String(limit));
+  queryParams.set('offset', String(offset));
+  queryParams.set('language', '2'); // Idioma com base de dados mais rica
 
-    if (category) {
-      queryParams.set('category', String(category));
-    }
-
-    if (term) {
-      queryParams.set('term', term);
-    }
-
-    const res = await fetch(`${WGER_BASE_URL}/exerciseinfo/?${queryParams.toString()}`, {
-      next: { revalidate: 3600 }, // Cache de 1 hora
-    });
-
-    if (!res.ok) {
-      throw new Error(`Erro ao consultar API wger (HTTP ${res.status})`);
-    }
-
-    const data: WgerApiResponse<WgerExerciseInfo> = await res.json();
-    return data;
-  } catch (err) {
-    console.error('[Wger API Error]:', err);
-    return {
-      count: 0,
-      next: null,
-      previous: null,
-      results: [],
-    };
+  if (category) {
+    queryParams.set('category', String(category));
   }
+
+  if (term) {
+    queryParams.set('term', term);
+  }
+
+  const url = `${WGER_BASE_URL}/exerciseinfo/?${queryParams.toString()}`;
+
+  // Uma tentativa extra antes de desistir — evita cair no fallback por uma
+  // falha de rede pontual (mais provável quando várias buscas rodam juntas)
+  for (let attempt = 0; attempt < 2; attempt++) {
+    try {
+      const res = await fetch(url, { next: { revalidate: 3600 } });
+      if (!res.ok) {
+        throw new Error(`Erro ao consultar API wger (HTTP ${res.status})`);
+      }
+      const data: WgerApiResponse<WgerExerciseInfo> = await res.json();
+      return data;
+    } catch (err) {
+      if (attempt === 1) {
+        console.error('[Wger API Error]:', err);
+      } else {
+        await new Promise((r) => setTimeout(r, 400));
+      }
+    }
+  }
+
+  return { count: 0, next: null, previous: null, results: [] };
 }
 
 /**
@@ -333,28 +335,32 @@ export async function generateWeeklyPlanFromWger(
 
   const trainingSlots = trainingSlotsByLevel[profile.fitnessLevel] || trainingSlotsByLevel.beginner;
 
-  // Gera todos os dias de treino em paralelo (bem mais rápido que um por vez)
-  const days: WeeklyPlanDay[] = await Promise.all(
-    WEEKDAYS.map(async (dayName, i) => {
-      const slotPosition = trainingSlots.indexOf(i);
+  // Gera um dia de treino por vez (as categorias de cada dia já buscam em
+  // paralelo dentro de generateCustomWorkoutFromWger). Gerar os 5 dias
+  // todos ao mesmo tempo dispara ate 25 requisicoes simultaneas do
+  // navegador para a wger.de, que falha sob essa carga e cai no fallback.
+  const days: WeeklyPlanDay[] = [];
 
-      if (slotPosition === -1) {
-        return { day: dayName, dayIndex: i, isRestDay: true };
-      }
+  for (let i = 0; i < WEEKDAYS.length; i++) {
+    const slotPosition = trainingSlots.indexOf(i);
 
-      const dayFocus = focusRotation[slotPosition % focusRotation.length] || 'fullBody';
-      const workout = await generateCustomWorkoutFromWger({ ...profile, focus: dayFocus });
-      workout.id = `${workout.id}-d${i}`;
+    if (slotPosition === -1) {
+      days.push({ day: WEEKDAYS[i], dayIndex: i, isRestDay: true });
+      continue;
+    }
 
-      return {
-        day: dayName,
-        dayIndex: i,
-        isRestDay: false,
-        focus: dayFocus,
-        workout,
-      };
-    })
-  );
+    const dayFocus = focusRotation[slotPosition % focusRotation.length] || 'fullBody';
+    const workout = await generateCustomWorkoutFromWger({ ...profile, focus: dayFocus });
+    workout.id = `${workout.id}-d${i}`;
+
+    days.push({
+      day: WEEKDAYS[i],
+      dayIndex: i,
+      isRestDay: false,
+      focus: dayFocus,
+      workout,
+    });
+  }
 
   return {
     generatedAt: Date.now(),
