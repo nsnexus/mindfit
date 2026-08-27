@@ -1,0 +1,137 @@
+[
+  {
+    "id": 73,
+    "name": "Supino Reto com Barra",
+    "description": "Deite no banco com a barra alinhada acima dos olhos, joelhos flexionados e pés firmes no chão. Segure a barra com pegada um pouco mais aberta que os ombros, desça devagar até tocar levemente o peito na altura dos mamilos e empurre de volta para cima. Uma pegada mais aberta ativa mais o peitoral externo; uma pegada mais fechada ativa mais o peitoral interno e o tríceps. Use um parceiro de apoio ao treinar com cargas altas."
+  },
+  {
+    "id": 75,
+    "name": "Supino Reto com Halteres",
+    "description": "Sente na ponta do banco com um haltere apoiado verticalmente em cada coxa e deite-se, usando os joelhos para levar os halteres ao peito. Apoie bem os pés no chão, retraia as escápulas contra o banco e mantenha a leve curvatura natural da lombar. Empurre os halteres para cima, cotovelos alinhados com os punhos, girando-os levemente para dentro (cerca de 45°) para proteger os ombros. Desça de forma controlada até sentir o alongamento na parte inferior do peito, depois empurre de volta em um arco leve, sem travar totalmente os cotovelos no topo, expirando durante a subida."
+  },
+  {
+    "id": 129,
+    "name": "Supino na Máquina (Chest Press)",
+    "description": "Ajuste a altura do banco para que as alças fiquem alinhadas com o peito. Empurre as alças para longe do peito expirando, mantendo as costas em contato com o encosto, e volte devagar até quase tocar o peito inspirando durante o retorno."
+  },
+  {
+    "id": 135,
+    "name": "Voador na Máquina (Peck Deck)",
+    "description": "Sentado na máquina, com os pés firmes no chão e os braços paralelos ao chão, junte os braços até as alças quase se tocarem. Volte devagar sem deixar os pesos baterem na pilha, mantendo tensão constante no peitoral."
+  },
+  {
+    "id": 161,
+    "name": "Pullover com Halter no Banco",
+    "description": "Segure um haltere com as duas mãos, palmas apoiadas na parte de baixo do disco. Deite transversalmente em um banco reto, apenas a parte superior das costas e os ombros apoiados, pés na largura dos ombros e cabeça levemente para trás. Com os braços levemente flexionados (cerca de 15°) e essa flexão mantida durante todo o movimento, desça o haltere devagar em um arco por trás da cabeça até onde for confortável, depois volte pelo mesmo arco até a posição inicial."
+  },
+  {
+    "id": 185,
+    "name": "Supino Declinado com Barra",
+    "description": "Deite em um banco declinado com a barra alinhada acima dos olhos, joelhos flexionados e pés firmes. Segure a barra com pegada mais aberta que os ombros, desça devagar até tocar levemente o peito na altura dos mamilos e empurre de volta para cima."
+  },
+  {
+    "id": 194,
+    "name": "Paralelas (Dips)",
+    "description": "Exercício de força para a parte superior do corpo. Com pegada estreita, na largura dos ombros, trabalha principalmente o tríceps, com participação do deltoide anterior, do peitoral e dos romboides das costas. Com os braços mais afastados, o foco muda mais para o peitoral, de forma parecida com o supino em pegada aberta."
+  },
+  {
+    "id": 237,
+    "name": "Crucifixo no Cabo",
+    "description": "Na máquina de cabos, dê dois passos à frente mantendo as costas retas e traga os cabos para o centro do peito em um movimento controlado."
+  },
+  {
+    "id": 238,
+    "name": "Crucifixo com Halteres",
+    "description": "Deitado no banco com dois halteres, pés firmes no chão e as costas bem apoiadas sem arquear. Com os braços estendidos à frente na largura dos ombros, flexione levemente os cotovelos e desça os halteres em meio círculo para os lados. Sem mudar o ângulo do cotovelo, traga-os de volta para cima em um movimento fluido."
+  },
+  {
+    "id": 323,
+    "name": "Crossover no Cabo",
+    "description": "Comece com os cabos na altura dos ombros, um em cada mão. Dê um passo à frente com um dos pés para se estabilizar e manter tensão nos cabos. Junte as mãos à frente do corpo, cruzando-as levemente para máxima contração do peitoral."
+  },
+  {
+    "id": 537,
+    "name": "Supino Inclinado com Halteres",
+    "description": "Variação do supino reto que enfatiza a parte superior do peitoral, mudando o ângulo de empurrão para dar um desenvolvimento mais equilibrado e tridimensional ao tronco. Ajuste o banco entre 30° e 45° de inclinação (mais que isso sobrecarrega os ombros e reduz o estímulo no peito). Sentado com um haltere em cada coxa, deite-se apoiando as costas no banco enquanto usa os joelhos para levar os halteres até a altura dos ombros. Apoie bem os pés no chão e retraia as escápulas para proteger os ombros. Desça os halteres devagar até a parte superior do peito, mantendo os cotovelos em um ângulo seguro de 45° a 60° em relação ao tronco (sem abrir a 90°). Empurre os halteres para cima expirando, em um caminho levemente convergente, parando pouco antes de travar os cotovelos para manter a tensão na parte superior do peitoral."
+  },
+  {
+    "id": 538,
+    "name": "Supino Inclinado com Barra",
+    "description": "Execute o movimento devagar, com cadência controlada em cada fase (descida lenta, pausa e subida)."
+  },
+  {
+    "id": 925,
+    "name": "Supino Levemente Inclinado no Smith",
+    "description": "Retire a barra do suporte e segure-a acima da parte superior do peito com os braços totalmente estendidos, escápulas retraídas e pressionadas contra o banco. Desça a barra devagar até logo abaixo da clavícula, com controle total, sem deixá-la quicar no peito. Empurre a barra em linha reta para cima até estender totalmente os braços, contraindo a parte superior do peitoral no topo. Complete as repetições e recoloque a barra com segurança no suporte."
+  },
+  {
+    "id": 926,
+    "name": "Voador na Máquina Sentado",
+    "description": "Sentado na máquina, com as costas retas, execute o movimento de forma lenta e controlada."
+  },
+  {
+    "id": 1084,
+    "name": "Supino no Chão com Halteres",
+    "description": "Deite de costas no chão com os joelhos dobrados e os pés apoiados (ou use um banco). Empurre os halteres para cima até travar os cotovelos, depois desça devagar até os braços tocarem o chão perto do corpo. Pause e empurre de volta explosivamente, contraindo bem o peitoral a cada repetição."
+  },
+  {
+    "id": 1086,
+    "name": "Flexão com Pegada Fechada",
+    "description": "Assuma uma posição firme de prancha com as mãos próximas, quase se tocando. Dobre os cotovelos para descer o peito devagar até perto do chão, mantendo os cotovelos junto ao corpo, e empurre de volta com força. Controle bem a descida em cada repetição."
+  },
+  {
+    "id": 1112,
+    "name": "Flexão Declinada",
+    "description": "Variação da flexão tradicional que muda o foco de trabalho na parte superior do corpo. Eleve os pés em uma superfície como banco, cadeira ou step, com as mãos no chão na posição de flexão. Desça o corpo mantendo uma linha reta dos ombros aos tornozelos e empurre de volta. A elevação dos pés aumenta a dificuldade e concentra mais carga em ombros e tríceps, mantendo o peitoral também ativo."
+  },
+  {
+    "id": 1198,
+    "name": "Remada Invertida",
+    "description": "Com o corpo reto, retraia as escápulas e puxe o peito em direção à barra. Excelente para costas e parte superior do corpo."
+  },
+  {
+    "id": 1296,
+    "name": "Crossover no Cabo Baixo",
+    "description": "Movimento de isolamento usando cabos que foca na parte superior do peitoral. Comum em treinos de peito combinado com supinos ou crucifixos em outros ângulos para trabalhar todas as regiões do músculo."
+  },
+  {
+    "id": 1353,
+    "name": "Hex Press com Halteres",
+    "description": "Ative bem os músculos e posicione os pés afastados. Em movimento lento e controlado, leve os halteres em direção à parte inferior do peito/abdômen, mantendo os halteres unidos durante todo o exercício."
+  },
+  {
+    "id": 1551,
+    "name": "Flexão de Braço (Push-Up)",
+    "description": "Exercício fundamental com peso do próprio corpo que trabalha peito, braços e ombros, além de exigir estabilidade do core. Comece em posição de prancha com as mãos um pouco mais afastadas que os ombros, pés juntos e corpo reto da cabeça aos calcanhares. Contraia o core e desça o corpo dobrando os cotovelos (junto ao corpo ou levemente abertos) até o peito quase tocar o chão, mantendo a coluna neutra. Empurre pelas palmas das mãos até estender totalmente os braços."
+  },
+  {
+    "id": 1554,
+    "name": "Flexão com Palma (Clap Push-Up)",
+    "description": "Movimento explosivo que desenvolve potência e força de contração rápida. Adiciona um desafio pliométrico à flexão tradicional, exigindo que as mãos saiam do chão durante o movimento. Comece em posição firme de flexão, desça o corpo explosivamente e empurre com força suficiente para tirar as mãos do chão, batendo palmas na altura do peito antes de voltar ao chão. Aterrisse com os cotovelos suaves para absorver o impacto e siga direto para a próxima repetição."
+  },
+  {
+    "id": 1831,
+    "name": "Supino Declinado na Hammer Strength",
+    "description": "Sente-se ereto na máquina Hammer Strength declinada, com as escápulas retraídas e os calcanhares firmes no chão sob os joelhos. Mantenha cabeça, ombros e glúteos sempre em contato com o encosto. Segure as alças com pegada pronada, um pouco além da largura dos ombros, logo abaixo do peito. Com o core ativado, empurre pelas palmas das mãos estendendo os cotovelos a 45° do tronco. Ao estender totalmente os braços, retorne à posição inicial."
+  },
+  {
+    "id": 1902,
+    "name": "Flexão com Peso",
+    "description": "Comece em posição padrão de prancha com uma anilha apoiada de forma segura nas costas superiores. Mantenha uma linha reta da cabeça aos calcanhares, com o core ativado para não deixar a lombar ceder. Desça o corpo até o peito quase tocar o chão, cotovelos a 45°, e empurre pelas palmas das mãos até estender totalmente os braços."
+  },
+  {
+    "id": 1922,
+    "name": "Crucifixo Sentado no Cabo",
+    "description": "Posicione um banco entre duas polias de cabo ajustadas na altura do peito/ombros enquanto sentado. Segure as alças com pegada neutra, apoiado no encosto. Junte os braços à frente do peito em movimento controlado, focando em contrair o peitoral, com os cotovelos levemente flexionados durante todo o movimento. Pause brevemente no topo e volte devagar à posição inicial."
+  },
+  {
+    "id": 2529,
+    "name": "Flexão Explosiva",
+    "description": "Comece em posição padrão de flexão, desça o peito e empurre o chão com força explosiva o suficiente para as mãos saírem do solo. Aterrisse suavemente e repita imediatamente."
+  },
+  {
+    "id": 2530,
+    "name": "Flexão Russa",
+    "description": "Comece em posição de flexão com as mãos um pouco mais abertas que os ombros. Desça o peito em direção ao chão, depois desloque o corpo para frente mantendo o peito próximo ao solo. Estenda os braços para voltar à posição inicial e reverta o movimento suavemente, mantendo o core firme durante todo o exercício."
+  }
+]

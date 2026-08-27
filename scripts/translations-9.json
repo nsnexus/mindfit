@@ -1,0 +1,407 @@
+[
+  {
+    "id": 12,
+    "name": "Adução de Quadril Sentado",
+    "description": "Sentado na máquina com os joelhos voltados para dentro contra as almofadas, solte o pino de segurança e segure as alças laterais. Aproxime as pernas contra a resistência das almofadas, trabalhando os adutores."
+  },
+  {
+    "id": 203,
+    "name": "Agachamento Goblet com Halter",
+    "description": "Segure o haltere com as duas mãos na lateral do disco, próximo ao peito. Com os pés na largura dos ombros e os joelhos levemente flexionados, agache até as coxas ficarem paralelas ao chão, mantendo as costas retas e levando o quadril para trás para os joelhos ficarem alinhados com os pés. Volte à posição inicial mantendo o peso nos calcanhares e o olhar à frente."
+  },
+  {
+    "id": 206,
+    "name": "Avanço Caminhando com Halteres",
+    "description": "Em pé, com os pés na largura do quadril e os halteres nas mãos ao lado do corpo. Dê um passo largo à frente com uma perna e desça o quadril até os dois joelhos formarem cerca de 90°. Empurre pelo calcanhar da frente para subir e leve o pé de trás para frente, seguindo direto para o próximo passo."
+  },
+  {
+    "id": 257,
+    "name": "Agachamento Frontal",
+    "description": "Variação do agachamento que trabalha posterior de coxa e glúteo máximo, além dos extensores lombares e abdutores, com a barra apoiada na frente dos ombros."
+  },
+  {
+    "id": 265,
+    "name": "Ponte de Glúteo",
+    "description": "Deite de costas com o quadril e os joelhos flexionados e os pés no chão. A partir daí, eleve o quadril até o corpo formar uma linha reta dos joelhos aos ombros. Para intensificar, apoie uma barra sobre o quadril ou eleve os pés em um degrau ou banco."
+  },
+  {
+    "id": 320,
+    "name": "Polichinelo",
+    "description": "Salte abrindo as pernas na largura dos ombros enquanto eleva os braços acima da cabeça (podendo bater palma), depois volte saltando para a posição com pés juntos e braços ao lado do corpo."
+  },
+  {
+    "id": 364,
+    "name": "Flexora (Leg Curl)",
+    "description": "Exercício de isolamento para o posterior de coxa. Flexione a perna contra a resistência, trazendo-a em direção ao glúteo. Outros exercícios que fortalecem o posterior de coxa incluem o glute-ham raise e o levantamento terra."
+  },
+  {
+    "id": 365,
+    "name": "Mesa Flexora Deitado",
+    "description": "Deite no banco e posicione as panturrilhas sob o apoio da máquina. Segure as alças para manter o corpo firme no lugar. Flexione as pernas trazendo o peso para cima e volte devagar. O corpo deve ficar parado durante o exercício — só as pernas trabalham."
+  },
+  {
+    "id": 369,
+    "name": "Cadeira Extensora",
+    "description": "Exercício de resistência que isola o quadríceps na máquina de cadeira extensora. Não substitui exercícios compostos como agachamento ou levantamento terra, mas complementa bem o treino de pernas. Consiste em estender a perna a partir da flexão do joelho, depois voltar devagar à posição inicial."
+  },
+  {
+    "id": 371,
+    "name": "Leg Press",
+    "description": "Exercício de musculação em que a pessoa empurra um peso ou resistência para longe do corpo usando as pernas, na máquina de leg press."
+  },
+  {
+    "id": 373,
+    "name": "Leg Press com Pés Fechados",
+    "description": "Bem parecido com o leg press tradicional: sente na máquina e apoie os pés na plataforma bem próximos um do outro, paralelos e apontando para cima. Abaixe o peso até os joelhos formarem um ângulo reto e empurre a plataforma de volta para cima sem pausar. Na posição mais baixa, os joelhos apontam levemente para fora, e o movimento deve ser sempre fluido."
+  },
+  {
+    "id": 456,
+    "name": "Agachamento Pistol (Uma Perna)",
+    "description": "Em pé, com os pés na largura do quadril, dedos apontados para a frente e peito erguido. Estenda uma perna à frente e os dois braços à frente na altura dos ombros. Com o core firme e o olhar à frente, agache devagar apenas com a perna de apoio, mantendo a perna livre e os braços estendidos durante todo o movimento."
+  },
+  {
+    "id": 507,
+    "name": "Levantamento Terra Romeno",
+    "description": "Variação do levantamento terra com as pernas quase estendidas, focando no alongamento e na força do posterior de coxa. Desça a barra deslizando próxima às pernas com o quadril indo para trás e as costas retas, até sentir o alongamento no posterior de coxa, depois volte à posição ereta contraindo os glúteos."
+  },
+  {
+    "id": 630,
+    "name": "Levantamento Terra Sumô",
+    "description": "Com a barra no chão, aproxime-se de forma que ela fique alinhada com o meio dos pés, que devem ficar bem afastados. Flexione o quadril para segurar a barra, braços diretamente abaixo dos ombros e por dentro das pernas, com pegada pronada, mista ou hook. Relaxe os ombros, respire fundo e desça o quadril mantendo o peito erguido e o olhar à frente. Empurre o chão com força, afastando os pés, com o peso na parte de trás deles. Estenda quadril e joelhos e, ao passar a barra pelos joelhos, incline-se para trás levando o quadril contra a barra e juntando as escápulas. Retorne o peso ao chão flexionando o quadril e controlando a descida."
+  },
+  {
+    "id": 909,
+    "name": "Nordic Curl Invertido",
+    "description": "Alternativa à cadeira extensora sem uso de equipamento, trabalhando o quadríceps com o peso do próprio corpo em posição ajoelhada, inclinando o tronco para trás de forma controlada."
+  },
+  {
+    "id": 960,
+    "name": "Balanço com Kettlebell (Swing)",
+    "description": "Exercício de corpo inteiro que trabalha principalmente a cadeia posterior — glúteos, posterior de coxa, eretores da espinha e músculos das costas superiores — através do balanço explosivo do kettlebell entre as pernas até a altura do peito."
+  },
+  {
+    "id": 977,
+    "name": "Agachamento com Caixa (Box Squat)",
+    "description": "Posicione uma caixa atrás de você, a uma altura que permita agachar e tocar levemente os glúteos nela com as costas retas. Fique com os pés na largura dos ombros, dedos levemente para fora, core ativado e costas neutras. Desça como se fosse sentar em uma cadeira, flexionando os joelhos até tocar suavemente a caixa (sem se jogar), pause brevemente e empurre pelos calcanhares para voltar à posição inicial. Melhora coordenação, equilíbrio, resistência e tonifica pernas e glúteos."
+  },
+  {
+    "id": 981,
+    "name": "Subida no Step (Step-Up)",
+    "description": "De frente para uma cadeira ou step, suba com um pé de cada vez até ficar em pé sobre ele, depois desça e repita."
+  },
+  {
+    "id": 984,
+    "name": "Avanço (Lunge)",
+    "description": "Em pé, com as costas retas, dê um passo largo à frente com uma perna e desça o quadril até o joelho de trás quase tocar o chão. Suba de volta e retorne à posição inicial dando um passo para trás, alternando as pernas a cada repetição."
+  },
+  {
+    "id": 988,
+    "name": "Agachamento Búlgaro (Esquerda)",
+    "description": "Em pé, na frente de uma cadeira ou banco, dê um passo largo e apoie a parte de cima de um dos pés na cadeira atrás de você. Flexione o joelho da frente, equilibrando-se com os braços, até o joelho de trás quase tocar o chão. Empurre de volta à posição inicial e repita."
+  },
+  {
+    "id": 990,
+    "name": "Coice de Glúteo Ajoelhado",
+    "description": "Na posição de quatro apoios, empurre um dos pés para trás até estendê-lo totalmente, concentrando-se nos glúteos. Segure por 1 segundo e volte à posição inicial, alternando as pernas."
+  },
+  {
+    "id": 999,
+    "name": "Avanço Reverso (Reverse Lunge)",
+    "description": "Em pé, com os pés na largura do quadril, dê um passo para trás com uma perna até formar um ângulo confortável de 90° nos dois joelhos. Retorne à posição inicial e repita alternando as pernas."
+  },
+  {
+    "id": 1088,
+    "name": "Levantamento Terra Sumô com Halter",
+    "description": "Posicione o haltere no chão entre as pernas. Com uma postura bem aberta e as costas retas, agache e segure o haltere pela parte de cima. Mantendo o peito erguido e o core firme, empurre o chão para voltar à posição em pé. Se conseguir fazer 20-30 repetições com facilidade, use dois halteres."
+  },
+  {
+    "id": 1100,
+    "name": "Wall Ball",
+    "description": "Com uma medicine ball, na largura dos ombros, agache e arremesse a bola o mais alto possível contra a parede, pegando-a de volta ao subir."
+  },
+  {
+    "id": 1131,
+    "name": "Extensão de Glúteo no Cabo",
+    "description": "Trabalha a parte superior (maior) do glúteo, essencial em uma rotina de exercícios de isolamento para essa região. Em pé na frente da máquina de cabo com a polia baixa, prenda a tornozeleira. Mantenha a postura ereta e as costas retas o tempo todo. Segure-se na máquina para melhor equilíbrio e, com a perna presa ao cabo, estenda-a lentamente para trás sem dobrar o joelho."
+  },
+  {
+    "id": 1141,
+    "name": "Arabesque",
+    "description": "Apoie todo o peso em uma perna, mantendo o quadril nivelado o tempo todo. Com as costas em posição neutra, incline o tronco para a frente enquanto leva a outra perna para trás e para cima, depois retorne devagar à posição neutra contraindo os glúteos."
+  },
+  {
+    "id": 1239,
+    "name": "Alongamento de Panturrilha em Pé",
+    "description": "Alongamento que trabalha o gastrocnêmio (principal músculo da panturrilha, responsável por flexionar joelho e pé). Fácil de fazer em qualquer lugar, usando apenas uma parede ou cadeira de apoio."
+  },
+  {
+    "id": 1243,
+    "name": "Elevação de Panturrilha com as Duas Pernas",
+    "description": "Importante para fortalecer e melhorar o controle e a estabilidade do tornozelo e do joelho, além de proporcionar equilíbrio e controle para quadril e pelve."
+  },
+  {
+    "id": 1274,
+    "name": "Alongamento de Panturrilha Sentado (Dorsiflexão)",
+    "description": "Alongamento leve para a panturrilha, ótimo para reabilitação."
+  },
+  {
+    "id": 1275,
+    "name": "Alongamento de Flexão Plantar com Faixa",
+    "description": "Alongamento para o tornozelo e o músculo tibial anterior, usando uma faixa elástica."
+  },
+  {
+    "id": 1325,
+    "name": "Impulso Lateral (Lateral Push Off)",
+    "description": "Empurre o chão lateralmente e aterrisse em uma perna, recuperando o equilíbrio antes de saltar para a outra perna."
+  },
+  {
+    "id": 1387,
+    "name": "Chute de Posterior de Coxa",
+    "description": "Em pé, com os pés na largura do quadril, estenda um braço à frente. Balance a perna oposta para a frente e para trás mantendo-a o mais reta possível e os dedos do pé apontados para cima. Repita com a outra perna."
+  },
+  {
+    "id": 1392,
+    "name": "Good Morning",
+    "description": "Em pé, com os pés mais afastados que a largura dos ombros e as mãos no quadril. Flexione o quadril, descendo o tronco em direção ao chão mantendo as costas retas, depois volte à posição ereta."
+  },
+  {
+    "id": 1452,
+    "name": "Alongamento de Joelho ao Peito",
+    "description": "Exercício simples e eficaz para aliviar a tensão lombar e melhorar a mobilidade do quadril. Deite de costas com as pernas estendidas. Traga um joelho em direção ao peito, segurando a canela ou a parte de trás da coxa, mantendo a outra perna reta no chão. Segure o alongamento por 15 a 30 segundos e troque de lado. Para um alongamento mais profundo, pode-se puxar os dois joelhos ao peito ao mesmo tempo."
+  },
+  {
+    "id": 1521,
+    "name": "Hack Pendular",
+    "description": "Agachamento hack feito na máquina pendular, trabalhando o quadríceps com trajetória guiada."
+  },
+  {
+    "id": 1593,
+    "name": "Agachamento Búlgaro no Smith",
+    "description": "Exercício de força feito na máquina Smith, ideal para pernas e glúteos. Posicione um pé à frente e o outro atrás, descendo o corpo até a coxa da frente ficar paralela ao chão enquanto a barra desliza verticalmente na máquina. Ajuda a melhorar a estabilidade, corrigir desequilíbrios musculares e reduzir o estresse na lombar."
+  },
+  {
+    "id": 1604,
+    "name": "Avanço Lateral Deslizante",
+    "description": "Em pé, com os pés na largura do quadril, segurando um kettlebell perto do peito na posição goblet. Coloque um pé sobre um disco deslizante ou toalha. Com o peito erguido e o core ativado, deslize o pé lentamente para o lado enquanto flexiona o joelho oposto, descendo o quadril em um avanço lateral. Mantenha o joelho da perna de trabalho alinhado com os dedos do pé, sem deixá-lo cair para dentro. Empurre pelo calcanhar da perna flexionada para voltar à posição inicial."
+  },
+  {
+    "id": 1612,
+    "name": "Levantamento Terra Sumô com Kettlebell",
+    "description": "Posicione os pés mais afastados que a largura dos ombros, com os dedos apontados para fora. Mantenha as costas retas, ombros para trás e peito erguido. Os joelhos devem seguir a mesma direção dos dedos dos pés, sem avançar para a frente. Ao subir, contraia bem os glúteos para maximizar o exercício."
+  },
+  {
+    "id": 1613,
+    "name": "Coice de Glúteo com Faixa Elástica",
+    "description": "Exercício feito de quatro apoios com uma faixa elástica presa ao pé. Chute o calcanhar para trás e para cima, contraindo o glúteo no topo do movimento, mantendo o core estável e as costas retas."
+  },
+  {
+    "id": 1616,
+    "name": "Coice de Glúteo com Halter",
+    "description": "Exercício eficaz para glúteo e posterior de coxa, feito na posição de quatro apoios com um haltere para adicionar resistência. Com as mãos alinhadas sob os ombros e os joelhos sob o quadril, posicione o haltere atrás do joelho da perna a ser elevada, segurando-o com firmeza. Inspire e, ao expirar, eleve a perna com o haltere mantendo o joelho flexionado a 90°, até ficar paralela ao chão, sentindo a contração no glúteo. Segure por 1 segundo no topo e desça devagar. Faça de 10 a 15 repetições por perna, em 2 a 3 séries."
+  },
+  {
+    "id": 1640,
+    "name": "Agachamento Frontal com Halteres",
+    "description": "Segure um haltere em cada mão na altura dos ombros e execute o agachamento. Trabalha quadríceps, posterior de coxa e glúteos, além de exigir ativação do core e da parte superior do corpo."
+  },
+  {
+    "id": 1641,
+    "name": "Levantamento Terra Unilateral com Kettlebell",
+    "description": "Segure um kettlebell em uma das mãos e, apoiado em uma perna só, incline o tronco para a frente até tocar o kettlebell no chão. Trabalha posterior de coxa, glúteos e lombar, além de melhorar equilíbrio e estabilidade."
+  },
+  {
+    "id": 1642,
+    "name": "Elevação de Quadril com Halter",
+    "description": "Sentado no chão com um haltere apoiado no quadril, eleve o quadril para cima contraindo os glúteos. Ótimo exercício para fortalecer os glúteos e melhorar a mobilidade do quadril."
+  },
+  {
+    "id": 1651,
+    "name": "Avanço Reverso com Halteres",
+    "description": "Segure um haltere em cada mão e dê um passo para trás em um avanço, depois retorne à posição em pé. Trabalha principalmente glúteos, posterior de coxa e quadríceps."
+  },
+  {
+    "id": 1652,
+    "name": "Levantamento Terra Romeno com Halteres",
+    "description": "Segure um haltere em cada mão e flexione o quadril para a frente mantendo as costas retas, depois retorne à posição em pé. Trabalha principalmente posterior de coxa e glúteos."
+  },
+  {
+    "id": 1653,
+    "name": "Agachamento Lateral com Halter",
+    "description": "Segure um haltere em uma das mãos e agache enquanto dá um passo lateral. Trabalha pernas, glúteos e core."
+  },
+  {
+    "id": 1706,
+    "name": "Agachamento Búlgaro com Halteres",
+    "description": "Agachamento feito com uma perna só, apoiando o pé de trás em uma plataforma elevada. Elevar a perna de trás em um banco cria instabilidade e aumenta a amplitude do movimento."
+  },
+  {
+    "id": 1733,
+    "name": "Agachamento Isométrico até a Falha",
+    "description": "Variação do agachamento em que você mantém uma posição estática em um ângulo específico, segurando até os músculos não conseguirem mais sustentar a contração."
+  },
+  {
+    "id": 1734,
+    "name": "Avanço Unilateral com Kettlebell",
+    "description": "Em pé, com os pés juntos, segure o kettlebell com as duas mãos próximo ao peito (ou com uma mão, do lado da perna de trabalho). Dê um passo largo à frente (ou para trás, mais seguro para os joelhos) com uma perna, descendo o quadril até os dois joelhos formarem 90°. Transfira o peso para a perna da frente, mantendo as costas retas e o tronco ereto. Empurre pela perna da frente para voltar à posição inicial."
+  },
+  {
+    "id": 1735,
+    "name": "Leg Press Unilateral Lateral (Glúteo)",
+    "description": "Variação do leg press em que o corpo fica angulado lateralmente na plataforma, com um pé posicionado mais alto e levemente inclinado para trabalhar intensamente o glúteo lateral (médio/mínimo) e o posterior de coxa. Sente na máquina, gire o corpo para um lado, posicionando um pé mais alto na plataforma a cerca de 45°, com os dedos levemente para fora. Mantenha quadril, joelho e tornozelo alinhados e a lombar sempre apoiada. Desça o peso devagar, flexionando bem o joelho (perto de 90°), sentindo o alongamento no glúteo e no posterior de coxa. Empurre pelo calcanhar (não pelos dedos) para subir, contraindo glúteo e posterior de coxa, parando antes de estender totalmente a perna."
+  },
+  {
+    "id": 1736,
+    "name": "Levantamento Terra Unilateral com Halter",
+    "description": "Em pé, com leve flexão nos joelhos, segurando um haltere em uma ou nas duas mãos. Transfira o peso para a perna de apoio e eleve levemente o outro pé do chão. Mantendo as costas retas e o core ativado, flexione o quadril levando os glúteos para trás. Ao descer o tronco, estenda a perna livre para trás para equilíbrio, mantendo o quadril nivelado. O(s) haltere(s) deve(m) descer alinhado(s) com a perna de apoio. Continue descendo até o tronco ficar quase paralelo ao chão ou sentir um alongamento intenso no posterior de coxa da perna de apoio. Pause embaixo, depois contraia glúteo e posterior de coxa para subir devagar de volta à posição inicial. Troque de lado após completar as repetições."
+  },
+  {
+    "id": 1747,
+    "name": "Agachamento no Smith",
+    "description": "Variação do agachamento tradicional com barra guiada em trajetória fixa. Posicione os pés um pouco à frente da barra, na largura dos ombros, com a barra apoiada nos trapézios/ombros como no agachamento tradicional. Destrave a barra girando-a para soltar dos ganchos de segurança, desça o corpo flexionando joelhos e quadril até as coxas ficarem paralelas ao chão (ou um pouco abaixo), pause brevemente e empurre pelos calcanhares para voltar à posição inicial. A trajetória fixa da barra reduz a exigência de equilíbrio, sendo mais indicada para iniciantes."
+  },
+  {
+    "id": 1748,
+    "name": "Abdução de Quadril na Máquina",
+    "description": "Sentado na máquina, com as costas apoiadas no encosto e a parte interna das coxas contra as almofadas de resistência. Ajuste o assento para alinhar o quadril com o eixo de pivô da máquina. Comece com as pernas juntas ou levemente pressionadas contra as almofadas internas e empurre-as lentamente para fora, separando-as até a amplitude confortável máxima. Pause brevemente no ponto mais externo e volte devagar e com controle à posição inicial. Trabalha principalmente o glúteo médio, melhorando a estabilidade do quadril e reduzindo o risco de lesões no joelho."
+  },
+  {
+    "id": 1801,
+    "name": "Agachamento Completo com Barra",
+    "description": "Exercício composto que trabalha várias regiões da parte inferior do corpo, incluindo quadríceps, posterior de coxa e glúteos. A postura correta é essencial para maximizar resultados e evitar lesões: mantenha os pés na largura dos ombros, gere tensão em todo o corpo, controle a descida e mantenha a profundidade e o posicionamento correto dos joelhos. Exercícios auxiliares como agachamento frontal, goblet, split squat e búlgaro ajudam a melhorar a técnica e o desempenho no agachamento com barra."
+  },
+  {
+    "id": 1804,
+    "name": "Mobilidade de Tornozelo (Dorsiflexão)",
+    "description": "Mova o joelho para a frente mantendo o calcanhar no chão. Segure a posição por alguns segundos e volte à posição inicial."
+  },
+  {
+    "id": 1830,
+    "name": "Avanço Reverso com Barra",
+    "description": "Em pé, com os pés na largura do quadril, apoiando a barra na parte superior das costas. Mantenha as costas retas, peito erguido e core ativado. Dê um passo para trás com uma perna e desça o corpo flexionando os dois joelhos, até o joelho de trás quase tocar o chão. Empurre pelo pé de trás para voltar à posição inicial e repita alternando as pernas."
+  },
+  {
+    "id": 1854,
+    "name": "Liberação Miofascial de Panturrilha (Foam Roller)",
+    "description": "Passe lentamente a panturrilha sobre o rolo de liberação miofascial (foam roller) para soltar a musculatura."
+  },
+  {
+    "id": 1855,
+    "name": "Liberação Miofascial de Posterior de Coxa (Foam Roller)",
+    "description": "Passe lentamente o posterior de coxa sobre o rolo de liberação miofascial (foam roller) para soltar a musculatura."
+  },
+  {
+    "id": 1856,
+    "name": "Liberação Miofascial de Tibial Anterior (Foam Roller)",
+    "description": "Use o rolo de liberação miofascial lentamente na região do tibial anterior, na frente da canela."
+  },
+  {
+    "id": 1857,
+    "name": "Liberação Miofascial de Trato Iliotibial (Foam Roller)",
+    "description": "Deslize o rolo de liberação miofascial sobre o trato iliotibial, na lateral da coxa."
+  },
+  {
+    "id": 1858,
+    "name": "Liberação Miofascial de Quadríceps (Foam Roller)",
+    "description": "Deslize o rolo de liberação miofascial sobre o quadríceps, na frente da coxa."
+  },
+  {
+    "id": 1859,
+    "name": "Liberação Miofascial de Glúteo (Foam Roller)",
+    "description": "Deslize o rolo de liberação miofascial sobre o glúteo para soltar a musculatura."
+  },
+  {
+    "id": 1860,
+    "name": "Liberação Miofascial de Adutores (Foam Roller)",
+    "description": "Deslize o rolo de liberação miofascial sobre os adutores, na parte interna da coxa."
+  },
+  {
+    "id": 1862,
+    "name": "Círculos de Quadril",
+    "description": "Mobilidade de quadril feita em pé, girando o quadril em círculos amplos e controlados para soltar a articulação."
+  },
+  {
+    "id": 1863,
+    "name": "Cruzamento de Quadril (Hip Crossover)",
+    "description": "Exercício de mobilidade que leva o joelho cruzando o corpo para soltar o quadril e a lombar."
+  },
+  {
+    "id": 1864,
+    "name": "Rotação de Tornozelo",
+    "description": "Gire o tornozelo em círculos, em ambas as direções, para melhorar a mobilidade da articulação."
+  },
+  {
+    "id": 1865,
+    "name": "Mobilidade de Tornozelo com Faixa",
+    "description": "Exercício de mobilidade de tornozelo usando uma faixa elástica para aumentar a amplitude de movimento."
+  },
+  {
+    "id": 1867,
+    "name": "Alongamento de Flexor de Quadril",
+    "description": "Alongamento para soltar o flexor do quadril, geralmente feito com um joelho apoiado no chão e o quadril empurrado para a frente."
+  },
+  {
+    "id": 1868,
+    "name": "Avanço com Rotação de Tronco (Alongamento)",
+    "description": "A partir de um avanço, gire o tronco em direção à perna da frente para alongar quadril e coluna torácica."
+  },
+  {
+    "id": 1869,
+    "name": "Alongamento Figura Quatro Deitado",
+    "description": "Deitado de costas, cruze um tornozelo sobre o joelho oposto formando um quatro, e puxe a perna de apoio em direção ao peito para alongar o glúteo."
+  },
+  {
+    "id": 1870,
+    "name": "Alongamento de Posterior de Coxa Deitado com Faixa",
+    "description": "Deitado de costas, use uma faixa elástica ao redor do pé para elevar e alongar a perna, trabalhando o posterior de coxa."
+  },
+  {
+    "id": 1872,
+    "name": "Alongamento do Pombo (Pigeon Stretch)",
+    "description": "Alongamento profundo de quadril, com uma perna dobrada à frente do corpo e a outra estendida para trás."
+  },
+  {
+    "id": 1873,
+    "name": "Alongamento de Quadríceps",
+    "description": "Em pé ou deitado de lado, flexione o joelho puxando o pé em direção ao glúteo para alongar a frente da coxa."
+  },
+  {
+    "id": 1874,
+    "name": "Alongamento de Avanço do Corredor",
+    "description": "A partir de um avanço profundo, com o quadril empurrado para baixo e para a frente, alongue o flexor de quadril e o posterior de coxa da perna de trás."
+  },
+  {
+    "id": 1875,
+    "name": "Alongamento de Trato Iliotibial em Pé",
+    "description": "Em pé, cruze uma perna atrás da outra e incline o tronco lateralmente para alongar o trato iliotibial na lateral da coxa."
+  },
+  {
+    "id": 1947,
+    "name": "Arranco com Halter (Snatch)",
+    "description": "Posicione o haltere entre os pés, ombros acima do quadril, peito erguido e costas retas. Estenda quadril, joelhos e tornozelos explosivamente (tripla extensão) para impulsionar o haltere para cima, mantendo o cotovelo alto e o peso próximo ao corpo. Flexione rapidamente quadril e joelhos para receber o haltere acima da cabeça com o braço travado, aterrissando em meio agachamento. Evite usar demais os braços em vez das pernas e alinhe bem ombro, cotovelo e punho na posição final."
+  },
+  {
+    "id": 1963,
+    "name": "Agachamento Lento",
+    "description": "Agachamento com cadência controlada que aumenta a tensão muscular e melhora a estabilidade da parte inferior do corpo. Desça devagar em 3 segundos, pause por 1 segundo embaixo e suba em ritmo normal, mantendo o peito erguido e o peso nos calcanhares."
+  },
+  {
+    "id": 1965,
+    "name": "Marcha com Joelhos Altos",
+    "description": "Exercício cardio de baixo impacto que fortalece os flexores do quadril e melhora o equilíbrio. Em pé e ereto, eleve um joelho em direção ao peito o mais alto que for confortável, balançando o braço oposto para a frente como em uma caminhada, mantendo o abdômen ativado e alternando as pernas em ritmo controlado."
+  },
+  {
+    "id": 2494,
+    "name": "Extensão Terminal de Joelho com Faixa",
+    "description": "Exercício de fortalecimento da extensão final do joelho. Prenda uma faixa elástica atrás de um dos joelhos e ancore a outra ponta em uma superfície estável à frente. Fique em posição avançada com o joelho da faixa flexionado à frente. Estenda o joelho contra a resistência da faixa, mantendo a contração do quadríceps por até 5 segundos antes de soltar."
+  },
+  {
+    "id": 2495,
+    "name": "Flexão de Perna na Máquina",
+    "description": "Ajuste o encosto ou a almofada para os joelhos ficarem alinhados com o eixo de pivô lateral da máquina. Posicione a almofada inferior contra a parte de baixo das panturrilhas, logo acima do tornozelo. Abaixe a almofada superior para as pernas ficarem firmes no assento. Escolha uma carga leve na pilha de peso."
+  },
+  {
+    "id": 2534,
+    "name": "Ponte de Glúteos",
+    "description": "Deite de costas com o quadril e os joelhos flexionados e os pés no chão. A partir daí, eleve o quadril até o corpo formar uma linha reta dos joelhos aos ombros. Para intensificar, apoie uma barra sobre o quadril ou eleve os pés em um degrau ou banco."
+  }
+]

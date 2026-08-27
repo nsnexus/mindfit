@@ -1,0 +1,182 @@
+[
+  {
+    "id": 79,
+    "name": "Remada Alta Inclinada",
+    "description": "Incline levemente o tronco para a frente segurando dois halteres. Puxe os halteres até o peito, mantendo os cotovelos o mais altos possível."
+  },
+  {
+    "id": 256,
+    "name": "Elevação Frontal",
+    "description": "Em pé, com os pés na largura dos ombros, segure os pesos com pegada pronada ao lado do corpo. Eleve os braços à frente do corpo até a altura dos olhos, com uma leve flexão nos cotovelos, isolando o deltoide anterior. Mantenha o corpo parado durante o movimento — se precisar balançar o corpo, o peso está pesado demais. Uma variação com pegada neutra eleva os braços a 45° à frente do corpo, sendo mais indicada para quem tem lesões no ombro."
+  },
+  {
+    "id": 282,
+    "name": "Flexão em Parada de Mão",
+    "description": "Também chamada de flexão vertical ou invertida, é feita com o corpo posicionado em parada de mão. Para quem ainda não tem equilíbrio suficiente, os pés podem se apoiar na parede ou contar com ajuda de um parceiro. Exige bastante força, equilíbrio e controle."
+  },
+  {
+    "id": 348,
+    "name": "Elevação Lateral",
+    "description": "Trabalha o deltoide do ombro. Comece com os braços estendidos e os pesos ao lado ou à frente do corpo, tronco levemente inclinado para a frente com quadril e joelhos levemente flexionados. Eleve os braços (retos ou levemente flexionados) lateralmente até a altura dos ombros, depois desça de volta à posição inicial completando uma repetição."
+  },
+  {
+    "id": 349,
+    "name": "Remada Lateral no Cabo (Um Braço)",
+    "description": "Com o cabo ajustado na altura da cintura, comece com o braço cruzado à frente do abdômen e mova a mão para o lado oposto do corpo, um braço de cada vez."
+  },
+  {
+    "id": 418,
+    "name": "Desenvolvimento Militar com Barra W",
+    "description": "Segure a barra W pelas partes anguladas, em pé com os braços estendidos para baixo, palmas voltadas para as pernas. Puxe a barra (flexionando os cotovelos) até o peito e depois empurre-a acima da cabeça com os braços o mais estendidos possível. Retorne a barra ao peito flexionando os cotovelos e depois volte à posição inicial."
+  },
+  {
+    "id": 478,
+    "name": "Push Press",
+    "description": "Leve os halteres aos ombros com as palmas voltadas para dentro. Respire fundo e contraia o core. Flexione levemente os joelhos e use o impulso das pernas para ajudar a empurrar os halteres acima da cabeça. Desça com controle e ritmo lento de volta aos ombros e repita."
+  },
+  {
+    "id": 487,
+    "name": "Elevação Posterior de Ombro",
+    "description": "Sentado no banco com os halteres no chão, incline o tronco a 45° e eleve cada haltere devagar até a altura dos ombros, segure por alguns segundos e desça de volta à posição inicial."
+  },
+  {
+    "id": 566,
+    "name": "Desenvolvimento com Barra",
+    "description": "Sentado no banco com o encosto quase vertical, segure a barra com pegada na largura dos ombros e leve-a até a altura do peito. Empurre o peso para cima sem estender totalmente os braços, desça devagar e repita."
+  },
+  {
+    "id": 567,
+    "name": "Desenvolvimento com Halteres",
+    "description": "Sentado no banco com o encosto quase vertical, leve dois halteres até a altura dos ombros com palmas e cotovelos voltados para a frente durante todo o movimento. Empurre os pesos para cima até quase se tocarem no topo (sem bater), desça devagar e repita."
+  },
+  {
+    "id": 570,
+    "name": "Encolhimento de Ombros",
+    "description": "Exercício para desenvolver a parte superior do trapézio. Em pé e ereto, com as mãos na largura dos ombros, eleve os ombros o máximo possível e depois abaixe, sem flexionar os cotovelos nem balançar o corpo. É considerada boa forma quando os ombros ficam nivelados na posição elevada."
+  },
+  {
+    "id": 571,
+    "name": "Encolhimento com Barra",
+    "description": "Em pé, com o corpo reto e os braços soltos à frente segurando a barra, eleve os ombros o máximo possível sem flexionar os braços durante o movimento. No ponto mais alto, pause por 1 a 2 segundos antes de voltar devagar à posição inicial. Com cargas mais altas, garanta ainda assim a amplitude completa do movimento."
+  },
+  {
+    "id": 572,
+    "name": "Encolhimento com Halteres",
+    "description": "Em pé, com o corpo reto e um haltere em cada mão ao lado do corpo, eleve os ombros o máximo possível sem flexionar os braços durante o movimento. No ponto mais alto, pause por 1 a 2 segundos antes de voltar devagar à posição inicial. Com cargas mais altas, garanta ainda assim a amplitude completa do movimento."
+  },
+  {
+    "id": 691,
+    "name": "Remada Alta na Multi Press",
+    "description": "Movimento parecido com o feito na barra W, mas usando a barra da multi press. Em pé, com os pés na largura dos ombros, segure a barra com pegada pronada apoiada nas coxas e braços estendidos. Eleve a barra próxima ao corpo até o queixo, com os cotovelos apontando para fora formando um V no topo. Pause brevemente antes de descer devagar e repetir."
+  },
+  {
+    "id": 693,
+    "name": "Remada Alta com Barra W",
+    "description": "Em pé, com os pés na largura dos ombros, segure a barra W com pegada pronada apoiada nas coxas e braços estendidos. Eleve a barra próxima ao corpo até o queixo, com os cotovelos apontando para fora formando um V no topo. Pause brevemente antes de descer devagar e repetir."
+  },
+  {
+    "id": 694,
+    "name": "Remada Alta com Halteres",
+    "description": "Segure um haltere em cada mão à frente do corpo, palmas voltadas para o corpo. Eleve as mãos em linha reta até ficarem logo abaixo do queixo, depois desça e repita."
+  },
+  {
+    "id": 822,
+    "name": "Crucifixo Invertido no Cabo",
+    "description": "Também chamado de reverse fly no cabo, é um dos melhores exercícios de isolamento para as costas e o deltoide posterior. Ajuste o peso e as polias na altura da cabeça, cruzando os cabos à frente do corpo (mão direita pega a polia esquerda e vice-versa). Puxe os braços para trás mantendo-os estendidos, pause brevemente ao final do movimento e volte devagar à posição inicial."
+  },
+  {
+    "id": 915,
+    "name": "Bus Driver (Rotação de Anilha)",
+    "description": "Sentado, segure uma anilha com as duas mãos como se fosse um volante e eleve-a levemente abaixo da altura dos olhos, girando-a de um lado para o outro."
+  },
+  {
+    "id": 916,
+    "name": "Desenvolvimento no Smith",
+    "description": "Sentado em um ângulo de quase 90°, execute o desenvolvimento de ombros na máquina Smith."
+  },
+  {
+    "id": 1007,
+    "name": "Rotação de Cabeça",
+    "description": "Sentado ou em pé, com as costas retas e os ombros relaxados para baixo, gire a cabeça para o lado até o limite confortável, segure por 5 segundos, volte ao centro e repita para o outro lado."
+  },
+  {
+    "id": 1080,
+    "name": "Flexão Hindu",
+    "description": "Exercício para fortalecer ombros e peitoral. Começa na posição de ioga \"cachorro olhando para baixo\", passa pela posição \"cobra\" sem apoiar pernas ou tronco no chão, e termina em uma flexão normal. Também pode ser feito no sentido inverso, voltando à posição inicial."
+  },
+  {
+    "id": 1227,
+    "name": "Remada para Deltoide Posterior com Halteres",
+    "description": "Segure um haltere em cada mão. Flexione o quadril até as costas ficarem quase paralelas ao chão, com os braços soltos alinhados com os ombros. Flexione e eleve os cotovelos para os lados até os braços ficarem paralelos ao chão, depois retorne devagar e repita."
+  },
+  {
+    "id": 1338,
+    "name": "Elevação de Ombro com Halter",
+    "description": "Ative bem os músculos, sem usar embalo. Movimento controlado e lento, mantendo sempre os braços levemente flexionados, sem hiperestender."
+  },
+  {
+    "id": 1378,
+    "name": "Elevação Lateral no Cabo (Um Braço)",
+    "description": "Variação da elevação lateral para desenvolver os músculos do ombro. Com o cabo na posição mais baixa e uma alça única presa, cruze o braço à frente do corpo e segure a alça com pegada neutra. Mantendo o cotovelo levemente flexionado, puxe a alça cruzando o corpo e eleve lateralmente. Desça devagar e com controle de volta à posição inicial."
+  },
+  {
+    "id": 1556,
+    "name": "Devil's Press",
+    "description": "Movimento híbrido que combina burpee com halteres e arranco duplo com halteres. Exercício de corpo inteiro e alta intensidade que desenvolve força, potência e condicionamento. Com um haltere em cada mão, faça um burpee tocando o peito no chão segurando os halteres. Salte os pés para a frente explosivamente e balance os halteres entre as pernas, levando-os acima da cabeça em um movimento contínuo até travar os braços. Desça os halteres com controle de volta à posição inicial e repita."
+  },
+  {
+    "id": 1581,
+    "name": "Trap Press",
+    "description": "Deitado com o braço apontando para cima e o cotovelo totalmente estendido, use apenas o ombro para elevar o peso o máximo confortável e volte à posição de descanso."
+  },
+  {
+    "id": 1582,
+    "name": "Rotação Interna Deitado de Lado",
+    "description": "Deitado de lado, usando o braço mais próximo do banco, mantenha o cotovelo flexionado a 90° e deixe o peso descer em direção ao chão além do banco até onde for confortável. Suba o peso usando apenas a rotação do ombro em direção ao ombro oposto."
+  },
+  {
+    "id": 1638,
+    "name": "Clean and Press com Barra",
+    "description": "Levante a barra do chão até os ombros e em seguida empurre-a acima da cabeça. Movimento composto que trabalha várias regiões do corpo — pernas, costas, ombros e braços — muito usado em programas de força e condicionamento para melhorar potência e atletismo geral."
+  },
+  {
+    "id": 1654,
+    "name": "Elevação Lateral na Máquina",
+    "description": "Exercício de isolamento que trabalha o deltoide lateral (medial) para ombros mais largos e definidos. O trajeto fixo da máquina oferece mais estabilidade que os halteres, sendo ideal para iniciantes ou para quem quer focar apenas na ativação muscular."
+  },
+  {
+    "id": 1744,
+    "name": "Elevação Lateral na Máquina (Side Lateral)",
+    "description": "Exercício de isolamento para o deltoide lateral feito na máquina, que oferece estabilidade ao elevar as almofadas ou alças lateralmente até a altura dos ombros e descer devagar, mantendo os cotovelos levemente flexionados e o trapézio relaxado para focar no deltoide. Ajuste o banco de forma que os ombros fiquem alinhados com o eixo da máquina, segure com pegada relaxada e ombros baixos. Expire ao elevar os braços lateralmente até ficarem paralelos ao chão, pause brevemente contraindo o deltoide lateral sem encolher os ombros, e inspire ao descer devagar e com controle."
+  },
+  {
+    "id": 1745,
+    "name": "Elevação Frontal no Cabo com Barra",
+    "description": "Isola o deltoide anterior (frente do ombro) com tensão constante do cabo. Fique de costas para a polia baixa, segure a barra com pegada pronada e eleve-a à frente do corpo até a altura dos ombros, com os braços levemente flexionados, sem balançar e com o core firme para um movimento controlado. Use carga leve a moderada, focando em repetições lentas e controladas em vez de embalo."
+  },
+  {
+    "id": 1835,
+    "name": "Alongamento de Rotação Externa",
+    "description": "Sentado com os pés um contra o outro e um joelho elevado para o lado do corpo, apoie o cotovelo sobre o joelho elevado, flexionado a 90°, segurando um peso com a mão apontando para a frente. Mantendo o ombro para baixo e retraído, eleve a mão até o antebraço ficar na vertical, como um aceno robótico. Abaixe a mão de volta e repita."
+  },
+  {
+    "id": 1893,
+    "name": "Desenvolvimento com Barra Acima da Cabeça",
+    "description": "Em pé com os pés juntos, segure a barra com pegada um pouco mais aberta que os ombros, apoiada na parte superior do peito. Com o core firme, empurre a barra em linha reta para cima até travar os braços, depois controle a descida de volta ao peito."
+  },
+  {
+    "id": 1901,
+    "name": "Clean and Press",
+    "description": "Primeira puxada: levante a barra do chão até a altura dos joelhos usando as pernas, mantendo o ângulo das costas constante. Posição de potência: ao passar pela metade da coxa, faça um encolhimento explosivo e estenda o quadril para gerar impulso vertical. Giro rápido do cotovelo: na fase de recepção, gire os cotovelos rapidamente por baixo da barra, criando um apoio nos deltoides frontais. Empurrão vertical: empurre a barra em linha reta para cima, deslocando levemente a cabeça para frente conforme a barra passa pela testa até a extensão total."
+  },
+  {
+    "id": 1916,
+    "name": "Planche Agachada (Tuck Planche)",
+    "description": "Progressão básica de calistenia rumo à planche completa, trabalhando força de ombros e core em posição de apoio horizontal."
+  },
+  {
+    "id": 1968,
+    "name": "Desenvolvimento Unilateral com Halter",
+    "description": "Empurre o haltere verticalmente acima da cabeça em movimento controlado até estender totalmente o braço, sem travar o cotovelo. Desça devagar de volta à altura dos ombros."
+  }
+]

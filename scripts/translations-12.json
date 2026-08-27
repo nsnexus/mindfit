@@ -1,0 +1,212 @@
+[
+  {
+    "id": 81,
+    "name": "Remada Curvada com Halteres",
+    "description": "Com um haltere em cada mão, flexione o quadril até as mãos ficarem logo abaixo dos joelhos (parecido com a posição inicial do stiff). Mantenha o ângulo do tronco constante e contraia o dorsal para puxar os cotovelos para trás, aproximando as escápulas no topo. Evite se levantar a cada repetição — as mãos devem sempre passar abaixo dos joelhos."
+  },
+  {
+    "id": 83,
+    "name": "Remada Curvada com Barra",
+    "description": "Segurando a barra com pegada pronada, flexione levemente os joelhos e incline o tronco para a frente pela cintura, mantendo as costas retas quase paralelas ao chão, com a cabeça erguida. A barra deve ficar pendurada à sua frente com os braços perpendiculares ao chão — essa é a posição inicial. Mantendo o tronco parado, expire e puxe a barra em sua direção, mantendo os cotovelos próximos ao corpo. No topo, contraia bem as costas e segure por um instante, depois inspire e desça devagar de volta à posição inicial."
+  },
+  {
+    "id": 84,
+    "name": "Remada Curvada com Pegada Pronada",
+    "description": "Semelhante à remada curvada tradicional, mas com pegada invertida (palmas voltadas para a frente). Segure a barra com pegada aberta (um pouco além da largura dos ombros) e incline o tronco para a frente, quase paralelo ao chão, peito para fora durante todo o exercício. Puxe a barra com movimento rápido em direção ao umbigo (não mais alto), e desça devagar de volta à posição inicial, sem balançar o corpo e mantendo os braços junto ao corpo."
+  },
+  {
+    "id": 152,
+    "name": "Barra Fixa com Pegada Supinada (Chin-Up)",
+    "description": "Exercício de força que fortalece principalmente o dorsal e o bíceps, que atuam na extensão do ombro e flexão do cotovelo. Nesse movimento, as palmas das mãos ficam voltadas para o corpo, e a amplitude é medida em relação ao queixo."
+  },
+  {
+    "id": 158,
+    "name": "Puxada Alta com Pegada Fechada",
+    "description": "Segure a barra da puxada com as mãos mais próximas que a largura dos ombros, palmas voltadas para fora. Incline-se levemente para trás e puxe a barra em direção ao peito, mantendo os cotovelos próximos ao corpo durante a descida. Puxe os ombros para trás no final do movimento."
+  },
+  {
+    "id": 184,
+    "name": "Levantamento Terra",
+    "description": "Fique em pé firmemente, com os pés um pouco mais afastados que a largura dos ombros, bem próximos à barra até quase tocar a canela, pés levemente apontados para fora. Flexione o corpo mantendo as costas retas, joelhos também apontando para fora. Segure a barra na largura dos ombros, com pegada mista (uma mão pronada, outra supinada). Puxe o peso para cima, no ponto mais alto contraia levemente a lombar e puxe os ombros para trás, segurando a posição por 1 a 2 segundos. Desça sem curvar as costas, podendo pausar no chão ou continuar direto, dependendo da carga."
+  },
+  {
+    "id": 301,
+    "name": "Hiperextensão Lombar",
+    "description": "Deite no banco de hiperextensão com o umbigo na borda da frente, deixando a parte superior do corpo pender livremente. Contraia toda a musculatura das costas e eleve o tronco até ficar na horizontal, sem passar disso. Desça devagar, mantendo o movimento controlado e constante."
+  },
+  {
+    "id": 394,
+    "name": "Remada Baixa no Cabo (Low Row)",
+    "description": "Sente-se, apoie os pés nos suportes e segure a barra com pegada aberta. Puxe o peso com movimento rápido em direção ao umbigo (não mais alto), mantendo braços e cotovelos próximos ao corpo durante o movimento, com os ombros puxados para trás. Deixe o peso voltar devagar até os braços ficarem totalmente estendidos."
+  },
+  {
+    "id": 475,
+    "name": "Barra Fixa (Pull-Up)",
+    "description": "Segure a barra com pegada aberta, corpo pendurado livremente. Mantenha o peito estufado e puxe o corpo para cima até o queixo alcançar a barra ou tocá-la atrás da cabeça, se estiver fazendo a variação por trás. Desça com movimento lento e controlado, sempre com o peito estufado."
+  },
+  {
+    "id": 484,
+    "name": "Levantamento Terra no Rack (Rack Pull)",
+    "description": "Levantamento terra parcial feito na máquina Smith ou em um rack livre, com a barra posicionada logo abaixo da altura dos joelhos. Levante usando os glúteos e o apoio nos calcanhares, retornando à posição inicial com movimento controlado de cerca de 2 segundos. Foca principalmente na lombar e nos glúteos."
+  },
+  {
+    "id": 512,
+    "name": "Remada Sentada com Pegada Fechada",
+    "description": "Ative bem os músculos com movimento controlado e lento. Mantenha o tronco ereto, sem se inclinar para trás, e puxe o peso em direção ao peito."
+  },
+  {
+    "id": 513,
+    "name": "Remada Cavalinho (T-Bar)",
+    "description": "Execução parecida com a remada curvada tradicional, mas com a barra fixa em uma extremidade. Segure com pegada aberta (um pouco além da largura dos ombros) e incline o tronco para a frente, quase paralelo ao chão, peito estufado. Puxe a barra com movimento rápido em direção ao umbigo (não mais alto) e desça devagar, sem balançar o corpo e mantendo os braços junto a ele."
+  },
+  {
+    "id": 828,
+    "name": "Crucifixo Invertido no Banco Inclinado",
+    "description": "Exercício para a parte superior do corpo que trabalha o deltoide posterior e os músculos posturais das costas superiores. Por trabalhar músculos pequenos, costuma ser feito com carga leve e mais repetições, entre 10 e 15 por série ou mais."
+  },
+  {
+    "id": 957,
+    "name": "Elevação Cruzada de Braço e Perna (Bird Dog em 4 Apoios)",
+    "description": "Ativa os músculos das costas, posterior de coxa e do braço, elevando simultaneamente o braço e a perna opostos na posição de quatro apoios. Também melhora equilíbrio e propriocepção. Fique na posição de quatro apoios, contraia o abdômen e eleve a perna direita e o braço esquerdo ao mesmo tempo, mantendo o abdômen contraído por 8 segundos. Depois, abaixe devagar o braço e a perna e relaxe a musculatura antes de repetir do outro lado."
+  },
+  {
+    "id": 959,
+    "name": "Remada com TRX",
+    "description": "Exercício introdutório que prepara o corpo para a barra fixa, puxando o peso do próprio corpo com as fitas de suspensão TRX."
+  },
+  {
+    "id": 1002,
+    "name": "Postura da Criança (Child's Pose)",
+    "description": "Comece em quatro apoios, com joelhos, dedos dos pés e mãos tocando o chão e os dedões dos pés se tocando. Afaste os joelhos na largura do quadril e, expirando, leve o quadril para trás sentando sobre os calcanhares, mantendo as mãos no chão. Relaxe a parte superior do corpo, abaixando a testa ao chão e deixando as mãos avançarem naturalmente. Para sair da posição, ande com os braços de volta sob os ombros e suba o tronco até sentar."
+  },
+  {
+    "id": 1003,
+    "name": "Levantamento Terra com Kettlebell",
+    "description": "Em pé, com os pés na largura do quadril e o kettlebell centralizado entre os tornozelos, costas retas e olhar para a frente. Flexione o quadril e dobre levemente os joelhos para segurar as alças do kettlebell, mantendo as costas retas. Segure as alças empurrando as mãos em direções opostas, contraia abdômen e glúteos e levante-se ficando totalmente ereto. Flexione o quadril novamente para descer o kettlebell e repita. Evite agachar em vez de flexionar o quadril, curvar as costas ao pegar o peso ou inclinar-se para trás ao levantar."
+  },
+  {
+    "id": 1018,
+    "name": "Inclinação de Cabeça",
+    "description": "Sentado ou em pé, com as costas retas, incline a cabeça para um lado e segure por alguns segundos. Volte à posição neutra, segure novamente e repita para o outro lado."
+  },
+  {
+    "id": 1022,
+    "name": "Prancha com Remada (Um Braço)",
+    "description": "Comece na posição de remada, estenda o corpo até a prancha e volte, terminando com a remada. Repita o ciclo."
+  },
+  {
+    "id": 1087,
+    "name": "Arranco Suspenso com Halteres (Hang Power Clean)",
+    "description": "Em pé, segure os halteres ao lado do corpo. Flexione o quadril para descer os halteres até a altura dos joelhos, depois levante-se com um pequeno salto, usando o impulso para puxar os halteres até os ombros. Fique ereto, desça com controle de volta ao lado do corpo e repita. Movimento rápido e explosivo — se a frequência cardíaca não subir bastante, o ritmo está errado."
+  },
+  {
+    "id": 1098,
+    "name": "Elevação Posterior de Ombro Sentado",
+    "description": "Sentado, inclinado 45° para a frente, com os braços totalmente estendidos, eleve os braços até a altura dos ombros e desça de volta."
+  },
+  {
+    "id": 1117,
+    "name": "Remada Sentada no Cabo",
+    "description": "Sente-se na máquina com os pés apoiados um pouco mais afastados que a largura dos ombros, calcanhares firmes e glúteos contraídos. Segure a alça do cabo, sente-se ereto com leve flexão nos joelhos, abdômen e lombar firmes para manter o tronco perpendicular ao chão. Puxe os ombros para trás e para baixo, contraindo-os como se apertasse um lápis entre as escápulas ao puxar a alça em direção ao umbigo. Pause um instante antes de retornar, mantendo a contração das escápulas, e só relaxe os ombros quando o peso já tiver retornado totalmente, sem inclinar o tronco para a frente."
+  },
+  {
+    "id": 1119,
+    "name": "Remada na Máquina com Pegada Fechada",
+    "description": "Remada feita em máquina com barra, usando pegada fechada."
+  },
+  {
+    "id": 1120,
+    "name": "Remada na Máquina com Pegada Supinada Fechada",
+    "description": "Remada feita em máquina ou cabo, com pegada fechada e supinada."
+  },
+  {
+    "id": 1127,
+    "name": "Puxada com Pegada Supinada Fechada",
+    "description": "Puxe a barra para baixo de forma que passe perto do queixo e toque a parte superior do peito, mantendo o resto do corpo parado durante o movimento."
+  },
+  {
+    "id": 1136,
+    "name": "Puxada com Pegada Neutra",
+    "description": "Exercício importante para fortalecer as costas e melhorar a postura. Posicione-se de frente para a máquina de cabos com os joelhos levemente flexionados e os pés no chão. Segure a alça com as palmas voltadas uma para a outra, mãos na largura dos ombros. Puxe a alça para baixo até tocar ou quase tocar o peito, segurando a posição por 1 a 2 segundos. Suba devagar de volta à posição inicial, mantendo braços e costas retos durante todo o movimento."
+  },
+  {
+    "id": 1137,
+    "name": "Pullover no Cabo Alto",
+    "description": "Fique de frente para a máquina, pés levemente afastados, segurando a barra com pegada pronada e braços estendidos na largura dos ombros. Mantendo as costas firmes e o abdômen contraído, inspire e traga a barra para baixo em direção às coxas mantendo os braços estendidos (ou levemente flexionados). Expire ao final do movimento."
+  },
+  {
+    "id": 1138,
+    "name": "Puxada no Banco Inclinado",
+    "description": "Deitado de bruços no banco inclinado de frente para a máquina de cabos, execute o movimento de puxada."
+  },
+  {
+    "id": 1143,
+    "name": "Extensão de Costas na Máquina",
+    "description": "Exercício de extensão da lombar feito na máquina de extensão de costas com carga."
+  },
+  {
+    "id": 1186,
+    "name": "Remada Unilateral Curvada",
+    "description": "Remada curvada com um braço só, feita no cabo com o auxílio de uma máquina."
+  },
+  {
+    "id": 1283,
+    "name": "Remada com Halteres no Banco Inclinado",
+    "description": "Ajuste um banco inclinado a 45°. Deite de bruços com a cabeça logo acima da borda do banco. Segure um haltere em cada mão, mantendo boa postura, com o core e o dorsal ativados e os ombros neutros. Puxe os halteres em direção à parte superior do abdômen, contraindo as costas no topo do movimento. Desça devagar de volta à posição inicial e repita."
+  },
+  {
+    "id": 1348,
+    "name": "Extensão Lombar",
+    "description": "Ative bem os músculos e eleve o quadril levemente. Movimento controlado e lento, sem usar embalo, mantendo a parte superior do corpo reta."
+  },
+  {
+    "id": 1363,
+    "name": "Liberação Miofascial com Blackroll",
+    "description": "Use o rolo de liberação miofascial nas costas com movimentos lentos e controlados, sem embalo, para soltar a musculatura."
+  },
+  {
+    "id": 1621,
+    "name": "Remada Unilateral no Cabo",
+    "description": "Posicione um banco vertical em frente à máquina de remada no cabo, focando em um lado do corpo por vez. Faça puxadas lentas focando nos músculos das costas laterais, garantindo tensão constante na posição alongada."
+  },
+  {
+    "id": 1634,
+    "name": "Remada/Pullover com Corda",
+    "description": "Posicione um banco em frente à máquina de remada no cabo. Incline-se sobre o banco para fazer o movimento de remada/pullover com a corda, focando no dorsal."
+  },
+  {
+    "id": 1635,
+    "name": "Puxada Modificada no Banco Inclinado",
+    "description": "Com um banco inclinado em frente à máquina de puxada, use pegada fechada para fazer puxadas com foco no dorsal."
+  },
+  {
+    "id": 1637,
+    "name": "Remada Unilateral Sentado no Chão",
+    "description": "Sentado no chão, use o cabo alto com pegada única para fazer puxadas focando no alongamento total do dorsal."
+  },
+  {
+    "id": 1639,
+    "name": "Face Pull Curvado com Halteres",
+    "description": "Use halteres para fazer um face pull curvado, trabalhando a parte superior das costas e os ombros. Puxe os pesos em direção ao rosto mantendo os cotovelos altos e contraindo as escápulas."
+  },
+  {
+    "id": 1725,
+    "name": "Remada Sentada na Máquina",
+    "description": "Mantenha o peito erguido e contraia as escápulas no final do movimento. Evite curvar o tronco ou arredondar as costas durante a puxada."
+  },
+  {
+    "id": 1726,
+    "name": "Pullover no Cabo com Braços Estendidos",
+    "description": "Mantenha os braços estendidos, sem travar, puxando com o dorsal e não com os ombros. Evite encolher os ombros durante o movimento."
+  },
+  {
+    "id": 1732,
+    "name": "Face Pull com Faixa Elástica",
+    "description": "Puxada horizontal em pé com faixa elástica. Segure a faixa na altura do rosto e puxe os cotovelos altos e abertos em direção ao rosto, contraindo as escápulas. Trabalha as costas superiores e o deltoide posterior, além de melhorar a postura."
+  },
+  {
+    "id": 1861,
+    "name": "Alongamento Lateral",
+    "description": "Alongamento lateral do tronco para soltar a musculatura das costas e dos oblíquos."
+  }
+]

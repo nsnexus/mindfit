@@ -1,0 +1,37 @@
+[
+  {
+    "id": 285,
+    "name": "Salto com Joelhos Elevados",
+    "description": "Comece com os pés um pouco mais abertos que a largura dos ombros e desça em um agachamento. No fundo do agachamento, exploda para cima em um salto levando os joelhos ao peito no ar. Aterrisse com os dois pés sem travar os joelhos para não sobrecarregar as articulações e encadeie a próxima repetição de forma controlada."
+  },
+  {
+    "id": 927,
+    "name": "Cruzamento Suspenso com TRX",
+    "description": "Exercício de suspensão com fitas TRX para trabalhar o peitoral, cruzando os braços à frente do corpo enquanto se apoia na suspensão."
+  },
+  {
+    "id": 983,
+    "name": "Corrida Estacionária com Joelhos Altos",
+    "description": "Em pé e ereto, corra no lugar levando os joelhos o mais alto possível e alternando as pernas em ritmo acelerado."
+  },
+  {
+    "id": 1285,
+    "name": "Coice com Calcanhar no Glúteo",
+    "description": "Encoste os calcanhares nos glúteos repetidamente, parado no lugar ou em deslocamento, em ritmo constante."
+  },
+  {
+    "id": 1615,
+    "name": "Cardio na Esteira",
+    "description": "Treino cardiovascular feito na esteira para melhorar o condicionamento, queimar calorias e fortalecer o coração. Permite ajustar velocidade e inclinação facilmente, possibilitando desde caminhada em subida até treino intervalado de alta intensidade (HIIT) e corridas em ritmo constante. Varie o treino para obter melhores resultados: caminhada em subida para trabalhar pernas e resistência, corrida contínua em ritmo confortável para construir resistência, treino intervalado alternando esforço alto e baixo para maximizar a queima calórica, e corrida em ritmo forte e sustentado para desafiar o condicionamento."
+  },
+  {
+    "id": 1618,
+    "name": "Cardio na Bike Ergométrica",
+    "description": "Treino cardiovascular na bicicleta ergométrica, ótimo para fortalecer o coração, melhorar a circulação e queimar entre 400 e 600 calorias por hora dependendo da intensidade. Trabalha principalmente quadríceps, posteriores de coxa e panturrilhas, aumenta a resistência muscular das pernas ao longo do tempo e ajuda a reduzir o estresse pela liberação de endorfina."
+  },
+  {
+    "id": 1962,
+    "name": "Step Jack",
+    "description": "Movimento pliométrico de baixo impacto que traz benefícios cardiovasculares sem o estresse das articulações causado por saltos, trabalhando o corpo todo com foco em pernas, core e ombros. Ideal para iniciantes ou como aquecimento dinâmico: fique em pé com os pés juntos, dê um passo lateral com o pé direito enquanto levanta os dois braços acima da cabeça, volte ao centro e repita alternando o lado em ritmo constante."
+  }
+]

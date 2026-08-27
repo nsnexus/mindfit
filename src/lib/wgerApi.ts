@@ -1,11 +1,23 @@
 // ============================================
-// Wger.de Fitness & Exercise API Client — Mindfit
+// Biblioteca de Exercícios — Mindfit
 // ============================================
+// A partir desta versão, o app não depende mais da API ao vivo da wger.de:
+// os ~268 exercícios curados (com imagem + tradução PT-BR) já foram
+// importados uma única vez para a coleção `exercises` do Firestore por
+// scripts/sync-exercise-library.mjs. As funções abaixo que geram treinos
+// (fetchValidExercisesForFocus, fetchReplacementExercise,
+// generateCustomWorkoutFromWger, generateWeeklyPlanFromWger) leem dessa
+// coleção. As funções fetchWgerExercises/fetchWgerCategories/fetchWgerMuscles
+// e getWgerTranslation/cleanHtml continuam exportadas apenas para uso futuro
+// em ferramentas de re-sync administrativas — nenhum caminho do app em
+// produção as chama mais.
 import type {
   WgerExerciseInfo,
   WgerCategory,
   WgerMuscle,
+  FirestoreExercise,
 } from '@/types/workout';
+import { getDocuments } from '@/lib/firebase/firestore';
 
 const WGER_BASE_URL = 'https://wger.de/api/v2';
 
@@ -224,27 +236,37 @@ export interface BuiltWgerExercise {
   targetSeconds: number;
 }
 
-/** Monta o item de exercício exibido/usado no treino a partir de um resultado real da wger */
+/** Monta o item de exercício exibido/usado no treino a partir de um documento real do Firestore */
 export function buildExerciseListItem(
-  wgerEx: WgerExerciseInfo,
+  ex: FirestoreExercise,
   opts: { focus: string; equipment: string; difficulty: string; durationSeconds: number },
   imageIdx = 0
 ): BuiltWgerExercise {
-  const t = getWgerTranslation(wgerEx);
-  const description = cleanHtml(t.description);
+  const description = ex.description || '';
 
   return {
-    id: `wger-${wgerEx.id}`,
-    wgerId: wgerEx.id,
-    name: t.name || 'Exercício',
+    id: ex.id,
+    wgerId: ex.wgerId,
+    name: ex.name || 'Exercício',
     description,
     muscleGroup: opts.focus === 'abs' ? 'core' : opts.focus === 'legs' ? 'legs' : 'fullBody',
-    mediaURL: wgerEx.images?.[0]?.image || PLACEHOLDER_PHOTOS[imageIdx % PLACEHOLDER_PHOTOS.length],
+    mediaURL: ex.imageURL || PLACEHOLDER_PHOTOS[imageIdx % PLACEHOLDER_PHOTOS.length],
     equipment: opts.equipment === 'none' ? 'none' : 'dumbbells',
     difficulty: opts.difficulty,
     cues: descriptionToCues(description),
     targetSeconds: opts.durationSeconds,
   };
+}
+
+/** Busca exercícios ativos da biblioteca (Firestore) para um conjunto de categorias da wger */
+async function getExercisesByCategoryIds(categoryIds: number[]): Promise<FirestoreExercise[]> {
+  if (typeof window === 'undefined' || categoryIds.length === 0) return [];
+  const { where } = await import('firebase/firestore');
+  // Firestore limita cláusulas "in" a 10 valores — nossos mapas de foco usam no máximo 5
+  return getDocuments<FirestoreExercise>('exercises', [
+    where('active', '==', true),
+    where('categoryId', 'in', categoryIds.slice(0, 10)),
+  ]);
 }
 
 const FITNESS_TIMING: Record<string, { targetCount: number; durationSeconds: number; restSeconds: number; sets: number }> = {
@@ -255,30 +277,25 @@ const FITNESS_TIMING: Record<string, { targetCount: number; durationSeconds: num
 
 /**
  * Busca exercícios reais e válidos (com nome + descrição) para um foco,
- * já deduplicados. Usado tanto para montar um treino do zero quanto para
- * trocar um exercício específico por outro.
+ * já deduplicados, lendo da biblioteca própria no Firestore. Usado tanto
+ * para montar um treino do zero quanto para trocar um exercício específico
+ * por outro.
  */
 export async function fetchValidExercisesForFocus(
   focus: WorkoutQuestionnaireData['focus'],
   excludeWgerIds: number[] = []
-): Promise<WgerExerciseInfo[]> {
+): Promise<FirestoreExercise[]> {
   const categories = FOCUS_CATEGORY_MAP[focus] || FOCUS_CATEGORY_MAP.fullBody;
-
-  const categoryResults = await Promise.all(
-    categories.map((catId) => fetchWgerExercises({ limit: 15, category: catId }))
-  );
+  const results = await getExercisesByCategoryIds(categories);
 
   const seen = new Set<number>(excludeWgerIds);
-  const valid: WgerExerciseInfo[] = [];
+  const valid: FirestoreExercise[] = [];
 
-  for (const res of categoryResults) {
-    for (const ex of res.results || []) {
-      if (seen.has(ex.id)) continue;
-      const t = getWgerTranslation(ex);
-      if (!t.name || !t.description) continue;
-      seen.add(ex.id);
-      valid.push(ex);
-    }
+  for (const ex of results) {
+    if (seen.has(ex.wgerId)) continue;
+    if (!ex.name || !ex.description) continue;
+    seen.add(ex.wgerId);
+    valid.push(ex);
   }
 
   return valid;
@@ -291,15 +308,15 @@ export async function fetchValidExercisesForFocus(
 export async function fetchReplacementExercise(
   focus: WorkoutQuestionnaireData['focus'],
   excludeWgerIds: number[] = []
-): Promise<WgerExerciseInfo | null> {
+): Promise<FirestoreExercise | null> {
   const candidates = await fetchValidExercisesForFocus(focus, excludeWgerIds);
   if (candidates.length === 0) return null;
   return candidates[Math.floor(Math.random() * candidates.length)];
 }
 
 /**
- * Gera um treino guiado personalizado buscando exercícios reais da API wger.de
- * de acordo com o perfil, foco e medidas do aluno.
+ * Gera um treino guiado personalizado buscando exercícios reais da
+ * biblioteca própria (Firestore) de acordo com o perfil, foco e medidas do aluno.
  */
 export async function generateCustomWorkoutFromWger(
   profile: WorkoutQuestionnaireData

@@ -1,0 +1,132 @@
+[
+  {
+    "id": 41,
+    "name": "Ab Rollout com Barra",
+    "description": "Coloque uma barra no chão à sua frente e, curvando a cintura, segure-a com pegada pronada. Com movimento lento e controlado, role a barra para frente mantendo as costas retas, depois volte à posição inicial elevando o quadril e o glúteo."
+  },
+  {
+    "id": 167,
+    "name": "Abdominal Crunch",
+    "description": "Deite de costas em uma superfície macia com os pés apoiados no chão, presos ou apoiados com ajuda de um parceiro, mãos atrás da cabeça. A partir daí, suba a parte superior do tronco até a cabeça ou os cotovelos quase tocarem os joelhos, enrolando as costas no movimento."
+  },
+  {
+    "id": 171,
+    "name": "Abdominal Crunch no Banco Inclinado",
+    "description": "Deite de costas em um banco inclinado, com os pés presos na extremidade e as mãos atrás da cabeça. Suba o tronco enrolando as costas até a cabeça ou os cotovelos quase tocarem os joelhos, depois retorne devagar."
+  },
+  {
+    "id": 297,
+    "name": "Hollow Hold",
+    "description": "Deite de costas no colchonete, contraia o abdômen e estenda braços e pernas, levantando-os do chão junto com cabeça e ombros. Mantenha a lombar sempre em contato com o colchonete durante todo o exercício."
+  },
+  {
+    "id": 377,
+    "name": "Elevação de Pernas Deitado",
+    "description": "Deitado em um banco, segure-se nas laterais para se estabilizar. Com as pernas esticadas, eleve-as até formar um ângulo de aproximadamente 45°, pause por 1 segundo e desça devagar. Para aumentar a intensidade, faça uma pausa mais longa de 7 segundos a cada 5 repetições."
+  },
+  {
+    "id": 427,
+    "name": "Crunch Negativo",
+    "description": "Sente-se no banco declinado com as pernas presas e os braços cruzados sobre o peito. Suba o tronco com um movimento de enrolamento e desça em seguida de forma lenta e contínua, sem pausar, mantendo a cabeça parada durante todo o movimento."
+  },
+  {
+    "id": 458,
+    "name": "Prancha",
+    "description": "Apoie o peso do corpo nos antebraços e nas pontas dos pés, com os braços dobrados diretamente abaixo dos ombros. Mantenha o corpo reto o tempo todo e segure a posição pelo maior tempo possível. Para aumentar a dificuldade, levante um braço ou uma perna durante o exercício."
+  },
+  {
+    "id": 576,
+    "name": "Crunch Lateral",
+    "description": "Segure um peso em uma das mãos e incline o tronco lateralmente em direção ao joelho. Use os oblíquos para puxar o corpo de volta à posição ereta."
+  },
+  {
+    "id": 976,
+    "name": "Crunch com Medicine Ball",
+    "description": "Usar uma medicine ball como sobrecarga torna o crunch tradicional mais intenso, exigindo mais dos músculos abdominais."
+  },
+  {
+    "id": 978,
+    "name": "Elevação de Joelhos na Barra",
+    "description": "Pendurado na barra, eleve os joelhos até formar um ângulo de 90° com o tronco. Exercício intenso que recruta todos os músculos abdominais."
+  },
+  {
+    "id": 979,
+    "name": "Elevação de Pernas na Barra",
+    "description": "Com pegada firme com as duas mãos na barra fixa, eleve as pernas esticadas até atingirem um ângulo de 90° em relação ao tronco."
+  },
+  {
+    "id": 1089,
+    "name": "Giro de Tronco com Medicine Ball",
+    "description": "Sentado no chão, gire o tronco de um lado para o outro sem forçar, aproximando a bola dos joelhos e tocando o chão de vez em quando durante o movimento."
+  },
+  {
+    "id": 1091,
+    "name": "Prancha com Toque no Ombro",
+    "description": "Na posição correta de prancha, com os pés um pouco mais afastados que a largura dos ombros, toque alternadamente o ombro oposto com cada mão, mantendo o quadril estável."
+  },
+  {
+    "id": 1105,
+    "name": "Recolhimento de Joelhos Sentado",
+    "description": "Sente-se no chão ou no colchonete com os braços levemente atrás do corpo para apoio. Eleve as pernas e alterne entre estendê-las e puxá-las de volta ao peito."
+  },
+  {
+    "id": 1188,
+    "name": "Flexão Lateral de Tronco",
+    "description": "Com um peso em uma das mãos, estenda esse braço para baixo e apoie a outra mão na cabeça. Incline o tronco para baixo e para cima do lado do peso, trabalhando os oblíquos."
+  },
+  {
+    "id": 1193,
+    "name": "Russian Twist",
+    "description": "Segure um haltere, anilha ou outro peso com as duas mãos, sem exagerar na carga para manter a postura correta. Incline o tronco para trás a 45°, mantendo os pés no chão (ou elevados para maior desafio), e gire o peso de um lado para o outro na altura do peito, tocando o chão ao lado do corpo. Cada giro completo para os dois lados conta como uma repetição."
+  },
+  {
+    "id": 1194,
+    "name": "Pallof Press",
+    "description": "Exercício anti-rotação que treina os músculos ao redor da coluna para resistir à torção do tronco. Fique de lado para o cabo ou faixa de resistência, segure o cabo com as duas mãos à frente do peito e empurre lentamente para a frente, depois puxe de volta ao peito e repita, sempre mantendo o tronco de frente e estável."
+  },
+  {
+    "id": 1307,
+    "name": "Prancha Frontal",
+    "description": "Exercício isométrico com o peso do próprio corpo que fortalece não só o abdômen, mas também a coluna e o quadril. A prancha melhora a postura, o equilíbrio e a resistência dos músculos estabilizadores, além de ajudar a aliviar dores nas costas ligadas ao enfraquecimento desses músculos."
+  },
+  {
+    "id": 1377,
+    "name": "Giro de Tronco em Pé",
+    "description": "Fique em pé com os pés e o quadril estáveis e gire o tronco de um lado para o outro, ativando os oblíquos e alongando a parte superior do corpo. Fortalece o core, aumenta a flexibilidade da coluna e melhora postura, equilíbrio e desempenho geral. Faça 3 séries de 10 a 15 repetições para cada lado."
+  },
+  {
+    "id": 1479,
+    "name": "Abdominal com Rotação de Cotovelo",
+    "description": "Movimento de rotação mais explosivo que o abdominal tradicional. Deitado com os joelhos dobrados e os pés no chão, suba o tronco levando o cotovelo esquerdo em direção ao lado direito do corpo, volte ao centro, desça controladamente e repita para o outro lado."
+  },
+  {
+    "id": 1572,
+    "name": "Bird Dog",
+    "description": "Exercício de estabilidade do core que melhora equilíbrio, coordenação e alinhamento da coluna. Apoiado em quatro apoios com mãos sob os ombros e joelhos sob o quadril e a coluna neutra, estenda o braço direito à frente e a perna esquerda para trás ao mesmo tempo, mantendo o quadril alinhado. Pause na extensão total contraindo o core e os glúteos, depois volte e repita do outro lado."
+  },
+  {
+    "id": 1573,
+    "name": "Roda Abdominal (Ab Wheel)",
+    "description": "Ajoelhado no chão com a roda abdominal à sua frente, segure firme nas alças. Role a roda lentamente para a frente, estendendo o corpo enquanto mantém o core contraído, depois puxe de volta em direção aos joelhos mantendo a tensão no abdômen."
+  },
+  {
+    "id": 1648,
+    "name": "Crunch com Peso",
+    "description": "Variação do crunch clássico com uma carga extra para aumentar a intensidade do trabalho abdominal. Deitado, com os joelhos dobrados e os pés apoiados (no chão ou em um banco a 90°), levante a cabeça e o tronco enrolando as costas para a frente — quanto mais alto for o movimento, mais o abdômen deve ser sentido contraindo. Volte à posição inicial e repita."
+  },
+  {
+    "id": 1650,
+    "name": "Flexão Lateral com Halter",
+    "description": "Segure um haltere em uma das mãos e incline o tronco lateralmente para trabalhar os oblíquos na lateral do corpo. Pode ser feito em pé ou sentado como exercício de fortalecimento do core."
+  },
+  {
+    "id": 1889,
+    "name": "Elevação de Pernas no Banco Declinado",
+    "description": "Deite em um banco declinado com a cabeça na parte de cima e segure as alças. Estenda as pernas totalmente, mantendo-as levemente elevadas para ativar o core. Suba as pernas em direção ao teto usando o abdômen (não o embalo), pause contraindo o abdômen inferior no topo e desça devagar e com controle."
+  },
+  {
+    "id": 2509,
+    "name": "Prancha Lateral (Core Nível 1)",
+    "description": "Prancha lateral para estabilidade do core, trabalhando os oblíquos, o quadrado lombar e os abdutores do quadril. Essencial para a estabilidade da coluna e o controle rotacional do tronco."
+  }
+]

@@ -1,0 +1,227 @@
+[
+  {
+    "id": 31,
+    "name": "Sustentação em Cruz (Axe Hold)",
+    "description": "Segure um haltere em cada mão, estenda os braços para os lados e mantenha a posição pelo maior tempo possível. Trabalha isometricamente ombros e antebraços."
+  },
+  {
+    "id": 50,
+    "name": "Extensão de Tríceps com Barra Acima da Cabeça",
+    "description": "Posicione a barra acima da cabeça com pegada pronada fechada. Desça o antebraço atrás da cabeça mantendo os cotovelos apontados para cima, depois estenda de volta acima da cabeça e repita."
+  },
+  {
+    "id": 51,
+    "name": "Rosca de Punho com Barra",
+    "description": "Sentado no banco, segure a barra com as palmas voltadas para cima e as mãos na largura dos ombros. Apoie os antebraços nas coxas, deixando os punhos para fora dos joelhos. Flexione os punhos e as palmas em direção ao rosto, pause no topo e volte devagar à posição inicial."
+  },
+  {
+    "id": 76,
+    "name": "Supino com Pegada Fechada",
+    "description": "Deite no banco e segure a barra com pegada na largura dos ombros (mais fechada que o supino tradicional). Desça a barra com controle até a parte inferior do peito, mantendo os cotovelos junto ao corpo sem abrir para os lados. Empurre a barra de volta para cima, contraindo bem o tríceps no topo."
+  },
+  {
+    "id": 91,
+    "name": "Rosca Direta com Barra",
+    "description": "Segure a barra na largura dos ombros, costas retas, ombros levemente para trás e braços estendidos. Flexione os braços trazendo o peso para cima com movimento rápido, e desça devagar e controlado sem pausar. Não balance o corpo — todo o trabalho deve vir do bíceps, mantendo os cotovelos parados."
+  },
+  {
+    "id": 92,
+    "name": "Rosca Direta com Halteres",
+    "description": "Segure dois halteres com os braços estendidos ao lado do corpo, palmas voltadas para dentro. Flexione os braços trazendo o peso para cima com movimento rápido, girando os antebraços 90° logo no início do movimento. No topo, gire um pouco mais os pesos para fora, e desça devagar sem pausar. Não balance o corpo — o bíceps deve fazer todo o trabalho."
+  },
+  {
+    "id": 94,
+    "name": "Rosca Direta com Barra W",
+    "description": "Segure a barra W na largura dos ombros, costas retas, ombros levemente para trás e braços estendidos. Flexione os braços trazendo o peso para cima com movimento rápido, e desça devagar e controlado sem pausar, mantendo o corpo parado e o trabalho concentrado no bíceps."
+  },
+  {
+    "id": 95,
+    "name": "Rosca no Cabo",
+    "description": "Fique a cerca de 30-40 cm do cabo, pés firmes no chão. Segure a barra e levante o peso com movimento rápido, depois desça devagar e controlado como na rosca com halteres."
+  },
+  {
+    "id": 197,
+    "name": "Mergulho Entre Dois Bancos",
+    "description": "Posicione dois bancos afastados o suficiente para apoiar as mãos em um e os pés no outro, com as pernas totalmente estendidas durante o exercício. Com os cotovelos apontando para trás, flexione-os o máximo possível e empurre o corpo de volta para cima, sem estender totalmente os braços."
+  },
+  {
+    "id": 246,
+    "name": "Tríceps Testa com Barra W (Skullcrusher)",
+    "description": "Segure a barra W deitado em um banco reto, com a cabeça próxima à borda. Estenda os braços com a barra acima e flexione-os para descer a barra em direção à testa, empurrando de volta antes de tocá-la. Mantenha os cotovelos e braços parados — só o tríceps deve trabalhar."
+  },
+  {
+    "id": 272,
+    "name": "Rosca Martelo",
+    "description": "Segure os halteres ao lado do corpo com as palmas voltadas para o tronco (pegada neutra, como segurando um martelo). Eleve os pesos em direção aos ombros mantendo a pegada neutra, contraia o bíceps no topo sem mover os cotovelos para frente, e desça devagar e com controle total."
+  },
+  {
+    "id": 275,
+    "name": "Rosca Martelo no Cabo",
+    "description": "Segure o cabo com as palmas paralelas, uma voltada para a outra, corpo reto. Flexione os braços trazendo o peso para cima com movimento rápido, e desça devagar e controlado sem estender totalmente os braços. Mantenha os cotovelos ao lado do corpo, parados, deixando o bíceps fazer todo o trabalho."
+  },
+  {
+    "id": 279,
+    "name": "Hand Grip",
+    "description": "Aparelho de pressão manual (hand grip) usado para fortalecer a musculatura do antebraço."
+  },
+  {
+    "id": 454,
+    "name": "Flexão em Pike",
+    "description": "Flexão de braço feita a partir da posição de pike (quadril elevado formando um V invertido), podendo ser feita com os pés elevados para maior dificuldade."
+  },
+  {
+    "id": 465,
+    "name": "Rosca Scott (Preacher Curl)",
+    "description": "Apoie a barra W nos suportes à frente do banco Scott. Incline-se sobre o banco e segure a barra com as palmas para cima, sentando de forma que a parte superior dos braços fique apoiada no encosto e o peito pressionado contra ele. Desça o peso até os cotovelos ficarem estendidos e os braços retos, depois traga o peso de volta contraindo o bíceps."
+  },
+  {
+    "id": 659,
+    "name": "Extensão de Tríceps no Cabo",
+    "description": "Segure o cabo em pé, com os pés na largura dos ombros, costas retas e leve inclinação para a frente. Empurre a barra para baixo mantendo os cotovelos parados, girando levemente as mãos para fora no final do movimento, e volte à posição inicial sem pausar."
+  },
+  {
+    "id": 804,
+    "name": "Suspensão em Sloper (Fingerboard)",
+    "description": "Pendure-se em uma pegada sloper de uma fingerboard e mantenha a posição pelo maior número de segundos possível, trabalhando força de antebraço e dedos."
+  },
+  {
+    "id": 805,
+    "name": "Tríceps Corda no Cabo",
+    "description": "Exercício popular para isolar o tríceps, fácil de aprender e executar, indicado para todos os níveis. Costuma ser feito com repetições moderadas a altas, entre 8 e 12 por série ou mais, como parte de um treino de braços ou parte superior do corpo."
+  },
+  {
+    "id": 912,
+    "name": "Rosca no Cabo com Barra Reta",
+    "description": "Em pé, de frente para a torre de cabos, use uma barra reta para executar o movimento de rosca."
+  },
+  {
+    "id": 958,
+    "name": "Rosca Bíceps com TRX",
+    "description": "Segure as alças do TRX, incline o corpo para trás com braços e pernas estendidos, formando uma linha reta única. Flexione os cotovelos para puxar o corpo, trabalhando o bíceps."
+  },
+  {
+    "id": 975,
+    "name": "Rosca com Kettlebell (Um Braço)",
+    "description": "Em pé, com o kettlebell em uma das mãos e o cotovelo flexionado, comece da posição totalmente estendida até a mão alcançar a altura do ombro. Evite impulsionar com as costas ou o corpo para executar o movimento corretamente."
+  },
+  {
+    "id": 1000,
+    "name": "Mergulho no Chão (Floor Dips)",
+    "description": "Sente-se com os braços atrás do corpo apoiando as costas, dedos apontando para a frente, joelhos flexionados e pés juntos. Eleve o quadril do chão estendendo os braços, depois flexione os cotovelos baixando o quadril novamente, e repita. A dificuldade aumenta quanto mais alto o quadril é elevado."
+  },
+  {
+    "id": 1012,
+    "name": "Rosca Alternada com Halteres",
+    "description": "Em pé, com um haltere em cada mão, costas retas e pés na largura do quadril, braços relaxados apontando para baixo, joelhos levemente flexionados, abdômen contraído e ombros para baixo. Flexione um braço no cotovelo trazendo o haltere até o ombro, mantendo a parte superior do braço parada, depois desça e repita alternando os braços."
+  },
+  {
+    "id": 1109,
+    "name": "Rosca Concentrada no Cabo",
+    "description": "Exercício clássico para desenvolver o bíceps de um braço por vez. Pode ser feito curvado ou ajoelhado, mas costuma ser feito sentado no banco. Ótimo para destacar o pico do bíceps, geralmente usado para fechar o treino."
+  },
+  {
+    "id": 1185,
+    "name": "Tríceps Pulley com Barra Reta",
+    "description": "Extensão de tríceps no cabo usando a barra reta (lat bar)."
+  },
+  {
+    "id": 1192,
+    "name": "Rosca Alternada com Halteres (Supinação)",
+    "description": "Segure dois halteres com os braços estendidos ao lado do corpo, palmas voltadas para dentro. Flexione um braço de cada vez trazendo o peso para cima com movimento rápido, girando o antebraço 90° logo no início do movimento e um pouco mais no topo. Desça devagar sem pausar e repita com o outro braço, sem balançar o corpo — só o bíceps deve trabalhar."
+  },
+  {
+    "id": 1217,
+    "name": "Flexão nas Pontas dos Dedos",
+    "description": "Comece na posição de prancha com as mãos sob os ombros e os dedos bem abertos e firmes no chão. Levante gradualmente as palmas, transferindo o peso para as pontas dos dedos, distribuindo a carga entre eles. Mantenha o corpo reto da cabeça aos calcanhares, com o core ativado. Desça o peito devagar em direção ao chão, mantendo estabilidade nas pontas dos dedos, e empurre de volta estendendo os braços."
+  },
+  {
+    "id": 1223,
+    "name": "Palma Acima da Cabeça (Salto)",
+    "description": "Em pé, com os pés na largura dos ombros, levante os braços e bata palma acima da cabeça."
+  },
+  {
+    "id": 1225,
+    "name": "Rosca Aberta com Halteres",
+    "description": "Segure um haltere em cada mão com as mãos um pouco mais abertas que os ombros, palmas voltadas para a frente. Flexione os cotovelos e eleve os halteres até os ombros. Retorne devagar e repita."
+  },
+  {
+    "id": 1226,
+    "name": "Rosca com Desenvolvimento (Curl to Press)",
+    "description": "Flexione os cotovelos e eleve os halteres até os ombros. Empurre os halteres acima da cabeça girando os braços para as palmas ficarem voltadas para a frente. Reverta o movimento para descer e repita."
+  },
+  {
+    "id": 1230,
+    "name": "Alongamento de Tríceps (Esquerdo)",
+    "description": "Coloque a mão esquerda nas costas, use a mão direita para segurar o cotovelo esquerdo e puxe-o suavemente. Segure a posição por alguns segundos."
+  },
+  {
+    "id": 1231,
+    "name": "Alongamento de Tríceps (Direito)",
+    "description": "Coloque a mão direita nas costas, use a mão esquerda para segurar o cotovelo direito e puxe-o suavemente. Segure a posição por alguns segundos."
+  },
+  {
+    "id": 1232,
+    "name": "Alongamento de Bíceps em Pé (Esquerdo)",
+    "description": "Em pé, com o braço esquerdo próximo a uma parede. Estenda o braço esquerdo e apoie a mão na parede, depois gire suavemente o corpo para a direita."
+  },
+  {
+    "id": 1233,
+    "name": "Alongamento de Bíceps em Pé (Direito)",
+    "description": "Em pé, com o braço direito próximo a uma parede. Estenda o braço direito e apoie a mão na parede, depois gire suavemente o corpo para a esquerda."
+  },
+  {
+    "id": 1290,
+    "name": "Rosca Inversa com Barra",
+    "description": "Segure a barra com pegada pronada (palmas para baixo), aproximadamente na largura dos ombros. Mantenha as costas retas, ombros levemente para trás e braços totalmente estendidos. Flexione a barra em direção ao peito com movimento controlado, mantendo os cotovelos junto ao corpo, sem balançar. No topo, pause brevemente para maximizar a contração do bíceps e do antebraço, depois desça devagar até estender totalmente os braços."
+  },
+  {
+    "id": 1298,
+    "name": "Extensão de Tríceps Cruzada no Cabo Alto",
+    "description": "Exercício de isolamento para o tríceps, especialmente a cabeça longa. Usa dois cabos altos com alças seguradas em mãos opostas, permitindo um movimento de empurrão único, mais confortável para punhos e cotovelos do que a barra reta ou a corda."
+  },
+  {
+    "id": 1333,
+    "name": "Rosca de Punho Inversa",
+    "description": "Ative bem os músculos do antebraço, sem usar embalo. Movimento controlado e lento durante toda a execução."
+  },
+  {
+    "id": 1336,
+    "name": "Tríceps Francês com Halter (Acima da Cabeça)",
+    "description": "Mantenha os cotovelos fixos e ative bem o tríceps, sem usar embalo. Movimento controlado e lento, sem hiperestender no final."
+  },
+  {
+    "id": 1448,
+    "name": "Rosca W Sentado",
+    "description": "Sente-se no banco com inclinação de 60°. Segure os halteres ao lado do corpo, próximos ao chão, palmas voltadas para fora e braços totalmente estendidos. Eleve os halteres usando apenas o bíceps, sem embalo."
+  },
+  {
+    "id": 1519,
+    "name": "Tríceps Francês com Barra W (Acima da Cabeça)",
+    "description": "Enfatiza a cabeça longa do tríceps por trabalhar alongada sob carga, mas recruta também as cabeças lateral e medial durante a extensão. Sentado ou em pé, segure a barra W com pegada pronada fechada e eleve-a acima da cabeça com os braços totalmente estendidos, core firme e cotovelos próximos à cabeça. Desça a barra atrás da cabeça flexionando os cotovelos até cerca de 90°, mantendo-os apontados para frente (sem abrir para os lados). Estenda os braços de volta à posição inicial, contraindo bem o tríceps no topo. Controle o movimento para não sobrecarregar os ombros, use carga moderada para manter a amplitude completa e mantenha as costas retas, sem arquear."
+  },
+  {
+    "id": 1567,
+    "name": "Rosca Martelo Alternada",
+    "description": "Em pé, com os joelhos levemente flexionados e as costas retas, segure um haltere em cada mão com pegada neutra ao lado do corpo, alternando a flexão dos braços."
+  },
+  {
+    "id": 1738,
+    "name": "Barra Fixa com Pegada Neutra ou Remada TRX",
+    "description": "A barra fixa é um puxão vertical, com foco maior no dorsal (largura das costas). A remada com TRX é um puxão horizontal, com foco maior nos romboides e trapézio (espessura e postura das costas médias)."
+  },
+  {
+    "id": 1900,
+    "name": "Tríceps Corda no Pulley",
+    "description": "Em pé, de frente para o cabo, pés na largura dos ombros, com leve inclinação para a frente. Segure a corda com as palmas voltadas uma para a outra e os cotovelos junto às costelas. Empurre a corda para baixo até os braços ficarem totalmente retos, afastando as pontas no final. Mantenha a parte superior dos braços parada e volte devagar e com controle à posição inicial."
+  },
+  {
+    "id": 1971,
+    "name": "Puxada Mentzer (Foco em Bíceps)",
+    "description": "Puxada frontal com pegada fechada, focando no bíceps para aumentar sua ativação em toda a amplitude do movimento, evitando envolver o dorsal."
+  },
+  {
+    "id": 2452,
+    "name": "Rosca de Punho com Barra",
+    "description": "Ajoelhado à frente de um banco reto, apoie a parte de trás dos antebraços sobre ele, com punhos e mãos levemente para fora da borda. Segure a barra com pegada supinada (palmas para cima). Desça a barra flexionando os punhos para baixo, deixando-a rolar levemente até as pontas dos dedos para alongar bem o antebraço. Feche os dedos ao redor da barra e flexione os punhos para cima com força controlada, contraindo o antebraço por um segundo no topo. Mantenha os antebraços sempre apoiados no banco — só os punhos e dedos devem se mover."
+  }
+]

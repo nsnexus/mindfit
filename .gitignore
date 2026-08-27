@@ -48,6 +48,7 @@ firebase-debug.log
 firestore-debug.log
 ui-debug.log
 .firebase/
+service-account*.json
 
 # Éfi Bank certificates
 /certs/
@@ -56,3 +57,9 @@ ui-debug.log
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# one-time exercise library sync — local resumability cache, not needed
+# once the sync has run (translations-*.json stay committed, they're the
+# actual PT-BR content the sync script upserts into Firestore)
+scripts/wger-raw-export.json
+scripts/wger-clean-*.json

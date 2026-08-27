@@ -1,170 +1,80 @@
 // ============================================
-// Exercise Library Explorer (Powered by wger.de) — Mindfit
+// Exercise Library Explorer (Biblioteca própria — Firestore) — Mindfit
 // ============================================
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import {
   Search,
   Dumbbell,
   Sparkles,
-  Layers,
   Info,
   X,
   ChevronRight,
   RefreshCw,
-  ExternalLink,
   Activity,
   Flame,
 } from 'lucide-react';
-import {
-  fetchWgerExercises,
-  fetchWgerCategories,
-  cleanHtml,
-  getWgerTranslation,
-  CATEGORY_TRANSLATIONS,
-  MUSCLE_TRANSLATIONS,
-} from '@/lib/wgerApi';
-import {
-  getCachedExerciseList,
-  setCachedExerciseList,
-  getCachedCategories,
-  setCachedCategories,
-} from '@/lib/firebase/exerciseCache';
-import type { WgerExerciseInfo, WgerCategory } from '@/types/workout';
+import { getDocuments } from '@/lib/firebase/firestore';
+import type { FirestoreExercise } from '@/types/workout';
 
-const CACHE_TTL = 1000 * 60 * 60 * 12; // 12h
-
-function readCache<T>(key: string): T | null {
-  try {
-    const raw = localStorage.getItem(key);
-    if (!raw) return null;
-    const { data, ts } = JSON.parse(raw);
-    if (Date.now() - ts > CACHE_TTL) return null;
-    return data as T;
-  } catch {
-    return null;
-  }
-}
-
-function writeCache(key: string, data: unknown) {
-  try {
-    localStorage.setItem(key, JSON.stringify({ data, ts: Date.now() }));
-  } catch {
-    // storage cheia ou bloqueada — ignora, cache é so otimizacao
-  }
-}
+const PAGE_SIZE = 18;
 
 export function ExerciseLibrary() {
-  const [exercises, setExercises] = useState<WgerExerciseInfo[]>([]);
-  const [categories, setCategories] = useState<WgerCategory[]>([]);
+  const [allExercises, setAllExercises] = useState<FirestoreExercise[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<number | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [searchInput, setSearchInput] = useState('');
   const [isLoading, setIsLoading] = useState(true);
-  const [offset, setOffset] = useState(0);
-  const [hasMore, setHasMore] = useState(true);
-  const [selectedExercise, setSelectedExercise] = useState<WgerExerciseInfo | null>(null);
+  const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
+  const [selectedExercise, setSelectedExercise] = useState<FirestoreExercise | null>(null);
 
-  // Carrega categorias na montagem: localStorage (instantâneo) → Firestore
-  // (compartilhado entre usuários) → API (só se ninguém buscou isso ainda)
+  // Carrega a biblioteca inteira (própria, já traduzida) uma única vez —
+  // ~268 exercícios é pouco o suficiente para filtrar/paginar em memória,
+  // sem precisar de chamadas repetidas à API externa da wger.
   useEffect(() => {
-    async function loadCategories() {
-      const local = readCache<WgerCategory[]>('mindfit_ex_categories');
-      if (local) {
-        setCategories(local);
-        return;
-      }
-
-      const shared = await getCachedCategories();
-      if (shared) {
-        setCategories(shared);
-        writeCache('mindfit_ex_categories', shared);
-        return;
-      }
-
-      const cats = await fetchWgerCategories();
-      if (cats.length > 0) {
-        setCategories(cats);
-        writeCache('mindfit_ex_categories', cats);
-        setCachedCategories(cats);
-      }
+    async function loadExercises() {
+      setIsLoading(true);
+      const { where } = await import('firebase/firestore');
+      const results = await getDocuments<FirestoreExercise>('exercises', [where('active', '==', true)]);
+      setAllExercises(results);
+      setIsLoading(false);
     }
-    loadCategories();
+    loadExercises();
   }, []);
 
-  // Carrega exercícios ao mudar filtros: localStorage → Firestore (galeria
-  // compartilhada) → API wger como último recurso. Cada nível encontrado
-  // "sobe" para os níveis mais rápidos, populando a galeria pros próximos.
-  useEffect(() => {
-    let isCancelled = false;
-    const filterKey = `${selectedCategory ?? 'all'}_${searchTerm || 'none'}`;
-    const localKey = `mindfit_ex_list_${filterKey}`;
-
-    async function loadExercises() {
-      const local = readCache<{ results: WgerExerciseInfo[]; next: string | null }>(localKey);
-      if (local) {
-        setExercises(local.results);
-        setOffset(18);
-        setHasMore(!!local.next);
-        setIsLoading(false);
-        return;
-      }
-
-      setIsLoading(true);
-
-      const shared = await getCachedExerciseList(filterKey);
-      if (shared && !isCancelled) {
-        setExercises(shared.results);
-        setOffset(18);
-        setHasMore(!!shared.next);
-        setIsLoading(false);
-        writeCache(localKey, shared);
-        return;
-      }
-
-      const res = await fetchWgerExercises({
-        limit: 18,
-        offset: 0,
-        category: selectedCategory || undefined,
-        term: searchTerm || undefined,
-      });
-
-      if (!isCancelled) {
-        setExercises(res.results || []);
-        setOffset(18);
-        setHasMore(!!res.next);
-        setIsLoading(false);
-        if (res.results?.length > 0) {
-          writeCache(localKey, { results: res.results, next: res.next });
-          setCachedExerciseList(filterKey, res.results, res.next);
-        }
-      }
+  // Categorias derivadas dos exercícios carregados (id + nome já em PT-BR)
+  const categories = useMemo(() => {
+    const map = new Map<number, string>();
+    for (const ex of allExercises) {
+      if (!map.has(ex.categoryId)) map.set(ex.categoryId, ex.category);
     }
+    return Array.from(map.entries())
+      .map(([id, name]) => ({ id, name }))
+      .sort((a, b) => a.name.localeCompare(b.name, 'pt-BR'));
+  }, [allExercises]);
 
-    loadExercises();
+  const filteredExercises = useMemo(() => {
+    const term = searchTerm.trim().toLowerCase();
+    return allExercises.filter((ex) => {
+      if (selectedCategory !== null && ex.categoryId !== selectedCategory) return false;
+      if (term && !ex.name.toLowerCase().includes(term) && !ex.description.toLowerCase().includes(term)) {
+        return false;
+      }
+      return true;
+    });
+  }, [allExercises, selectedCategory, searchTerm]);
 
-    return () => {
-      isCancelled = true;
-    };
+  // Reseta a paginação em memória sempre que o filtro muda
+  useEffect(() => {
+    setVisibleCount(PAGE_SIZE);
   }, [selectedCategory, searchTerm]);
 
-  // Carrega mais exercícios (paginação infinita)
-  const handleLoadMore = async () => {
-    if (isLoading || !hasMore) return;
-    setIsLoading(true);
+  const visibleExercises = filteredExercises.slice(0, visibleCount);
+  const hasMore = visibleCount < filteredExercises.length;
 
-    const res = await fetchWgerExercises({
-      limit: 18,
-      offset,
-      category: selectedCategory || undefined,
-      term: searchTerm || undefined,
-    });
-
-    setExercises((prev) => [...prev, ...(res.results || [])]);
-    setOffset((prev) => prev + 18);
-    setHasMore(!!res.next);
-    setIsLoading(false);
+  const handleLoadMore = () => {
+    setVisibleCount((prev) => prev + PAGE_SIZE);
   };
 
   const handleSearchSubmit = (e: React.FormEvent) => {
@@ -185,7 +95,7 @@ export function ExerciseLibrary() {
               </h2>
             </div>
             <p className="text-xs sm:text-sm text-neutral-500">
-              Mais de 800 exercícios com ilustrações anatômicas e guia de postura em tempo real.
+              Exercícios com ilustrações e guia de postura, traduzidos e selecionados para você.
             </p>
           </div>
 
@@ -200,7 +110,7 @@ export function ExerciseLibrary() {
             <Search className="w-5 h-5 text-neutral-400 absolute left-4 top-1/2 -translate-y-1/2" />
             <input
               type="text"
-              placeholder="Buscar por nome (ex: Squat, Push-up, Plank, Crunch...)"
+              placeholder="Buscar por nome (ex: Agachamento, Flexão, Prancha...)"
               value={searchInput}
               onChange={(e) => setSearchInput(e.target.value)}
               className="w-full h-12 pl-12 pr-4 bg-neutral-50 border border-neutral-200/80 rounded-2xl text-sm font-medium text-neutral-900 placeholder:text-neutral-400 focus:outline-none focus:border-emerald-500 focus:bg-white focus:ring-4 focus:ring-emerald-500/10 transition-all"
@@ -237,7 +147,6 @@ export function ExerciseLibrary() {
 
           {categories.map((cat) => {
             const isSelected = selectedCategory === cat.id;
-            const translatedName = CATEGORY_TRANSLATIONS[cat.name] || cat.name;
 
             return (
               <button
@@ -253,7 +162,7 @@ export function ExerciseLibrary() {
                   }
                 `}
               >
-                {translatedName}
+                {cat.name}
               </button>
             );
           })}
@@ -261,7 +170,7 @@ export function ExerciseLibrary() {
       </div>
 
       {/* Exercises Grid */}
-      {exercises.length === 0 && !isLoading ? (
+      {!isLoading && visibleExercises.length === 0 ? (
         <div className="p-12 text-center bg-white rounded-3xl border border-neutral-200/80 shadow-sm space-y-3">
           <div className="w-14 h-14 rounded-2xl bg-amber-500/10 text-amber-600 flex items-center justify-center mx-auto">
             <Info className="w-7 h-7" />
@@ -270,80 +179,73 @@ export function ExerciseLibrary() {
             Nenhum exercício encontrado
           </h3>
           <p className="text-xs text-neutral-400 max-w-sm mx-auto">
-            Tente buscar com outros termos em inglês ou português, ou selecione uma categoria diferente.
+            Tente buscar com outros termos ou selecione uma categoria diferente.
           </p>
         </div>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
-          {exercises.map((ex) => {
-            const mainImage = ex.images?.find((img) => img.is_main)?.image || ex.images?.[0]?.image;
-            const categoryName = CATEGORY_TRANSLATIONS[ex.category?.name] || ex.category?.name || 'Geral';
-            const { name: exName, description: exDescription } = getWgerTranslation(ex);
-            const cleanDesc = cleanHtml(exDescription);
+          {visibleExercises.map((ex) => (
+            <div
+              key={ex.id}
+              onClick={() => setSelectedExercise(ex)}
+              className="group bg-white rounded-3xl border border-emerald-100/80 shadow-[0_8px_25px_-5px_rgba(14,159,110,0.06)] hover:border-emerald-400 hover:shadow-xl hover:shadow-emerald-900/10 hover:-translate-y-1.5 transition-all duration-300 overflow-hidden flex flex-col justify-between cursor-pointer"
+            >
+              {/* Thumbnail Preview */}
+              <div className="relative h-44 w-full bg-gradient-to-br from-neutral-50 to-emerald-50/40 flex items-center justify-center overflow-hidden border-b border-neutral-100">
+                {ex.imageURL ? (
+                  <img
+                    src={ex.imageURL}
+                    alt={ex.name}
+                    className="w-full h-full object-contain p-3 group-hover:scale-105 transition-transform duration-300"
+                    loading="lazy"
+                  />
+                ) : (
+                  <div className="w-14 h-14 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-600 flex items-center justify-center group-hover:scale-110 transition-transform">
+                    <Dumbbell className="w-7 h-7" />
+                  </div>
+                )}
 
-            return (
-              <div
-                key={ex.id}
-                onClick={() => setSelectedExercise(ex)}
-                className="group bg-white rounded-3xl border border-emerald-100/80 shadow-[0_8px_25px_-5px_rgba(14,159,110,0.06)] hover:border-emerald-400 hover:shadow-xl hover:shadow-emerald-900/10 hover:-translate-y-1.5 transition-all duration-300 overflow-hidden flex flex-col justify-between cursor-pointer"
-              >
-                {/* Thumbnail Preview */}
-                <div className="relative h-44 w-full bg-gradient-to-br from-neutral-50 to-emerald-50/40 flex items-center justify-center overflow-hidden border-b border-neutral-100">
-                  {mainImage ? (
-                    <img
-                      src={mainImage}
-                      alt={exName}
-                      className="w-full h-full object-contain p-3 group-hover:scale-105 transition-transform duration-300"
-                      loading="lazy"
-                    />
-                  ) : (
-                    <div className="w-14 h-14 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-600 flex items-center justify-center group-hover:scale-110 transition-transform">
-                      <Dumbbell className="w-7 h-7" />
-                    </div>
-                  )}
+                <span className="absolute top-3 left-3 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider bg-white/90 backdrop-blur-md text-emerald-800 border border-emerald-500/20 shadow-sm">
+                  {ex.category || 'Geral'}
+                </span>
+              </div>
 
-                  <span className="absolute top-3 left-3 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider bg-white/90 backdrop-blur-md text-emerald-800 border border-emerald-500/20 shadow-sm">
-                    {categoryName}
+              {/* Card Content */}
+              <div className="p-5 flex-1 flex flex-col justify-between space-y-3">
+                <div>
+                  <h3 className="font-black text-neutral-900 text-base font-[var(--font-heading)] group-hover:text-emerald-700 transition-colors line-clamp-1">
+                    {ex.name || 'Exercício'}
+                  </h3>
+                  <p className="text-xs text-neutral-400 font-medium line-clamp-2 mt-1 leading-relaxed">
+                    {ex.description || 'Instruções de execução, ativação muscular e posicionamento correto.'}
+                  </p>
+                </div>
+
+                {/* Muscle Tags */}
+                <div className="pt-2 border-t border-neutral-100/80 flex items-center justify-between">
+                  <div className="flex flex-wrap gap-1">
+                    {ex.muscles?.slice(0, 2).map((m) => (
+                      <span
+                        key={m}
+                        className="px-2 py-0.5 rounded-lg text-[10px] font-bold bg-neutral-100 text-neutral-600"
+                      >
+                        {m}
+                      </span>
+                    ))}
+                    {ex.muscles?.length > 2 && (
+                      <span className="px-1.5 py-0.5 rounded-lg text-[10px] font-bold bg-neutral-100 text-neutral-400">
+                        +{ex.muscles.length - 2}
+                      </span>
+                    )}
+                  </div>
+
+                  <span className="text-xs font-bold text-emerald-600 group-hover:translate-x-0.5 transition-transform flex items-center gap-0.5">
+                    Ver guia <ChevronRight className="w-3.5 h-3.5" />
                   </span>
                 </div>
-
-                {/* Card Content */}
-                <div className="p-5 flex-1 flex flex-col justify-between space-y-3">
-                  <div>
-                    <h3 className="font-black text-neutral-900 text-base font-[var(--font-heading)] group-hover:text-emerald-700 transition-colors line-clamp-1">
-                      {exName || 'Exercício'}
-                    </h3>
-                    <p className="text-xs text-neutral-400 font-medium line-clamp-2 mt-1 leading-relaxed">
-                      {cleanDesc || 'Instruções de execução, ativação muscular e posicionamento correto.'}
-                    </p>
-                  </div>
-
-                  {/* Muscle Tags */}
-                  <div className="pt-2 border-t border-neutral-100/80 flex items-center justify-between">
-                    <div className="flex flex-wrap gap-1">
-                      {ex.muscles?.slice(0, 2).map((m) => (
-                        <span
-                          key={m.id}
-                          className="px-2 py-0.5 rounded-lg text-[10px] font-bold bg-neutral-100 text-neutral-600"
-                        >
-                          {MUSCLE_TRANSLATIONS[m.name] || m.name}
-                        </span>
-                      ))}
-                      {ex.muscles?.length > 2 && (
-                        <span className="px-1.5 py-0.5 rounded-lg text-[10px] font-bold bg-neutral-100 text-neutral-400">
-                          +{ex.muscles.length - 2}
-                        </span>
-                      )}
-                    </div>
-
-                    <span className="text-xs font-bold text-emerald-600 group-hover:translate-x-0.5 transition-transform flex items-center gap-0.5">
-                      Ver guia <ChevronRight className="w-3.5 h-3.5" />
-                    </span>
-                  </div>
-                </div>
               </div>
-            );
-          })}
+            </div>
+          ))}
         </div>
       )}
 
@@ -373,9 +275,6 @@ export function ExerciseLibrary() {
           className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-fade-in"
           onClick={() => setSelectedExercise(null)}
         >
-          {(() => {
-            const { name: modalName, description: modalDescription } = getWgerTranslation(selectedExercise);
-            return (
           <div
             className="bg-white rounded-3xl max-w-2xl w-full max-h-[90vh] overflow-y-auto p-6 sm:p-8 shadow-2xl border border-neutral-200 relative space-y-6"
             onClick={(e) => e.stopPropagation()}
@@ -384,10 +283,10 @@ export function ExerciseLibrary() {
             <div className="flex items-start justify-between gap-4 pb-4 border-b border-neutral-100">
               <div className="space-y-1">
                 <span className="px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider bg-emerald-100 text-emerald-800 border border-emerald-200">
-                  {CATEGORY_TRANSLATIONS[selectedExercise.category?.name] || selectedExercise.category?.name}
+                  {selectedExercise.category}
                 </span>
                 <h2 className="text-xl sm:text-2xl font-black font-[var(--font-heading)] text-neutral-900">
-                  {modalName || 'Exercício'}
+                  {selectedExercise.name || 'Exercício'}
                 </h2>
               </div>
 
@@ -401,21 +300,14 @@ export function ExerciseLibrary() {
               </button>
             </div>
 
-            {/* Images Gallery */}
-            {selectedExercise.images && selectedExercise.images.length > 0 && (
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                {selectedExercise.images.map((img) => (
-                  <div
-                    key={img.id}
-                    className="h-48 rounded-2xl bg-neutral-50 border border-neutral-200/80 p-3 flex items-center justify-center overflow-hidden"
-                  >
-                    <img
-                      src={img.image}
-                      alt={modalName}
-                      className="w-full h-full object-contain"
-                    />
-                  </div>
-                ))}
+            {/* Image */}
+            {selectedExercise.imageURL && (
+              <div className="h-64 rounded-2xl bg-neutral-50 border border-neutral-200/80 p-3 flex items-center justify-center overflow-hidden">
+                <img
+                  src={selectedExercise.imageURL}
+                  alt={selectedExercise.name}
+                  className="w-full h-full object-contain"
+                />
               </div>
             )}
 
@@ -429,10 +321,10 @@ export function ExerciseLibrary() {
                   {selectedExercise.muscles?.length > 0 ? (
                     selectedExercise.muscles.map((m) => (
                       <span
-                        key={m.id}
+                        key={m}
                         className="px-2.5 py-1 rounded-xl text-xs font-bold bg-white text-emerald-900 border border-emerald-200/80 shadow-xs"
                       >
-                        {MUSCLE_TRANSLATIONS[m.name] || m.name}
+                        {m}
                       </span>
                     ))
                   ) : (
@@ -449,10 +341,10 @@ export function ExerciseLibrary() {
                   {selectedExercise.equipment?.length > 0 ? (
                     selectedExercise.equipment.map((eq) => (
                       <span
-                        key={eq.id}
+                        key={eq}
                         className="px-2.5 py-1 rounded-xl text-xs font-bold bg-white text-neutral-800 border border-neutral-200 shadow-xs"
                       >
-                        {eq.name}
+                        {eq}
                       </span>
                     ))
                   ) : (
@@ -468,7 +360,7 @@ export function ExerciseLibrary() {
                 Instruções de Postura e Execução
               </h3>
               <div className="p-5 rounded-2xl bg-neutral-50 border border-neutral-200/80 text-xs sm:text-sm text-neutral-700 leading-relaxed font-medium">
-                {cleanHtml(modalDescription) || (
+                {selectedExercise.description || (
                   <p>Mantenha a postura ereta, respiração ritmada e execute o movimento de forma controlada sem pressa para maximizar a queima calórica.</p>
                 )}
               </div>
@@ -485,8 +377,6 @@ export function ExerciseLibrary() {
               </button>
             </div>
           </div>
-            );
-          })()}
         </div>
       )}
     </div>

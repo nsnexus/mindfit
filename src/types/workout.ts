@@ -89,6 +89,28 @@ export interface WgerExerciseTranslation {
   language: number;
 }
 
+// ============================================
+// Biblioteca de Exercícios (Firestore — coleção `exercises`)
+// ============================================
+// Fonte de verdade atual: dados curados e traduzidos para PT-BR, importados
+// uma única vez da wger.de via scripts/sync-exercise-library.mjs. O app não
+// consulta mais a API da wger em tempo de execução.
+export interface FirestoreExercise {
+  id: string; // doc id, ex: "wger-9"
+  wgerId: number;
+  name: string;
+  description: string;
+  categoryId: number;
+  category: string;
+  muscles: string[];
+  musclesSecondary: string[];
+  equipment: string[];
+  imageURL: string;
+  active: boolean;
+  createdAt?: unknown;
+  updatedAt?: unknown;
+}
+
 export interface WgerExerciseInfo {
   id: number;
   uuid?: string;
