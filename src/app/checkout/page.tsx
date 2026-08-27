@@ -11,6 +11,7 @@ import { PricingCard } from '@/components/checkout/PricingCard';
 import { PixQRCode, type PixDataView } from '@/components/checkout/PixQRCode';
 import { updateDocument } from '@/lib/firebase/firestore';
 import { registerWithEmail } from '@/lib/firebase/auth';
+import { trackPixelEvent } from '@/lib/metaPixel';
 import { DISCLAIMER_TEXT } from '@/constants/config';
 import { ROUTES } from '@/constants/routes';
 import type { PaymentMethod, CheckoutFormData } from '@/types/payment';
@@ -80,6 +81,12 @@ export default function CheckoutPage() {
           pixCopiaECola: data.pixCopiaECola,
           qrCodeUrl: data.qrCodeUrl,
           amount: data.amount,
+        });
+
+        trackPixelEvent('InitiateCheckout', {
+          value: data.amount,
+          currency: 'BRL',
+          content_name: 'Mindfit Acesso Vitalício',
         });
       } else {
         await handleUnlockAccess();

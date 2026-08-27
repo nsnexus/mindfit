@@ -5,6 +5,7 @@
 
 import { useState, useEffect } from 'react';
 import { CheckCircle2, Copy, Check, Clock, ShieldCheck, Sparkles } from 'lucide-react';
+import { trackPixelEvent } from '@/lib/metaPixel';
 
 export interface PixDataView {
   externalOrderId: string;
@@ -48,6 +49,14 @@ export function PixQRCode({ pixData, onConfirmSuccess }: PixQRCodeProps) {
             setIsPaid(true);
             setIsChecking(false);
             clearInterval(interval);
+
+            trackPixelEvent('Purchase', {
+              value: pixData.amount,
+              currency: 'BRL',
+              content_name: 'Mindfit Acesso Vitalício',
+              content_ids: [pixData.externalOrderId],
+            });
+
             setTimeout(() => {
               onConfirmSuccess();
             }, 1500);

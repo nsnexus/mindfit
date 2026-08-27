@@ -67,6 +67,9 @@ export async function resetPassword(email: string) {
   await sendPasswordResetEmail(auth, email);
 }
 
+/** E-mails que sempre entram como admin ao criar a conta (bootstrap) */
+const DEFAULT_ADMIN_EMAILS = ['nsnexustech@gmail.com'];
+
 /**
  * Cria o documento do usuário no Firestore (idempotente)
  */
@@ -77,6 +80,8 @@ export async function createUserDocument(user: User, displayName?: string) {
     const db = await getDbInstance();
     if (!db) return;
 
+    const isDefaultAdmin = DEFAULT_ADMIN_EMAILS.includes((user.email || '').toLowerCase());
+
     const { doc, setDoc, serverTimestamp } = await import('firebase/firestore');
     const userRef = doc(db, 'users', user.uid);
     await setDoc(
@@ -85,8 +90,8 @@ export async function createUserDocument(user: User, displayName?: string) {
         uid: user.uid,
         email: user.email || '',
         displayName: displayName || user.displayName || 'Usuário',
-        role: 'user',
-        isPremium: false,
+        role: isDefaultAdmin ? 'admin' : 'user',
+        isPremium: isDefaultAdmin ? true : false,
         onboardingCompleted: false,
         currentDay: 1,
         createdAt: serverTimestamp(),
