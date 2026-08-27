@@ -82,15 +82,25 @@ export interface WgerExerciseImage {
   is_main?: boolean;
 }
 
+export interface WgerExerciseTranslation {
+  id: number;
+  name: string;
+  description: string;
+  language: number;
+}
+
 export interface WgerExerciseInfo {
   id: number;
   uuid?: string;
-  name: string;
+  /** @deprecated a API não retorna isso no nível raiz — use getWgerTranslation() */
+  name?: string;
   category: {
     id: number;
     name: string;
   };
-  description: string;
+  /** @deprecated a API não retorna isso no nível raiz — use getWgerTranslation() */
+  description?: string;
+  translations: WgerExerciseTranslation[];
   muscles: {
     id: number;
     name: string;

@@ -21,6 +21,7 @@ import {
   fetchWgerExercises,
   fetchWgerCategories,
   cleanHtml,
+  getWgerTranslation,
   CATEGORY_TRANSLATIONS,
   MUSCLE_TRANSLATIONS,
 } from '@/lib/wgerApi';
@@ -277,7 +278,8 @@ export function ExerciseLibrary() {
           {exercises.map((ex) => {
             const mainImage = ex.images?.find((img) => img.is_main)?.image || ex.images?.[0]?.image;
             const categoryName = CATEGORY_TRANSLATIONS[ex.category?.name] || ex.category?.name || 'Geral';
-            const cleanDesc = cleanHtml(ex.description);
+            const { name: exName, description: exDescription } = getWgerTranslation(ex);
+            const cleanDesc = cleanHtml(exDescription);
 
             return (
               <div
@@ -290,7 +292,7 @@ export function ExerciseLibrary() {
                   {mainImage ? (
                     <img
                       src={mainImage}
-                      alt={ex.name}
+                      alt={exName}
                       className="w-full h-full object-contain p-3 group-hover:scale-105 transition-transform duration-300"
                       loading="lazy"
                     />
@@ -309,7 +311,7 @@ export function ExerciseLibrary() {
                 <div className="p-5 flex-1 flex flex-col justify-between space-y-3">
                   <div>
                     <h3 className="font-black text-neutral-900 text-base font-[var(--font-heading)] group-hover:text-emerald-700 transition-colors line-clamp-1">
-                      {ex.name}
+                      {exName || 'Exercício'}
                     </h3>
                     <p className="text-xs text-neutral-400 font-medium line-clamp-2 mt-1 leading-relaxed">
                       {cleanDesc || 'Instruções de execução, ativação muscular e posicionamento correto.'}
@@ -371,6 +373,9 @@ export function ExerciseLibrary() {
           className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-fade-in"
           onClick={() => setSelectedExercise(null)}
         >
+          {(() => {
+            const { name: modalName, description: modalDescription } = getWgerTranslation(selectedExercise);
+            return (
           <div
             className="bg-white rounded-3xl max-w-2xl w-full max-h-[90vh] overflow-y-auto p-6 sm:p-8 shadow-2xl border border-neutral-200 relative space-y-6"
             onClick={(e) => e.stopPropagation()}
@@ -382,7 +387,7 @@ export function ExerciseLibrary() {
                   {CATEGORY_TRANSLATIONS[selectedExercise.category?.name] || selectedExercise.category?.name}
                 </span>
                 <h2 className="text-xl sm:text-2xl font-black font-[var(--font-heading)] text-neutral-900">
-                  {selectedExercise.name}
+                  {modalName || 'Exercício'}
                 </h2>
               </div>
 
@@ -406,7 +411,7 @@ export function ExerciseLibrary() {
                   >
                     <img
                       src={img.image}
-                      alt={selectedExercise.name}
+                      alt={modalName}
                       className="w-full h-full object-contain"
                     />
                   </div>
@@ -463,7 +468,7 @@ export function ExerciseLibrary() {
                 Instruções de Postura e Execução
               </h3>
               <div className="p-5 rounded-2xl bg-neutral-50 border border-neutral-200/80 text-xs sm:text-sm text-neutral-700 leading-relaxed font-medium">
-                {cleanHtml(selectedExercise.description) || (
+                {cleanHtml(modalDescription) || (
                   <p>Mantenha a postura ereta, respiração ritmada e execute o movimento de forma controlada sem pressa para maximizar a queima calórica.</p>
                 )}
               </div>
@@ -480,6 +485,8 @@ export function ExerciseLibrary() {
               </button>
             </div>
           </div>
+            );
+          })()}
         </div>
       )}
     </div>

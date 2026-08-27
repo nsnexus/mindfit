@@ -55,6 +55,28 @@ export interface WgerApiResponse<T> {
 }
 
 /**
+ * Extrai nome e descrição de um exercício da wger.
+ * A API não retorna esses campos no nível raiz — eles ficam dentro de
+ * `translations[]`, um item por idioma. Tenta o idioma pedido (2 = inglês,
+ * base mais completa), cai para o primeiro disponível se não achar.
+ */
+export function getWgerTranslation(
+  exercise: WgerExerciseInfo,
+  languageId = 2
+): { name: string; description: string } {
+  const translations = exercise.translations || [];
+  const match =
+    translations.find((t) => t.language === languageId && t.name) ||
+    translations.find((t) => t.name) ||
+    null;
+
+  return {
+    name: match?.name || '',
+    description: match?.description || '',
+  };
+}
+
+/**
  * Remove tags HTML das descrições da wger
  */
 export function cleanHtml(html: string): string {
@@ -223,8 +245,12 @@ export async function generateCustomWorkoutFromWger(
   );
   const rawExercises: WgerExerciseInfo[] = categoryResults.flatMap((res) => res.results || []);
 
-  // Filtra e seleciona exercícios variados com imagens e instruções
-  const validExercises = rawExercises.filter((e) => e.name && e.description);
+  // Filtra e seleciona exercícios variados com nome e instruções (o nome/
+  // descrição ficam dentro de translations[], não no nível raiz)
+  const validExercises = rawExercises.filter((e) => {
+    const t = getWgerTranslation(e);
+    return t.name && t.description;
+  });
   const picked = validExercises.slice(0, targetExerciseCount);
 
   // Se a API retornar menos do que o desejado, usa os disponíveis
@@ -275,21 +301,24 @@ export async function generateCustomWorkoutFromWger(
     equipment: profile.equipment === 'none' ? ('none' as const) : ('dumbbells' as const),
     phase: [1, 2, 3] as (1 | 2 | 3)[],
     caloriesBurned: profile.fitnessLevel === 'beginner' ? 140 : profile.fitnessLevel === 'intermediate' ? 180 : 230,
-    exercisesList: selectedWgerList.map((wgerEx, idx) => ({
-      id: `wger-${wgerEx.id}`,
-      name: wgerEx.name,
-      description: cleanHtml(wgerEx.description),
-      muscleGroup: (profile.focus === 'abs' ? 'core' : profile.focus === 'legs' ? 'legs' : 'fullBody') as any,
-      mediaURL: wgerEx.images && wgerEx.images.length > 0 ? wgerEx.images[0].image : fallbackImages[idx % fallbackImages.length],
-      equipment: profile.equipment === 'none' ? 'none' : 'dumbbells',
-      difficulty: profile.fitnessLevel,
-      cues: [
-        'Mantenha a postura alinhada e abdômen contraído.',
-        'Respire de forma contínua durante todo o movimento.',
-        'Controle a velocidade na fase de descida.',
-      ],
-      targetSeconds: durationSeconds,
-    })),
+    exercisesList: selectedWgerList.map((wgerEx, idx) => {
+      const t = getWgerTranslation(wgerEx);
+      return {
+        id: `wger-${wgerEx.id}`,
+        name: t.name || wgerEx.name || 'Exercício',
+        description: cleanHtml(t.description || wgerEx.description || ''),
+        muscleGroup: (profile.focus === 'abs' ? 'core' : profile.focus === 'legs' ? 'legs' : 'fullBody') as any,
+        mediaURL: wgerEx.images && wgerEx.images.length > 0 ? wgerEx.images[0].image : fallbackImages[idx % fallbackImages.length],
+        equipment: profile.equipment === 'none' ? 'none' : 'dumbbells',
+        difficulty: profile.fitnessLevel,
+        cues: [
+          'Mantenha a postura alinhada e abdômen contraído.',
+          'Respire de forma contínua durante todo o movimento.',
+          'Controle a velocidade na fase de descida.',
+        ],
+        targetSeconds: durationSeconds,
+      };
+    }),
     exercises: selectedWgerList.map((wgerEx) => ({
       exerciseId: `wger-${wgerEx.id}`,
       sets,
