@@ -378,8 +378,14 @@ section {
   animation: heroPhoneFloat 5s ease-in-out infinite;
 }
 
-@keyframes heroCardGlow {
-  to { transform: rotate(360deg); }
+@property --hero-card-angle {
+  syntax: '<angle>';
+  inherits: false;
+  initial-value: 0deg;
+}
+
+@keyframes heroCardBorderSpin {
+  to { --hero-card-angle: 360deg; }
 }
 
 .hero-price-card {
@@ -389,31 +395,16 @@ section {
   width: 24%;
   min-width: 122px;
   max-width: 172px;
-  background: #fff;
   border-radius: 16px;
   padding: 12px 13px;
+  border: 2.5px solid transparent;
+  background:
+    linear-gradient(#fff, #fff) padding-box,
+    conic-gradient(from var(--hero-card-angle, 0deg), #eaf3ef, #8bc34a, #0e9f6e, #eaf3ef, #eaf3ef) border-box;
   box-shadow: 0 20px 45px rgba(15, 53, 47, 0.22);
   z-index: 5;
   text-align: left;
-}
-
-.hero-price-card::before {
-  content: '';
-  position: absolute;
-  inset: -3px;
-  border-radius: 19px;
-  background: conic-gradient(
-    from 0deg,
-    transparent 0%,
-    transparent 72%,
-    #8bc34a 84%,
-    #0e9f6e 92%,
-    transparent 100%
-  );
-  filter: blur(2px);
-  opacity: 0.85;
-  animation: heroCardGlow 3.5s linear infinite;
-  z-index: -1;
+  animation: heroCardBorderSpin 3.5s linear infinite;
 }
 
 .hero-price-tag {
