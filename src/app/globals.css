@@ -400,14 +400,18 @@ section {
 .hero-price-card::before {
   content: '';
   position: absolute;
-  inset: -1.5px;
-  border-radius: inherit;
-  padding: 1.5px;
-  background: conic-gradient(from 0deg, transparent 0%, #8bc34a 12%, #0e9f6e 22%, transparent 38%);
-  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-  -webkit-mask-composite: xor;
-  mask-composite: exclude;
-  animation: heroCardGlow 3.5s linear infinite;
+  inset: -35%;
+  border-radius: 50%;
+  background: conic-gradient(
+    from 0deg,
+    transparent 0%,
+    transparent 70%,
+    #8bc34a 82%,
+    #0e9f6e 90%,
+    transparent 100%
+  );
+  filter: blur(6px);
+  animation: heroCardGlow 3s linear infinite;
   z-index: -1;
 }
 
@@ -415,8 +419,8 @@ section {
   display: inline-flex;
   align-items: center;
   gap: 4px;
-  background: #fff4e0;
-  color: #c47f0a;
+  background: var(--grad);
+  color: #fff;
   font-family: 'Poppins', sans-serif;
   font-weight: 700;
   font-size: 0.5rem;
@@ -425,6 +429,7 @@ section {
   padding: 3px 8px;
   border-radius: 50px;
   margin-bottom: 6px;
+  white-space: nowrap;
 }
 
 .hero-price-label {
