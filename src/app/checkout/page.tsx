@@ -10,6 +10,7 @@ import { useAuthStore } from '@/stores/authStore';
 import { PricingCard } from '@/components/checkout/PricingCard';
 import { PixQRCode, type PixDataView } from '@/components/checkout/PixQRCode';
 import { updateDocument } from '@/lib/firebase/firestore';
+import { registerWithEmail } from '@/lib/firebase/auth';
 import { DISCLAIMER_TEXT } from '@/constants/config';
 import { ROUTES } from '@/constants/routes';
 import type { PaymentMethod, CheckoutFormData } from '@/types/payment';
@@ -23,12 +24,17 @@ export default function CheckoutPage() {
     email: appUser?.email || '',
     cpf: '',
     phone: '',
+    password: '',
     paymentMethod: 'pix',
   });
+  const [confirmPassword, setConfirmPassword] = useState('');
 
   const [isLoading, setIsLoading] = useState(false);
   const [pixData, setPixData] = useState<PixDataView | null>(null);
   const [error, setError] = useState('');
+
+  // Quem já está logado não precisa criar senha — a conta já existe
+  const needsPassword = !firebaseUser;
 
   const handleCreatePayment = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -39,14 +45,26 @@ export default function CheckoutPage() {
       return;
     }
 
+    if (needsPassword) {
+      if (formData.password.length < 6) {
+        setError('A senha precisa ter pelo menos 6 caracteres.');
+        return;
+      }
+      if (formData.password !== confirmPassword) {
+        setError('As senhas não coincidem.');
+        return;
+      }
+    }
+
     setIsLoading(true);
     try {
       if (formData.paymentMethod === 'pix') {
+        const { password, ...orderData } = formData;
         const res = await fetch('/api/checkout/pix', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            ...formData,
+            ...orderData,
             userId: firebaseUser?.uid || null,
           }),
         });
@@ -74,16 +92,42 @@ export default function CheckoutPage() {
   };
 
   const handleUnlockAccess = async () => {
-    if (firebaseUser) {
-      await updateDocument('users', firebaseUser.uid, {
-        isPremium: true,
-      });
+    try {
+      if (firebaseUser) {
+        // Já estava logado — só libera o acesso na conta existente
+        await updateDocument('users', firebaseUser.uid, {
+          isPremium: true,
+          cpf: formData.cpf || undefined,
+          phone: formData.phone || undefined,
+          premiumSince: new Date().toISOString(),
+        });
 
-      if (appUser) {
-        setAppUser({ ...appUser, isPremium: true });
+        if (appUser) {
+          setAppUser({ ...appUser, isPremium: true });
+        }
+      } else {
+        // Ninguém logado — cria a conta agora com a senha definida no checkout
+        const newUser = await registerWithEmail(formData.email, formData.password, formData.fullName);
+        if (!newUser) {
+          throw new Error('Não foi possível criar sua conta. Tente novamente.');
+        }
+
+        await updateDocument('users', newUser.uid, {
+          isPremium: true,
+          cpf: formData.cpf || undefined,
+          phone: formData.phone || undefined,
+          premiumSince: new Date().toISOString(),
+        });
+      }
+
+      router.push(ROUTES.ONBOARDING);
+    } catch (err: any) {
+      if (err?.code === 'auth/email-already-in-use') {
+        setError('Esse e-mail já tem uma conta. Faça login para liberar o acesso vitalício.');
+      } else {
+        setError(err?.message || 'Pagamento confirmado, mas houve um erro ao liberar seu acesso. Fale com o suporte.');
       }
     }
-    router.push(ROUTES.ONBOARDING);
   };
 
   return (
@@ -109,29 +153,37 @@ export default function CheckoutPage() {
         <div className="checkout-grid">
           {/* Left Column: Form / Pix */}
           <div>
+            {error && (
+              <div
+                style={{
+                  marginBottom: '18px',
+                  padding: '12px 16px',
+                  background: '#fef2f2',
+                  border: '1px solid #fecaca',
+                  borderRadius: '12px',
+                  color: '#dc2626',
+                  fontSize: '0.85rem',
+                  fontWeight: 600,
+                }}
+              >
+                {error}
+                {error.includes('já tem uma conta') && (
+                  <>
+                    {' '}
+                    <Link href={ROUTES.LOGIN} style={{ textDecoration: 'underline' }}>
+                      Ir para o login →
+                    </Link>
+                  </>
+                )}
+              </div>
+            )}
+
             {!pixData ? (
               <div className="checkout-form-card">
                 <h2 className="checkout-form-title">Dados do Titular</h2>
                 <p className="checkout-form-sub">
                   Preencha suas informações para liberação imediata do acesso.
                 </p>
-
-                {error && (
-                  <div
-                    style={{
-                      marginBottom: '18px',
-                      padding: '12px 16px',
-                      background: '#fef2f2',
-                      border: '1px solid #fecaca',
-                      borderRadius: '12px',
-                      color: '#dc2626',
-                      fontSize: '0.85rem',
-                      fontWeight: 600,
-                    }}
-                  >
-                    {error}
-                  </div>
-                )}
 
                 <form onSubmit={handleCreatePayment}>
                   <div className="form-group-clean">
@@ -160,6 +212,36 @@ export default function CheckoutPage() {
                       Você receberá a confirmação e o acesso neste e-mail.
                     </span>
                   </div>
+
+                  {needsPassword && (
+                    <div className="form-row-2">
+                      <div className="form-group-clean">
+                        <label>Crie uma Senha</label>
+                        <input
+                          type="password"
+                          className="input-clean"
+                          placeholder="Mínimo 6 caracteres"
+                          value={formData.password}
+                          onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                          required
+                          minLength={6}
+                        />
+                      </div>
+
+                      <div className="form-group-clean">
+                        <label>Confirme a Senha</label>
+                        <input
+                          type="password"
+                          className="input-clean"
+                          placeholder="Repita a senha"
+                          value={confirmPassword}
+                          onChange={(e) => setConfirmPassword(e.target.value)}
+                          required
+                          minLength={6}
+                        />
+                      </div>
+                    </div>
+                  )}
 
                   <div className="form-row-2">
                     <div className="form-group-clean">

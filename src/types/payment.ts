@@ -34,5 +34,6 @@ export interface CheckoutFormData {
   email: string;
   cpf: string;
   phone: string;
+  password: string;
   paymentMethod: PaymentMethod;
 }
