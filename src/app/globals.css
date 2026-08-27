@@ -400,18 +400,19 @@ section {
 .hero-price-card::before {
   content: '';
   position: absolute;
-  inset: -35%;
-  border-radius: 50%;
+  inset: -3px;
+  border-radius: 19px;
   background: conic-gradient(
     from 0deg,
     transparent 0%,
-    transparent 70%,
-    #8bc34a 82%,
-    #0e9f6e 90%,
+    transparent 72%,
+    #8bc34a 84%,
+    #0e9f6e 92%,
     transparent 100%
   );
-  filter: blur(6px);
-  animation: heroCardGlow 3s linear infinite;
+  filter: blur(2px);
+  opacity: 0.85;
+  animation: heroCardGlow 3.5s linear infinite;
   z-index: -1;
 }
 
