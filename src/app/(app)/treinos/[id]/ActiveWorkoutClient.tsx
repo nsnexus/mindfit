@@ -48,13 +48,13 @@ export function ActiveWorkoutClient({ workout: initialWorkout, workoutId }: Acti
     );
   }
 
-  if (!resolvedWorkout) {
+  if (!resolvedWorkout || !resolvedWorkout.exercises || resolvedWorkout.exercises.length === 0) {
     return (
       <div className="text-center py-20 bg-white rounded-3xl border border-[#e2f2ea] shadow-sm max-w-lg mx-auto">
         <span className="text-4xl block mb-2">🏋️</span>
         <h2 className="text-lg font-bold text-[#12352f] font-head">Treino não encontrado</h2>
         <p className="text-xs text-[#5b7a72] mt-1 mb-6">
-          O treino que você está procurando não existe ou expirou.
+          O treino que você está procurando não existe ou expirou. Tente gerar seu plano novamente.
         </p>
         <Link href={ROUTES.TREINOS}>
           <button className="btn btn-primary">Voltar aos Treinos</button>

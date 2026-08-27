@@ -146,6 +146,43 @@ export async function fetchWgerMuscles(): Promise<WgerMuscle[]> {
   }
 }
 
+/**
+ * Exercícios de reserva (sem dependência de rede), usados quando a busca
+ * de exercícios não retorna nada utilizável para o foco selecionado.
+ */
+const FALLBACK_EXERCISES: Record<string, { name: string; description: string }[]> = {
+  fullBody: [
+    { name: 'Polichinelo', description: 'Salte abrindo pernas e braços simultaneamente, retornando à posição inicial de forma controlada.' },
+    { name: 'Agachamento Livre', description: 'Pés na largura dos ombros, desça flexionando joelhos e quadril mantendo a coluna neutra.' },
+    { name: 'Flexão de Braço', description: 'Apoie mãos e pés no chão, desça o tronco controlado e empurre de volta mantendo o corpo alinhado.' },
+    { name: 'Prancha Abdominal', description: 'Apoie antebraços e pontas dos pés no chão, mantenha o corpo reto contraindo o abdômen.' },
+    { name: 'Burpee', description: 'Agache, jogue os pés para trás em posição de prancha, retorne e salte para cima.' },
+    { name: 'Afundo Alternado', description: 'Dê um passo à frente flexionando ambos os joelhos a 90°, alterne as pernas.' },
+  ],
+  abs: [
+    { name: 'Prancha Abdominal', description: 'Apoie antebraços e pontas dos pés no chão, mantenha o corpo reto contraindo o abdômen.' },
+    { name: 'Abdominal Supra', description: 'Deitado, flexione o tronco em direção aos joelhos contraindo o abdômen.' },
+    { name: 'Elevação de Pernas', description: 'Deitado de costas, eleve as pernas estendidas mantendo a lombar apoiada.' },
+    { name: 'Prancha Lateral', description: 'Apoie um antebraço e a lateral do pé no chão, mantenha o quadril elevado e alinhado.' },
+  ],
+  legs: [
+    { name: 'Agachamento Livre', description: 'Pés na largura dos ombros, desça flexionando joelhos e quadril mantendo a coluna neutra.' },
+    { name: 'Afundo Alternado', description: 'Dê um passo à frente flexionando ambos os joelhos a 90°, alterne as pernas.' },
+    { name: 'Elevação de Panturrilha', description: 'Em pé, eleve os calcanhares o máximo possível e desça controlado.' },
+    { name: 'Ponte de Glúteo', description: 'Deitado, pés apoiados no chão, eleve o quadril contraindo os glúteos.' },
+  ],
+  arms: [
+    { name: 'Flexão de Braço', description: 'Apoie mãos e pés no chão, desça o tronco controlado e empurre de volta mantendo o corpo alinhado.' },
+    { name: 'Tríceps no Banco', description: 'Apoie as mãos na borda de um banco/cadeira, desça o corpo flexionando os cotovelos.' },
+    { name: 'Prancha com Toque no Ombro', description: 'Em posição de prancha, toque o ombro oposto alternadamente mantendo o quadril estável.' },
+  ],
+  back: [
+    { name: 'Superman', description: 'Deitado de bruços, eleve simultaneamente braços e pernas contraindo a lombar.' },
+    { name: 'Prancha Abdominal', description: 'Apoie antebraços e pontas dos pés no chão, mantenha o corpo reto contraindo o abdômen.' },
+    { name: 'Ponte de Glúteo', description: 'Deitado, pés apoiados no chão, eleve o quadril contraindo os glúteos.' },
+  ],
+};
+
 export interface WorkoutQuestionnaireData {
   weight?: number;
   height?: number;
@@ -178,22 +215,30 @@ export async function generateCustomWorkoutFromWger(
   const restSeconds = profile.fitnessLevel === 'beginner' ? 20 : 15;
   const sets = profile.fitnessLevel === 'beginner' ? 2 : 3;
 
-  // Busca exercícios nas categorias selecionadas
-  const rawExercises: WgerExerciseInfo[] = [];
-
-  for (const catId of selectedCategories) {
-    const res = await fetchWgerExercises({ limit: 8, category: catId });
-    if (res.results && res.results.length > 0) {
-      rawExercises.push(...res.results);
-    }
-  }
+  // Busca exercícios nas categorias selecionadas (em paralelo — bem mais rápido que sequencial)
+  const categoryResults = await Promise.all(
+    selectedCategories.map((catId) => fetchWgerExercises({ limit: 8, category: catId }))
+  );
+  const rawExercises: WgerExerciseInfo[] = categoryResults.flatMap((res) => res.results || []);
 
   // Filtra e seleciona exercícios variados com imagens e instruções
   const validExercises = rawExercises.filter((e) => e.name && e.description);
   const picked = validExercises.slice(0, targetExerciseCount);
 
   // Se a API retornar menos do que o desejado, usa os disponíveis
-  const selectedWgerList = picked.length > 0 ? picked : validExercises.slice(0, 4);
+  let selectedWgerList = picked.length > 0 ? picked : validExercises.slice(0, 4);
+
+  // Se a API não devolveu nada utilizável, cai para uma lista fixa local
+  // (garante que o treino nunca fique sem exercícios)
+  if (selectedWgerList.length === 0) {
+    const fallbackList = FALLBACK_EXERCISES[profile.focus] || FALLBACK_EXERCISES.fullBody;
+    selectedWgerList = fallbackList.map((ex, idx) => ({
+      id: `fallback-${idx}`,
+      name: ex.name,
+      description: ex.description,
+      images: [],
+    })) as unknown as WgerExerciseInfo[];
+  }
 
   const fallbackImages = [
     'https://images.unsplash.com/photo-1518611012118-696072aa579a?w=600&q=70',
@@ -288,28 +333,28 @@ export async function generateWeeklyPlanFromWger(
 
   const trainingSlots = trainingSlotsByLevel[profile.fitnessLevel] || trainingSlotsByLevel.beginner;
 
-  const days: WeeklyPlanDay[] = [];
+  // Gera todos os dias de treino em paralelo (bem mais rápido que um por vez)
+  const days: WeeklyPlanDay[] = await Promise.all(
+    WEEKDAYS.map(async (dayName, i) => {
+      const slotPosition = trainingSlots.indexOf(i);
 
-  for (let i = 0; i < WEEKDAYS.length; i++) {
-    const slotPosition = trainingSlots.indexOf(i);
+      if (slotPosition === -1) {
+        return { day: dayName, dayIndex: i, isRestDay: true };
+      }
 
-    if (slotPosition === -1) {
-      days.push({ day: WEEKDAYS[i], dayIndex: i, isRestDay: true });
-      continue;
-    }
+      const dayFocus = focusRotation[slotPosition % focusRotation.length] || 'fullBody';
+      const workout = await generateCustomWorkoutFromWger({ ...profile, focus: dayFocus });
+      workout.id = `${workout.id}-d${i}`;
 
-    const dayFocus = focusRotation[slotPosition % focusRotation.length] || 'fullBody';
-    const workout = await generateCustomWorkoutFromWger({ ...profile, focus: dayFocus });
-    workout.id = `${workout.id}-d${i}`;
-
-    days.push({
-      day: WEEKDAYS[i],
-      dayIndex: i,
-      isRestDay: false,
-      focus: dayFocus,
-      workout,
-    });
-  }
+      return {
+        day: dayName,
+        dayIndex: i,
+        isRestDay: false,
+        focus: dayFocus,
+        workout,
+      };
+    })
+  );
 
   return {
     generatedAt: Date.now(),
