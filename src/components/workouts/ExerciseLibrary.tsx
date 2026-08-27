@@ -24,6 +24,12 @@ import {
   CATEGORY_TRANSLATIONS,
   MUSCLE_TRANSLATIONS,
 } from '@/lib/wgerApi';
+import {
+  getCachedExerciseList,
+  setCachedExerciseList,
+  getCachedCategories,
+  setCachedCategories,
+} from '@/lib/firebase/exerciseCache';
 import type { WgerExerciseInfo, WgerCategory } from '@/types/workout';
 
 const CACHE_TTL = 1000 * 60 * 60 * 12; // 12h
@@ -59,35 +65,61 @@ export function ExerciseLibrary() {
   const [hasMore, setHasMore] = useState(true);
   const [selectedExercise, setSelectedExercise] = useState<WgerExerciseInfo | null>(null);
 
-  // Carrega categorias na montagem (cache local evita nova consulta a cada visita)
+  // Carrega categorias na montagem: localStorage (instantâneo) → Firestore
+  // (compartilhado entre usuários) → API (só se ninguém buscou isso ainda)
   useEffect(() => {
     async function loadCategories() {
-      const cached = readCache<WgerCategory[]>('mindfit_ex_categories');
-      if (cached) setCategories(cached);
+      const local = readCache<WgerCategory[]>('mindfit_ex_categories');
+      if (local) {
+        setCategories(local);
+        return;
+      }
+
+      const shared = await getCachedCategories();
+      if (shared) {
+        setCategories(shared);
+        writeCache('mindfit_ex_categories', shared);
+        return;
+      }
 
       const cats = await fetchWgerCategories();
       if (cats.length > 0) {
         setCategories(cats);
         writeCache('mindfit_ex_categories', cats);
+        setCachedCategories(cats);
       }
     }
     loadCategories();
   }, []);
 
-  // Carrega exercícios ao mudar filtros (mostra cache local na hora, atualiza em segundo plano)
+  // Carrega exercícios ao mudar filtros: localStorage → Firestore (galeria
+  // compartilhada) → API wger como último recurso. Cada nível encontrado
+  // "sobe" para os níveis mais rápidos, populando a galeria pros próximos.
   useEffect(() => {
     let isCancelled = false;
-    const cacheKey = `mindfit_ex_list_${selectedCategory ?? 'all'}_${searchTerm || 'none'}`;
+    const filterKey = `${selectedCategory ?? 'all'}_${searchTerm || 'none'}`;
+    const localKey = `mindfit_ex_list_${filterKey}`;
 
     async function loadExercises() {
-      const cached = readCache<{ results: WgerExerciseInfo[]; next: string | null }>(cacheKey);
-      if (cached) {
-        setExercises(cached.results);
+      const local = readCache<{ results: WgerExerciseInfo[]; next: string | null }>(localKey);
+      if (local) {
+        setExercises(local.results);
         setOffset(18);
-        setHasMore(!!cached.next);
+        setHasMore(!!local.next);
         setIsLoading(false);
-      } else {
-        setIsLoading(true);
+        return;
+      }
+
+      setIsLoading(true);
+
+      const shared = await getCachedExerciseList(filterKey);
+      if (shared && !isCancelled) {
+        setExercises(shared.results);
+        setOffset(18);
+        setHasMore(!!shared.next);
+        setIsLoading(false);
+        writeCache(localKey, shared);
+        return;
       }
 
       const res = await fetchWgerExercises({
@@ -103,7 +135,8 @@ export function ExerciseLibrary() {
         setHasMore(!!res.next);
         setIsLoading(false);
         if (res.results?.length > 0) {
-          writeCache(cacheKey, { results: res.results, next: res.next });
+          writeCache(localKey, { results: res.results, next: res.next });
+          setCachedExerciseList(filterKey, res.results, res.next);
         }
       }
     }

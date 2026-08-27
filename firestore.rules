@@ -79,6 +79,15 @@ service cloud.firestore {
     }
 
     // =========================================
+    // EXERCISE CACHE (cache compartilhado da API de exercícios —
+    // qualquer usuário logado pode ler e popular; não é conteúdo
+    // sensível, só espelha dados públicos da wger.de)
+    // =========================================
+    match /exerciseCache/{docId} {
+      allow read, write: if isAuth();
+    }
+
+    // =========================================
     // WORKOUTS (public read, admin write)
     // =========================================
     match /workouts/{workoutId} {
