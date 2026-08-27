@@ -33,20 +33,58 @@ export function Hero() {
           </div>
         </div>
 
-        <div className="hero-visual" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-          <img
-            src="/mulher-hero.png"
-            alt="Transformação Mindfit — Emagrecimento saudável em 21 dias"
-            className="hero-img"
-            style={{
-              width: '100%',
-              maxWidth: '560px',
-              height: 'auto',
-              maxHeight: '620px',
-              objectFit: 'contain',
-              display: 'block',
-            }}
-          />
+        <div className="hero-visual">
+          <div className="hero-scene">
+            <img
+              src="/mulher-transformacao.png"
+              alt="Transformação Mindfit — antes e depois do emagrecimento saudável"
+              className="hero-photo"
+            />
+
+            <svg className="hero-arrow" viewBox="0 0 200 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <linearGradient id="heroArrowGrad" x1="8" y1="88" x2="188" y2="16" gradientUnits="userSpaceOnUse">
+                  <stop stopColor="#8bc34a" />
+                  <stop offset="1" stopColor="#0e9f6e" />
+                </linearGradient>
+                <marker
+                  id="heroArrowHead"
+                  viewBox="0 0 10 10"
+                  refX="5.5"
+                  refY="5"
+                  markerWidth="6"
+                  markerHeight="6"
+                  orient="auto-start-reverse"
+                >
+                  <path d="M0 0L10 5L0 10Z" fill="#0e9f6e" />
+                </marker>
+              </defs>
+              <path
+                d="M10 85C55 20 130 6 183 22"
+                stroke="url(#heroArrowGrad)"
+                strokeWidth="7"
+                strokeLinecap="round"
+                markerEnd="url(#heroArrowHead)"
+              />
+            </svg>
+
+            <img src="/celular.png" alt="App Mindfit — painel do aluno" className="hero-phone" />
+
+            <div className="hero-price-card">
+              <span className="hero-price-tag">🔥 Acesso vitalício</span>
+              <p className="hero-price-label">Pagamento único</p>
+              <div className="hero-price-value">
+                R$<b>49</b>
+                <span>,90</span>
+              </div>
+              <p className="hero-price-sub">• para sempre •</p>
+              <ul className="hero-price-list">
+                <li>✅ Sem mensalidade</li>
+                <li>✅ Sem pegadinha</li>
+                <li>✅ Use para sempre</li>
+              </ul>
+            </div>
+          </div>
         </div>
       </div>
     </header>

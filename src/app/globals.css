@@ -331,6 +331,166 @@ section {
   align-items: center;
 }
 
+.hero-scene {
+  position: relative;
+  width: 100%;
+  max-width: 620px;
+  aspect-ratio: 11 / 10;
+}
+
+.hero-photo {
+  position: absolute;
+  left: 0;
+  top: 6%;
+  height: 92%;
+  width: auto;
+  max-width: 68%;
+  object-fit: contain;
+  object-position: left bottom;
+  z-index: 2;
+  filter: drop-shadow(0 24px 34px rgba(15, 53, 47, 0.16));
+}
+
+.hero-arrow {
+  position: absolute;
+  left: 15%;
+  top: 0;
+  width: 19%;
+  height: auto;
+  z-index: 3;
+  pointer-events: none;
+}
+
+@keyframes heroPhoneFloat {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+.hero-phone {
+  position: absolute;
+  right: -2%;
+  top: 4%;
+  height: 84%;
+  width: auto;
+  object-fit: contain;
+  z-index: 4;
+  filter: drop-shadow(0 30px 45px rgba(15, 53, 47, 0.25));
+  animation: heroPhoneFloat 5s ease-in-out infinite;
+}
+
+@keyframes heroCardGlow {
+  to { transform: rotate(360deg); }
+}
+
+.hero-price-card {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: 24%;
+  min-width: 122px;
+  max-width: 172px;
+  background: #fff;
+  border-radius: 16px;
+  padding: 12px 13px;
+  box-shadow: 0 20px 45px rgba(15, 53, 47, 0.22);
+  z-index: 5;
+  text-align: left;
+}
+
+.hero-price-card::before {
+  content: '';
+  position: absolute;
+  inset: -1.5px;
+  border-radius: inherit;
+  padding: 1.5px;
+  background: conic-gradient(from 0deg, transparent 0%, #8bc34a 12%, #0e9f6e 22%, transparent 38%);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  animation: heroCardGlow 3.5s linear infinite;
+  z-index: -1;
+}
+
+.hero-price-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: #fff4e0;
+  color: #c47f0a;
+  font-family: 'Poppins', sans-serif;
+  font-weight: 700;
+  font-size: 0.5rem;
+  letter-spacing: 0.2px;
+  text-transform: uppercase;
+  padding: 3px 8px;
+  border-radius: 50px;
+  margin-bottom: 6px;
+}
+
+.hero-price-label {
+  font-size: 0.66rem;
+  color: var(--muted);
+  margin-bottom: 1px;
+}
+
+.hero-price-value {
+  font-family: 'Poppins', sans-serif;
+  font-weight: 800;
+  font-size: 1.2rem;
+  color: var(--ink);
+  line-height: 1;
+}
+
+.hero-price-value b {
+  font-size: 1.5rem;
+}
+
+.hero-price-value span {
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+.hero-price-sub {
+  font-size: 0.6rem;
+  color: var(--muted);
+  margin-bottom: 8px;
+}
+
+.hero-price-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  border-top: 1px solid #eef4f1;
+  padding-top: 8px;
+}
+
+.hero-price-list li {
+  font-size: 0.6rem;
+  color: var(--ink);
+  font-weight: 600;
+}
+
+@media (max-width: 640px) {
+  .hero-scene {
+    aspect-ratio: 4 / 5;
+    max-width: 380px;
+  }
+  .hero-phone,
+  .hero-price-card,
+  .hero-arrow {
+    display: none;
+  }
+  .hero-photo {
+    left: 50%;
+    top: 0;
+    height: 100%;
+    max-width: none;
+    transform: translateX(-50%);
+    object-position: center bottom;
+  }
+}
+
 .hero-blob {
   position: absolute;
   width: 115%;
