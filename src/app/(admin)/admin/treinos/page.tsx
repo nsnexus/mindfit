@@ -1,17 +1,50 @@
 // ============================================
-// Painel Administrativo — Gestão de Treinos (CRUD com Firestore + upload de imagem)
+// Painel Administrativo — Gestão de Treinos (CRUD + montagem de exercícios)
 // ============================================
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
-import { WORKOUTS_SEED } from '@/data/workouts-seed';
+import { useState, useEffect, useRef, useMemo } from 'react';
+import { WORKOUTS_SEED, EXERCISES_SEED } from '@/data/workouts-seed';
 import { Card, Button, Input, Modal, Badge } from '@/components/ui';
 import { getDocuments, setDocument, deleteDocument } from '@/lib/firebase/firestore';
 import { uploadFileWithProgress } from '@/lib/firebase/storage';
-import type { Workout } from '@/types/workout';
+import { descriptionToCues } from '@/lib/wgerApi';
+import type { Workout, WorkoutExerciseItem, Exercise, FirestoreExercise } from '@/types/workout';
+
+/**
+ * Treinos antigos (do seed local) guardam só `exercises` (ids do
+ * EXERCISES_SEED local), sem `exercisesList` denormalizado. Resolve isso
+ * pra exibir/editar corretamente — sem isso, o modal mostraria "0
+ * exercícios" e salvar apagaria os exercícios reais do treino.
+ */
+function resolveExercisesList(w: Workout): Exercise[] {
+  if (w.exercisesList && w.exercisesList.length > 0) return w.exercisesList;
+  if (!w.exercises || w.exercises.length === 0) return [];
+
+  const resolved: Exercise[] = [];
+  for (const cfg of w.exercises) {
+    const found = EXERCISES_SEED.find((e) => e.id === cfg.exerciseId);
+    if (!found) continue;
+    resolved.push({ ...found, targetSeconds: cfg.durationSeconds ?? found.targetSeconds });
+  }
+  return resolved;
+}
+
+const DEFAULT_FORM: Partial<Workout> = {
+  title: '',
+  description: '',
+  imageURL: '',
+  type: 'hiit',
+  difficulty: 'beginner',
+  durationMinutes: 15,
+  caloriesBurned: 120,
+  phase: [1],
+  exercisesList: [],
+};
 
 export default function AdminTreinosPage() {
   const [workouts, setWorkouts] = useState<Workout[]>([]);
+  const [library, setLibrary] = useState<FirestoreExercise[]>([]);
   const [isLoadingList, setIsLoadingList] = useState(true);
   const [search, setSearch] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -21,23 +54,20 @@ export default function AdminTreinosPage() {
   const [uploadProgress, setUploadProgress] = useState(0);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const [formData, setFormData] = useState<Partial<Workout>>({
-    title: '',
-    description: '',
-    imageURL: '',
-    type: 'hiit',
-    difficulty: 'beginner',
-    durationMinutes: 15,
-    caloriesBurned: 120,
-    phase: [1],
-  });
+  const [isPickerOpen, setIsPickerOpen] = useState(false);
+  const [pickerSearch, setPickerSearch] = useState('');
 
-  // Carrega do Firestore; se a coleção ainda estiver vazia, migra o seed
+  const [formData, setFormData] = useState<Partial<Workout>>(DEFAULT_FORM);
+
+  // Carrega treinos do Firestore; se a coleção estiver vazia, migra o seed
   // local uma única vez (compatibilidade com os treinos que já existiam).
   useEffect(() => {
     async function load() {
       setIsLoadingList(true);
-      const fromDb = await getDocuments<Workout>('workouts');
+      const [fromDb, exercises] = await Promise.all([
+        getDocuments<Workout>('workouts'),
+        loadLibrary(),
+      ]);
 
       if (fromDb.length === 0) {
         await Promise.all(WORKOUTS_SEED.map((w) => setDocument('workouts', w.id, w)));
@@ -45,8 +75,15 @@ export default function AdminTreinosPage() {
       } else {
         setWorkouts(fromDb);
       }
+      setLibrary(exercises);
       setIsLoadingList(false);
     }
+
+    async function loadLibrary(): Promise<FirestoreExercise[]> {
+      const { where } = await import('firebase/firestore');
+      return getDocuments<FirestoreExercise>('exercises', [where('active', '==', true)]);
+    }
+
     load();
   }, []);
 
@@ -90,35 +127,138 @@ export default function AdminTreinosPage() {
     }
   };
 
+  // --- Montagem dos exercícios do treino ---
+
+  const exercisesList = formData.exercisesList || [];
+
+  const addExercise = (ex: FirestoreExercise) => {
+    if (exercisesList.some((e) => e.id === ex.id)) return; // já adicionado
+
+    const newExercise: Exercise = {
+      id: ex.id,
+      name: ex.name,
+      description: ex.description,
+      muscleGroup: 'fullBody',
+      mediaURL: ex.imageURL,
+      equipment: 'none',
+      difficulty: formData.difficulty || 'beginner',
+      cues: descriptionToCues(ex.description),
+      targetSeconds: 30,
+    };
+
+    setFormData((prev) => ({
+      ...prev,
+      exercisesList: [...(prev.exercisesList || []), newExercise],
+    }));
+  };
+
+  const removeExercise = (exerciseId: string) => {
+    setFormData((prev) => ({
+      ...prev,
+      exercisesList: (prev.exercisesList || []).filter((e) => e.id !== exerciseId),
+    }));
+  };
+
+  const moveExercise = (index: number, direction: -1 | 1) => {
+    setFormData((prev) => {
+      const list = [...(prev.exercisesList || [])];
+      const target = index + direction;
+      if (target < 0 || target >= list.length) return prev;
+      [list[index], list[target]] = [list[target], list[index]];
+      return { ...prev, exercisesList: list };
+    });
+  };
+
+  const updateExerciseConfig = (
+    exerciseId: string,
+    field: 'sets' | 'targetSeconds' | 'restSeconds',
+    value: number
+  ) => {
+    setFormData((prev) => ({
+      ...prev,
+      exercisesList: (prev.exercisesList || []).map((e) =>
+        e.id === exerciseId
+          ? field === 'targetSeconds'
+            ? { ...e, targetSeconds: value }
+            : e
+          : e
+      ),
+      // sets/restSeconds ficam guardados à parte, no exerciseConfigMap abaixo
+    }));
+    if (field === 'sets' || field === 'restSeconds') {
+      setExerciseConfigMap((prev) => ({
+        ...prev,
+        [exerciseId]: { ...prev[exerciseId], [field]: value },
+      }));
+    }
+  };
+
+  // sets/restSeconds por exercício (não fazem parte do tipo Exercise em si,
+  // vão para o array `exercises` — WorkoutExerciseItem)
+  const [exerciseConfigMap, setExerciseConfigMap] = useState<
+    Record<string, { sets: number; restSeconds: number }>
+  >({});
+
+  useEffect(() => {
+    if (!isModalOpen) return;
+    const map: Record<string, { sets: number; restSeconds: number }> = {};
+    const existingConfigs = editingWorkout?.exercises || [];
+    for (const ex of exercisesList) {
+      const existing = existingConfigs.find((c) => c.exerciseId === ex.id);
+      map[ex.id] = {
+        sets: existing?.sets ?? 3,
+        restSeconds: existing?.restSeconds ?? 15,
+      };
+    }
+    setExerciseConfigMap(map);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isModalOpen]);
+
+  const pickerResults = useMemo(() => {
+    const term = pickerSearch.trim().toLowerCase();
+    const alreadyAdded = new Set(exercisesList.map((e) => e.id));
+    return library
+      .filter((ex) => !alreadyAdded.has(ex.id))
+      .filter((ex) => !term || ex.name.toLowerCase().includes(term) || ex.category.toLowerCase().includes(term))
+      .slice(0, 40);
+  }, [library, pickerSearch, exercisesList]);
+
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!formData.title) return;
 
     setIsSaving(true);
     try {
-      if (editingWorkout) {
-        const updated: Workout = { ...editingWorkout, ...formData } as Workout;
-        await setDocument('workouts', editingWorkout.id, updated);
-        setWorkouts((prev) => prev.map((w) => (w.id === editingWorkout.id ? updated : w)));
-      } else {
-        const newWorkout: Workout = {
-          id: `trk-${Date.now()}`,
-          title: formData.title || '',
-          description: formData.description || '',
-          imageURL:
-            formData.imageURL ||
-            'https://images.unsplash.com/photo-1518611012118-696072aa579a?auto=format&fit=crop&w=600&q=80',
-          type: formData.type || 'hiit',
-          difficulty: formData.difficulty || 'beginner',
-          durationMinutes: Number(formData.durationMinutes) || 15,
-          equipment: 'none',
-          phase: formData.phase || [1],
-          caloriesBurned: Number(formData.caloriesBurned) || 120,
-          exercises: [{ exerciseId: 'polichinelo', sets: 3, durationSeconds: 30, restSeconds: 20 }],
-        };
-        await setDocument('workouts', newWorkout.id, newWorkout);
-        setWorkouts((prev) => [newWorkout, ...prev]);
-      }
+      const exercises: WorkoutExerciseItem[] = exercisesList.map((ex) => ({
+        exerciseId: ex.id,
+        sets: exerciseConfigMap[ex.id]?.sets ?? 3,
+        durationSeconds: ex.targetSeconds ?? 30,
+        restSeconds: exerciseConfigMap[ex.id]?.restSeconds ?? 15,
+      }));
+
+      const id = editingWorkout?.id || `trk-${Date.now()}`;
+      const workout: Workout = {
+        id,
+        title: formData.title || '',
+        description: formData.description || '',
+        imageURL:
+          formData.imageURL ||
+          exercisesList[0]?.mediaURL ||
+          'https://images.unsplash.com/photo-1518611012118-696072aa579a?auto=format&fit=crop&w=600&q=80',
+        type: formData.type || 'hiit',
+        difficulty: formData.difficulty || 'beginner',
+        durationMinutes: Number(formData.durationMinutes) || 15,
+        equipment: 'none',
+        phase: formData.phase || [1],
+        caloriesBurned: Number(formData.caloriesBurned) || 120,
+        exercises,
+        exercisesList,
+      };
+
+      await setDocument('workouts', id, workout);
+      setWorkouts((prev) =>
+        editingWorkout ? prev.map((w) => (w.id === id ? workout : w)) : [workout, ...prev]
+      );
 
       setIsModalOpen(false);
       setEditingWorkout(null);
@@ -154,16 +294,7 @@ export default function AdminTreinosPage() {
             variant="primary"
             onClick={() => {
               setEditingWorkout(null);
-              setFormData({
-                title: '',
-                description: '',
-                imageURL: '',
-                type: 'hiit',
-                difficulty: 'beginner',
-                durationMinutes: 15,
-                caloriesBurned: 120,
-                phase: [1],
-              });
+              setFormData(DEFAULT_FORM);
               setIsModalOpen(true);
             }}
             className="whitespace-nowrap"
@@ -181,6 +312,7 @@ export default function AdminTreinosPage() {
               <tr>
                 <th className="p-4">Treino</th>
                 <th className="p-4">Tipo</th>
+                <th className="p-4">Exercícios</th>
                 <th className="p-4">Duração</th>
                 <th className="p-4">Gasto Estimado</th>
                 <th className="p-4 text-right">Ações</th>
@@ -189,7 +321,7 @@ export default function AdminTreinosPage() {
             <tbody className="divide-y divide-neutral-100">
               {isLoadingList ? (
                 <tr>
-                  <td colSpan={5} className="p-8 text-center text-neutral-400 text-sm">
+                  <td colSpan={6} className="p-8 text-center text-neutral-400 text-sm">
                     Carregando treinos...
                   </td>
                 </tr>
@@ -214,6 +346,9 @@ export default function AdminTreinosPage() {
                         {w.type}
                       </Badge>
                     </td>
+                    <td className="p-4 text-neutral-600">
+                      {(w.exercisesList?.length ?? w.exercises?.length ?? 0)} exercícios
+                    </td>
                     <td className="p-4 font-semibold text-neutral-700">
                       ⏱️ {w.durationMinutes} min
                     </td>
@@ -225,8 +360,9 @@ export default function AdminTreinosPage() {
                         variant="outline"
                         size="sm"
                         onClick={() => {
-                          setEditingWorkout(w);
-                          setFormData(w);
+                          const resolvedList = resolveExercisesList(w);
+                          setEditingWorkout({ ...w, exercisesList: resolvedList });
+                          setFormData({ ...w, exercisesList: resolvedList });
                           setIsModalOpen(true);
                         }}
                         className="text-xs"
@@ -255,7 +391,7 @@ export default function AdminTreinosPage() {
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         title={editingWorkout ? 'Editar Treino' : 'Novo Treino'}
-        size="md"
+        size="xl"
       >
         <form onSubmit={handleSave} className="space-y-4">
           {/* Upload de imagem */}
@@ -289,7 +425,9 @@ export default function AdminTreinosPage() {
                 >
                   {isUploadingImage ? `Enviando... ${Math.round(uploadProgress)}%` : '📤 Subir Imagem'}
                 </Button>
-                <p className="text-[11px] text-neutral-400">JPG ou PNG, até 10MB.</p>
+                <p className="text-[11px] text-neutral-400">
+                  JPG ou PNG, até 10MB. Se não subir nenhuma, usa a foto do 1º exercício.
+                </p>
               </div>
             </div>
           </div>
@@ -324,6 +462,99 @@ export default function AdminTreinosPage() {
             />
           </div>
 
+          {/* Exercícios do treino */}
+          <div className="border-t border-neutral-100 pt-4">
+            <div className="flex items-center justify-between mb-3">
+              <label className="block text-xs font-bold text-neutral-700">
+                Exercícios do Treino ({exercisesList.length})
+              </label>
+              <Button type="button" variant="outline" size="sm" onClick={() => setIsPickerOpen(true)}>
+                + Adicionar Exercício
+              </Button>
+            </div>
+
+            {exercisesList.length === 0 ? (
+              <div className="text-center py-8 bg-neutral-50 rounded-xl border border-dashed border-neutral-200">
+                <p className="text-xs text-neutral-400">
+                  Nenhum exercício ainda — clique em "Adicionar Exercício" e escolha da Biblioteca.
+                </p>
+              </div>
+            ) : (
+              <div className="space-y-2 max-h-[320px] overflow-y-auto pr-1">
+                {exercisesList.map((ex, idx) => (
+                  <div
+                    key={ex.id}
+                    className="flex items-center gap-2 p-2.5 rounded-xl bg-neutral-50 border border-neutral-100"
+                  >
+                    <img
+                      src={ex.mediaURL}
+                      alt={ex.name}
+                      className="w-10 h-10 rounded-lg object-cover shrink-0 bg-neutral-200"
+                    />
+
+                    <span className="flex-1 text-xs font-bold text-neutral-800 truncate" title={ex.name}>
+                      {ex.name}
+                    </span>
+
+                    <div className="flex items-center gap-1 shrink-0">
+                      <input
+                        type="number"
+                        min={1}
+                        value={exerciseConfigMap[ex.id]?.sets ?? 3}
+                        onChange={(e) => updateExerciseConfig(ex.id, 'sets', Number(e.target.value))}
+                        className="w-11 text-center text-[11px] border border-neutral-200 rounded-lg py-1"
+                        title="Séries"
+                      />
+                      <span className="text-[10px] text-neutral-400">séries</span>
+                    </div>
+
+                    <div className="flex items-center gap-1 shrink-0">
+                      <input
+                        type="number"
+                        min={5}
+                        step={5}
+                        value={ex.targetSeconds ?? 30}
+                        onChange={(e) => updateExerciseConfig(ex.id, 'targetSeconds', Number(e.target.value))}
+                        className="w-11 text-center text-[11px] border border-neutral-200 rounded-lg py-1"
+                        title="Duração (s)"
+                      />
+                      <span className="text-[10px] text-neutral-400">seg</span>
+                    </div>
+
+                    <div className="flex items-center gap-0.5 shrink-0">
+                      <button
+                        type="button"
+                        onClick={() => moveExercise(idx, -1)}
+                        disabled={idx === 0}
+                        className="w-6 h-6 rounded-md text-neutral-400 hover:bg-neutral-200 disabled:opacity-30 cursor-pointer"
+                        title="Mover para cima"
+                      >
+                        ↑
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => moveExercise(idx, 1)}
+                        disabled={idx === exercisesList.length - 1}
+                        className="w-6 h-6 rounded-md text-neutral-400 hover:bg-neutral-200 disabled:opacity-30 cursor-pointer"
+                        title="Mover para baixo"
+                      >
+                        ↓
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => removeExercise(ex.id)}
+                        className="w-6 h-6 rounded-md text-red-500 hover:bg-red-50 cursor-pointer"
+                        title="Remover"
+                      >
+                        ✕
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+
           <div className="flex gap-3 pt-2">
             <Button
               type="button"
@@ -339,6 +570,54 @@ export default function AdminTreinosPage() {
             </Button>
           </div>
         </form>
+      </Modal>
+
+      {/* Seletor de exercícios da Biblioteca */}
+      <Modal
+        isOpen={isPickerOpen}
+        onClose={() => setIsPickerOpen(false)}
+        title="Adicionar Exercício da Biblioteca"
+        size="lg"
+      >
+        <div className="space-y-3">
+          <Input
+            placeholder="Buscar por nome ou categoria..."
+            value={pickerSearch}
+            onChange={(e) => setPickerSearch(e.target.value)}
+            autoFocus
+          />
+
+          <div className="max-h-[420px] overflow-y-auto space-y-1.5 pr-1">
+            {pickerResults.length === 0 ? (
+              <p className="text-center text-xs text-neutral-400 py-8">
+                Nenhum exercício encontrado (ou todos já foram adicionados).
+              </p>
+            ) : (
+              pickerResults.map((ex) => (
+                <button
+                  key={ex.id}
+                  type="button"
+                  onClick={() => {
+                    addExercise(ex);
+                    setIsPickerOpen(false);
+                    setPickerSearch('');
+                  }}
+                  className="w-full flex items-center gap-3 p-2.5 rounded-xl hover:bg-emerald-50 border border-transparent hover:border-emerald-200 transition-colors text-left cursor-pointer"
+                >
+                  <img
+                    src={ex.imageURL}
+                    alt={ex.name}
+                    className="w-10 h-10 rounded-lg object-cover shrink-0 bg-neutral-100"
+                  />
+                  <div className="min-w-0">
+                    <p className="text-xs font-bold text-neutral-800 truncate">{ex.name}</p>
+                    <p className="text-[11px] text-neutral-400 truncate">{ex.category}</p>
+                  </div>
+                </button>
+              ))
+            )}
+          </div>
+        </div>
       </Modal>
     </div>
   );

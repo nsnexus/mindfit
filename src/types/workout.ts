@@ -40,6 +40,9 @@ export interface Workout {
   phase: (1 | 2 | 3)[];
   caloriesBurned: number;
   exercises: WorkoutExerciseItem[];
+  /** Dados completos de cada exercício, denormalizados — evita depender de
+   *  lookup por id em tempo de execução (usado pelo player de treino). */
+  exercisesList?: Exercise[];
   isFeatured?: boolean;
 }
 
