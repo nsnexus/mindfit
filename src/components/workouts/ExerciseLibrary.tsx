@@ -26,6 +26,28 @@ import {
 } from '@/lib/wgerApi';
 import type { WgerExerciseInfo, WgerCategory } from '@/types/workout';
 
+const CACHE_TTL = 1000 * 60 * 60 * 12; // 12h
+
+function readCache<T>(key: string): T | null {
+  try {
+    const raw = localStorage.getItem(key);
+    if (!raw) return null;
+    const { data, ts } = JSON.parse(raw);
+    if (Date.now() - ts > CACHE_TTL) return null;
+    return data as T;
+  } catch {
+    return null;
+  }
+}
+
+function writeCache(key: string, data: unknown) {
+  try {
+    localStorage.setItem(key, JSON.stringify({ data, ts: Date.now() }));
+  } catch {
+    // storage cheia ou bloqueada — ignora, cache é so otimizacao
+  }
+}
+
 export function ExerciseLibrary() {
   const [exercises, setExercises] = useState<WgerExerciseInfo[]>([]);
   const [categories, setCategories] = useState<WgerCategory[]>([]);
@@ -37,21 +59,37 @@ export function ExerciseLibrary() {
   const [hasMore, setHasMore] = useState(true);
   const [selectedExercise, setSelectedExercise] = useState<WgerExerciseInfo | null>(null);
 
-  // Carrega categorias na montagem
+  // Carrega categorias na montagem (cache local evita nova consulta a cada visita)
   useEffect(() => {
     async function loadCategories() {
+      const cached = readCache<WgerCategory[]>('mindfit_ex_categories');
+      if (cached) setCategories(cached);
+
       const cats = await fetchWgerCategories();
-      setCategories(cats);
+      if (cats.length > 0) {
+        setCategories(cats);
+        writeCache('mindfit_ex_categories', cats);
+      }
     }
     loadCategories();
   }, []);
 
-  // Carrega exercícios ao mudar filtros
+  // Carrega exercícios ao mudar filtros (mostra cache local na hora, atualiza em segundo plano)
   useEffect(() => {
     let isCancelled = false;
+    const cacheKey = `mindfit_ex_list_${selectedCategory ?? 'all'}_${searchTerm || 'none'}`;
 
     async function loadExercises() {
-      setIsLoading(true);
+      const cached = readCache<{ results: WgerExerciseInfo[]; next: string | null }>(cacheKey);
+      if (cached) {
+        setExercises(cached.results);
+        setOffset(18);
+        setHasMore(!!cached.next);
+        setIsLoading(false);
+      } else {
+        setIsLoading(true);
+      }
+
       const res = await fetchWgerExercises({
         limit: 18,
         offset: 0,
@@ -64,6 +102,9 @@ export function ExerciseLibrary() {
         setOffset(18);
         setHasMore(!!res.next);
         setIsLoading(false);
+        if (res.results?.length > 0) {
+          writeCache(cacheKey, { results: res.results, next: res.next });
+        }
       }
     }
 
