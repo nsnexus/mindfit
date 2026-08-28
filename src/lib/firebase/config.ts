@@ -41,8 +41,23 @@ export async function getAuthInstance(): Promise<Auth | null> {
   const app = await getFirebaseApp();
   if (!app) return null;
 
-  const { getAuth } = await import('firebase/auth');
+  const { getAuth, setPersistence, indexedDBLocalPersistence, browserLocalPersistence } = await import('firebase/auth');
   _auth = getAuth(app);
+
+  // Deixa a persistência explícita em vez de confiar no default do SDK —
+  // WebViews de app nativo (Capacitor/Android) às vezes não persistem a
+  // sessão entre aberturas do app sem isso, derrubando o login toda hora.
+  // Tenta IndexedDB primeiro (mais robusto), cai pro localStorage se falhar.
+  try {
+    await setPersistence(_auth, indexedDBLocalPersistence);
+  } catch {
+    try {
+      await setPersistence(_auth, browserLocalPersistence);
+    } catch {
+      // sem persistência mesmo, segue com o default do SDK
+    }
+  }
+
   return _auth;
 }
 

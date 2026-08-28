@@ -38,7 +38,7 @@ export function ActivityTrackerClient() {
   const [startedAt, setStartedAt] = useState<string | null>(null);
   const [summary, setSummary] = useState<ReturnType<typeof tracker.finish> | null>(null);
   const [isSaving, setIsSaving] = useState(false);
-  const [debugInfo, setDebugInfo] = useState<string>('checando...');
+  const [debugInfo, setDebugInfo] = useState('toque no botão de debug abaixo');
 
   useEffect(() => {
     if (!firebaseUser) return;
@@ -47,29 +47,20 @@ export function ActivityTrackerClient() {
     });
   }, [firebaseUser]);
 
-  // Painel de diagnóstico temporário — ajuda a identificar onde o GPS nativo
-  // está travando sem precisar de log via cabo/adb.
-  useEffect(() => {
-    let cancelled = false;
-    async function checkDebug() {
-      const native = isNativeApp();
-      let extra = '';
-      if (native) {
-        try {
-          const { Geolocation } = await import('@capacitor/geolocation');
-          const perm = await Geolocation.checkPermissions();
-          extra = ` | permissão: ${JSON.stringify(perm)}`;
-        } catch (err: any) {
-          extra = ` | ERRO ao checar permissão: ${err?.message || err}`;
-        }
-      }
-      if (!cancelled) setDebugInfo(`modo: ${native ? 'app nativo' : 'navegador'}${extra}`);
+  // Teste manual e isolado de requestPermissions() — pra ver se a chamada
+  // resolve, demora, ou trava pra sempre (sem depender do fluxo completo).
+  const testPermissionRequest = async () => {
+    setDebugInfo(`nativo: ${isNativeApp()} | pedindo permissão às ${new Date().toLocaleTimeString()}...`);
+    try {
+      const { Geolocation } = await import('@capacitor/geolocation');
+      const before = await Geolocation.checkPermissions();
+      setDebugInfo((prev) => `${prev}\ncheck antes: ${JSON.stringify(before)}`);
+      const after = await Geolocation.requestPermissions();
+      setDebugInfo((prev) => `${prev}\nrequestPermissions resolveu às ${new Date().toLocaleTimeString()}: ${JSON.stringify(after)}`);
+    } catch (err: any) {
+      setDebugInfo((prev) => `${prev}\nERRO: ${err?.message || err}`);
     }
-    checkDebug();
-    return () => {
-      cancelled = true;
-    };
-  }, []);
+  };
 
   const handleStart = () => {
     setStartedAt(new Date().toISOString());
@@ -249,10 +240,13 @@ export function ActivityTrackerClient() {
           : 'Mantenha a tela ligada e o app aberto durante a atividade pra não perder o rastreio de GPS.'}
       </p>
 
-      {/* Diagnóstico temporário — remover depois que o GPS nativo estiver ok */}
-      <p className="text-[10px] text-neutral-300 text-center px-4 break-all">
-        🔧 debug: {debugInfo}
-      </p>
+      {/* Diagnóstico temporário */}
+      <Card padding="sm" className="bg-neutral-50 border border-neutral-200">
+        <Button variant="outline" size="sm" className="w-full mb-2" onClick={testPermissionRequest}>
+          🔧 Testar permissão de GPS
+        </Button>
+        <p className="text-[10px] text-neutral-500 whitespace-pre-wrap break-all">{debugInfo}</p>
+      </Card>
     </div>
   );
 }

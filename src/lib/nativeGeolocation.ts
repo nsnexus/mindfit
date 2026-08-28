@@ -54,7 +54,14 @@ async function startNativeWatch(
       return { stop: () => {} };
     }
   } catch (err: any) {
-    onError(err?.message || 'Não foi possível pedir permissão de localização.');
+    const raw = err?.message || '';
+    if (/location services are not enabled/i.test(raw)) {
+      // Não é permissão do app — é o GPS do aparelho desligado (Configurações
+      // > Localização, ou o atalho na barra de notificações do Android).
+      onError('O GPS do celular está desligado. Ative a Localização nas configurações do Android e tente de novo.');
+    } else {
+      onError(raw || 'Não foi possível pedir permissão de localização.');
+    }
   }
 
   // Android 13+ exige permissão de notificação pro serviço em primeiro

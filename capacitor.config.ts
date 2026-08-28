@@ -16,7 +16,11 @@ const config: CapacitorConfig = {
   },
   android: {
     allowMixedContent: false,
-    useLegacyBridge: true,
+    // useLegacyBridge desligado: suspeito de estar quebrando o retorno do
+    // dialogo de permissao (onRequestPermissionsResult nao resolvia a
+    // Promise, ficava travado sem popup nenhum). Era pra outro problema
+    // (throttle de HTTP em segundo plano apos 5min) que nem testamos ainda -
+    // permissao funcionando vem primeiro.
   },
 };
 
