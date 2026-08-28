@@ -37,7 +37,8 @@ export default function HomePage() {
               Entrar
             </Link>
             <Link href={ROUTES.CHECKOUT} className="btn btn-primary">
-              Começar agora
+              <span className="btn-label-full">Começar agora</span>
+              <span className="btn-label-short">Assinar</span>
             </Link>
           </div>
         </div>

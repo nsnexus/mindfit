@@ -3,6 +3,7 @@
 // dentro do app Android (Capacitor), cai pro navigator.geolocation padrão
 // quando rodando no navegador (onde só funciona com a aba/tela ativa).
 // ============================================
+import { Capacitor, registerPlugin } from '@capacitor/core';
 
 export interface RawGeoPoint {
   lat: number;
@@ -15,30 +16,24 @@ export interface GeoWatchHandle {
   stop: () => void;
 }
 
-// Só cacheamos um resultado positivo (não pode virar mentira depois). Um
-// resultado negativo NÃO é cacheado — a ponte do Capacitor pode ainda não
-// ter injetado `window.Capacitor` no primeiro check (corrida de carregamento
-// da WebView), então sempre re-checa até confirmar nativo de verdade.
-let cachedIsNative = false;
-
+/**
+ * @capacitor/core é isomórfico (seguro importar tanto na web quanto no app
+ * nativo) — ele mesmo resolve a ponte nativa internamente, muito mais
+ * confiável que ler `window.Capacitor` na mão (jeito antigo daqui, que
+ * ficava preso em falso quando checado cedo demais).
+ */
 export function isNativeApp(): boolean {
-  if (cachedIsNative) return true;
   try {
-    // Import estático seria travado no build web (pacote nativo). Como só
-    // precisamos de um boolean síncrono, checamos o objeto global que o
-    // runtime do Capacitor injeta na WebView nativa.
-    cachedIsNative = typeof window !== 'undefined' && !!(window as any).Capacitor?.isNativePlatform?.();
+    return Capacitor.isNativePlatform();
   } catch {
-    cachedIsNative = false;
+    return false;
   }
-  return cachedIsNative;
 }
 
 async function startNativeWatch(
   onPosition: (p: RawGeoPoint) => void,
   onError: (message: string) => void
 ): Promise<GeoWatchHandle> {
-  const { registerPlugin } = await import('@capacitor/core');
   const BackgroundGeolocation = registerPlugin<any>('BackgroundGeolocation');
 
   // Pede a permissão de localização explicitamente pelo plugin oficial
