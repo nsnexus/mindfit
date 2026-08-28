@@ -53,40 +53,41 @@ COMO SE COMPORTAR:
 - Sempre incentive, quando fizer sentido, buscar apoio profissional (psicólogo, psiquiatra) para acompanhamento contínuo — você é um complemento, não substituto.
 - Responda sempre em português do Brasil.`;
 
-interface AnthropicResponse {
-  content?: { type: string; text?: string }[];
+interface OpenAIResponse {
+  choices?: { message?: { content?: string } }[];
 }
 
 /**
- * Chama a API da Anthropic (Claude) server-side pra gerar a resposta do
+ * Chama a API da OpenAI (GPT) server-side pra gerar a resposta do
  * assistente de bem-estar, com fallback de rede de segurança pra crise.
  */
 export async function getWellnessReply(history: ChatTurn[], apiKey: string): Promise<{ text: string; flagged: boolean }> {
   const lastUserMessage = [...history].reverse().find((t) => t.role === 'user')?.text || '';
   const flagged = containsCrisisSignal(lastUserMessage);
 
-  const res = await fetch('https://api.anthropic.com/v1/messages', {
+  const res = await fetch('https://api.openai.com/v1/chat/completions', {
     method: 'POST',
     headers: {
       'content-type': 'application/json',
-      'x-api-key': apiKey,
-      'anthropic-version': '2023-06-01',
+      authorization: `Bearer ${apiKey}`,
     },
     body: JSON.stringify({
-      model: 'claude-sonnet-5',
+      model: 'gpt-4o-mini',
       max_tokens: 500,
-      system: SYSTEM_PROMPT,
-      messages: history.map((t) => ({ role: t.role, content: t.text })),
+      messages: [
+        { role: 'system', content: SYSTEM_PROMPT },
+        ...history.map((t) => ({ role: t.role, content: t.text })),
+      ],
     }),
   });
 
   if (!res.ok) {
     const errBody = await res.text().catch(() => '');
-    throw new Error(`Anthropic API error ${res.status}: ${errBody}`);
+    throw new Error(`OpenAI API error ${res.status}: ${errBody}`);
   }
 
-  const data = (await res.json()) as AnthropicResponse;
-  const modelText = data.content?.find((c) => c.type === 'text')?.text?.trim() || '';
+  const data = (await res.json()) as OpenAIResponse;
+  const modelText = data.choices?.[0]?.message?.content?.trim() || '';
 
   if (flagged) {
     // Rede de segurança: independente do que o modelo respondeu, garante os
