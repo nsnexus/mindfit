@@ -8,7 +8,38 @@ import { RECIPES_SEED } from '@/data/recipes-seed';
 import { Card, Button, Input, Modal, Badge } from '@/components/ui';
 import { getDocuments, setDocument, deleteDocument } from '@/lib/firebase/firestore';
 import { uploadFileWithProgress } from '@/lib/firebase/storage';
-import type { Recipe } from '@/types/recipe';
+import type { Recipe, Ingredient } from '@/types/recipe';
+
+const CATEGORY_OPTIONS: { value: Recipe['category']; label: string }[] = [
+  { value: 'breakfast', label: '☕ Café da Manhã' },
+  { value: 'lunch', label: '🥘 Almoço' },
+  { value: 'dinner', label: '🍲 Jantar' },
+  { value: 'snack', label: '🍎 Lanche' },
+  { value: 'dessert', label: '🍫 Sobremesa' },
+];
+
+const DIFFICULTY_OPTIONS: { value: Recipe['difficulty']; label: string }[] = [
+  { value: 'easy', label: 'Fácil' },
+  { value: 'medium', label: 'Médio' },
+  { value: 'hard', label: 'Difícil' },
+];
+
+const TAG_OPTIONS = [
+  { value: 'quick', label: '⚡ Rápido' },
+  { value: 'vegetarian', label: '🌱 Vegetariano' },
+  { value: 'vegan', label: '🌿 Vegano' },
+  { value: 'highProtein', label: '🥩 Proteico' },
+  { value: 'glutenFree', label: '🌾 Sem Glúten' },
+  { value: 'lowCarb', label: '🥑 Low Carb' },
+];
+
+const INGREDIENT_CATEGORY_OPTIONS: { value: NonNullable<Ingredient['category']>; label: string }[] = [
+  { value: 'hortifruti', label: 'Hortifruti' },
+  { value: 'carnes', label: 'Carnes' },
+  { value: 'mercearia', label: 'Mercearia' },
+  { value: 'laticinios', label: 'Laticínios' },
+  { value: 'temperos', label: 'Temperos' },
+];
 
 export default function AdminReceitasPage() {
   const [recipes, setRecipes] = useState<Recipe[]>([]);
@@ -95,14 +126,98 @@ export default function AdminReceitasPage() {
     }
   };
 
+  // --- Ingredientes ---
+  const ingredients = formData.ingredients || [];
+
+  const addIngredient = () => {
+    setFormData((prev) => ({
+      ...prev,
+      ingredients: [...(prev.ingredients || []), { name: '', quantity: '', category: 'mercearia' }],
+    }));
+  };
+
+  const updateIngredient = (index: number, field: keyof Ingredient, value: string) => {
+    setFormData((prev) => ({
+      ...prev,
+      ingredients: (prev.ingredients || []).map((ing, i) =>
+        i === index ? { ...ing, [field]: value } : ing
+      ),
+    }));
+  };
+
+  const removeIngredient = (index: number) => {
+    setFormData((prev) => ({
+      ...prev,
+      ingredients: (prev.ingredients || []).filter((_, i) => i !== index),
+    }));
+  };
+
+  // --- Modo de preparo ---
+  const instructions = formData.instructions || [];
+
+  const addInstruction = () => {
+    setFormData((prev) => ({ ...prev, instructions: [...(prev.instructions || []), ''] }));
+  };
+
+  const updateInstruction = (index: number, value: string) => {
+    setFormData((prev) => ({
+      ...prev,
+      instructions: (prev.instructions || []).map((s, i) => (i === index ? value : s)),
+    }));
+  };
+
+  const removeInstruction = (index: number) => {
+    setFormData((prev) => ({
+      ...prev,
+      instructions: (prev.instructions || []).filter((_, i) => i !== index),
+    }));
+  };
+
+  const moveInstruction = (index: number, direction: -1 | 1) => {
+    setFormData((prev) => {
+      const list = [...(prev.instructions || [])];
+      const target = index + direction;
+      if (target < 0 || target >= list.length) return prev;
+      [list[index], list[target]] = [list[target], list[index]];
+      return { ...prev, instructions: list };
+    });
+  };
+
+  const toggleTag = (tag: string) => {
+    setFormData((prev) => {
+      const current = prev.tags || [];
+      return {
+        ...prev,
+        tags: current.includes(tag) ? current.filter((t) => t !== tag) : [...current, tag],
+      };
+    });
+  };
+
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!formData.title) return;
 
+    const cleanIngredients = ingredients.filter((i) => i.name.trim());
+    const cleanInstructions = instructions.map((s) => s.trim()).filter(Boolean);
+
+    if (cleanIngredients.length === 0) {
+      alert('Adicione pelo menos 1 ingrediente.');
+      return;
+    }
+    if (cleanInstructions.length === 0) {
+      alert('Adicione pelo menos 1 passo do modo de preparo.');
+      return;
+    }
+
     setIsSaving(true);
     try {
       if (editingRecipe) {
-        const updated: Recipe = { ...editingRecipe, ...formData } as Recipe;
+        const updated: Recipe = {
+          ...editingRecipe,
+          ...formData,
+          ingredients: cleanIngredients,
+          instructions: cleanInstructions,
+        } as Recipe;
         await setDocument('recipes', editingRecipe.id, updated);
         setRecipes((prev) => prev.map((r) => (r.id === editingRecipe.id ? updated : r)));
       } else {
@@ -122,9 +237,9 @@ export default function AdminReceitasPage() {
           protein: Number(formData.protein) || 25,
           carbs: Number(formData.carbs) || 20,
           fat: Number(formData.fat) || 10,
-          ingredients: [{ name: 'Ingrediente principal', quantity: '1 porção', category: 'mercearia' }],
-          instructions: ['Passo 1 do preparo.'],
-          phase: [1, 2, 3],
+          ingredients: cleanIngredients,
+          instructions: cleanInstructions,
+          phase: formData.phase || [1, 2, 3],
         };
         await setDocument('recipes', newRecipe.id, newRecipe);
         setRecipes((prev) => [newRecipe, ...prev]);
@@ -169,11 +284,16 @@ export default function AdminReceitasPage() {
                 description: '',
                 imageURL: '',
                 category: 'lunch',
+                difficulty: 'easy',
+                servings: 1,
                 prepTimeMinutes: 15,
                 calories: 300,
                 protein: 25,
                 carbs: 20,
                 fat: 10,
+                tags: [],
+                ingredients: [],
+                instructions: [],
               });
               setIsModalOpen(true);
             }}
@@ -266,7 +386,7 @@ export default function AdminReceitasPage() {
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         title={editingRecipe ? 'Editar Receita' : 'Nova Receita'}
-        size="md"
+        size="xl"
       >
         <form onSubmit={handleSave} className="space-y-4">
           {/* Upload de imagem */}
@@ -358,6 +478,180 @@ export default function AdminReceitasPage() {
               value={formData.fat || ''}
               onChange={(e) => setFormData({ ...formData, fat: Number(e.target.value) })}
             />
+          </div>
+
+          <div className="grid grid-cols-3 gap-4">
+            <div>
+              <label className="block text-xs font-bold text-neutral-700 mb-1.5">Categoria</label>
+              <select
+                value={formData.category || 'lunch'}
+                onChange={(e) => setFormData({ ...formData, category: e.target.value as Recipe['category'] })}
+                className="w-full h-10 px-3 rounded-xl border border-neutral-200 text-sm bg-white"
+              >
+                {CATEGORY_OPTIONS.map((c) => (
+                  <option key={c.value} value={c.value}>{c.label}</option>
+                ))}
+              </select>
+            </div>
+
+            <div>
+              <label className="block text-xs font-bold text-neutral-700 mb-1.5">Dificuldade</label>
+              <select
+                value={formData.difficulty || 'easy'}
+                onChange={(e) => setFormData({ ...formData, difficulty: e.target.value as Recipe['difficulty'] })}
+                className="w-full h-10 px-3 rounded-xl border border-neutral-200 text-sm bg-white"
+              >
+                {DIFFICULTY_OPTIONS.map((d) => (
+                  <option key={d.value} value={d.value}>{d.label}</option>
+                ))}
+              </select>
+            </div>
+
+            <Input
+              label="Porções"
+              type="number"
+              value={formData.servings || ''}
+              onChange={(e) => setFormData({ ...formData, servings: Number(e.target.value) })}
+            />
+          </div>
+
+          {/* Tags */}
+          <div>
+            <label className="block text-xs font-bold text-neutral-700 mb-1.5">Tags</label>
+            <div className="flex flex-wrap gap-2">
+              {TAG_OPTIONS.map((tag) => {
+                const isActive = (formData.tags || []).includes(tag.value);
+                return (
+                  <button
+                    key={tag.value}
+                    type="button"
+                    onClick={() => toggleTag(tag.value)}
+                    className={`px-3 py-1.5 rounded-full text-xs font-bold border cursor-pointer transition-colors ${
+                      isActive
+                        ? 'bg-emerald-50 border-emerald-300 text-emerald-700'
+                        : 'bg-white border-neutral-200 text-neutral-500'
+                    }`}
+                  >
+                    {tag.label}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Ingredientes */}
+          <div className="border-t border-neutral-100 pt-4">
+            <div className="flex items-center justify-between mb-3">
+              <label className="block text-xs font-bold text-neutral-700">
+                Ingredientes ({ingredients.length})
+              </label>
+              <Button type="button" variant="outline" size="sm" onClick={addIngredient}>
+                + Adicionar Ingrediente
+              </Button>
+            </div>
+
+            {ingredients.length === 0 ? (
+              <div className="text-center py-6 bg-neutral-50 rounded-xl border border-dashed border-neutral-200">
+                <p className="text-xs text-neutral-400">Nenhum ingrediente ainda.</p>
+              </div>
+            ) : (
+              <div className="space-y-2 max-h-[240px] overflow-y-auto pr-1">
+                {ingredients.map((ing, idx) => (
+                  <div key={idx} className="flex items-center gap-2">
+                    <input
+                      type="text"
+                      placeholder="Ingrediente"
+                      value={ing.name}
+                      onChange={(e) => updateIngredient(idx, 'name', e.target.value)}
+                      className="flex-1 h-9 px-3 rounded-lg border border-neutral-200 text-xs"
+                    />
+                    <input
+                      type="text"
+                      placeholder="Quantidade"
+                      value={ing.quantity}
+                      onChange={(e) => updateIngredient(idx, 'quantity', e.target.value)}
+                      className="w-28 h-9 px-3 rounded-lg border border-neutral-200 text-xs"
+                    />
+                    <select
+                      value={ing.category || 'mercearia'}
+                      onChange={(e) => updateIngredient(idx, 'category', e.target.value)}
+                      className="w-28 h-9 px-2 rounded-lg border border-neutral-200 text-xs bg-white shrink-0"
+                    >
+                      {INGREDIENT_CATEGORY_OPTIONS.map((c) => (
+                        <option key={c.value} value={c.value}>{c.label}</option>
+                      ))}
+                    </select>
+                    <button
+                      type="button"
+                      onClick={() => removeIngredient(idx)}
+                      className="w-8 h-8 rounded-lg text-red-500 hover:bg-red-50 shrink-0 cursor-pointer"
+                    >
+                      ✕
+                    </button>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* Modo de Preparo */}
+          <div className="border-t border-neutral-100 pt-4">
+            <div className="flex items-center justify-between mb-3">
+              <label className="block text-xs font-bold text-neutral-700">
+                Modo de Preparo ({instructions.length} passo{instructions.length === 1 ? '' : 's'})
+              </label>
+              <Button type="button" variant="outline" size="sm" onClick={addInstruction}>
+                + Adicionar Passo
+              </Button>
+            </div>
+
+            {instructions.length === 0 ? (
+              <div className="text-center py-6 bg-neutral-50 rounded-xl border border-dashed border-neutral-200">
+                <p className="text-xs text-neutral-400">Nenhum passo ainda.</p>
+              </div>
+            ) : (
+              <div className="space-y-2 max-h-[280px] overflow-y-auto pr-1">
+                {instructions.map((step, idx) => (
+                  <div key={idx} className="flex items-start gap-2">
+                    <span className="w-6 h-9 flex items-center justify-center text-xs font-bold text-neutral-400 shrink-0">
+                      {idx + 1}.
+                    </span>
+                    <textarea
+                      placeholder={`Passo ${idx + 1}`}
+                      value={step}
+                      onChange={(e) => updateInstruction(idx, e.target.value)}
+                      rows={2}
+                      className="flex-1 px-3 py-2 rounded-lg border border-neutral-200 text-xs resize-none"
+                    />
+                    <div className="flex flex-col gap-0.5 shrink-0">
+                      <button
+                        type="button"
+                        onClick={() => moveInstruction(idx, -1)}
+                        disabled={idx === 0}
+                        className="w-7 h-[17px] rounded text-neutral-400 hover:bg-neutral-100 disabled:opacity-30 text-[10px] cursor-pointer"
+                      >
+                        ↑
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => moveInstruction(idx, 1)}
+                        disabled={idx === instructions.length - 1}
+                        className="w-7 h-[17px] rounded text-neutral-400 hover:bg-neutral-100 disabled:opacity-30 text-[10px] cursor-pointer"
+                      >
+                        ↓
+                      </button>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => removeInstruction(idx)}
+                      className="w-8 h-9 rounded-lg text-red-500 hover:bg-red-50 shrink-0 cursor-pointer"
+                    >
+                      ✕
+                    </button>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
 
           <div className="flex gap-3 pt-2">
