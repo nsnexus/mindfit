@@ -269,6 +269,22 @@ section {
   font-size: 0.9rem;
 }
 
+.nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+/* Só aparece quando .nav-links some (mobile) — senão o link de login
+   fica sem nenhum jeito de acessar na landing */
+.nav-login-mobile {
+  display: none;
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: var(--dark);
+  white-space: nowrap;
+}
+
 /* HERO */
 .hero {
   background: radial-gradient(1200px 500px at 80% -10%, #e9f8f0 0%, transparent 60%), var(--bg);
@@ -1300,6 +1316,10 @@ footer .brand .mind {
 
   .nav-links {
     display: none;
+  }
+
+  .nav-login-mobile {
+    display: inline-flex;
   }
 
   .hero h1 {

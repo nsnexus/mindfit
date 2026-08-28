@@ -32,9 +32,14 @@ export default function HomePage() {
             <a href="#faq">Dúvidas</a>
             <Link href={ROUTES.LOGIN}>Entrar</Link>
           </div>
-          <Link href={ROUTES.CHECKOUT} className="btn btn-primary">
-            Começar agora
-          </Link>
+          <div className="nav-actions">
+            <Link href={ROUTES.LOGIN} className="nav-login-mobile">
+              Entrar
+            </Link>
+            <Link href={ROUTES.CHECKOUT} className="btn btn-primary">
+              Começar agora
+            </Link>
+          </div>
         </div>
       </nav>
 

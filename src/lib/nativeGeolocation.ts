@@ -15,10 +15,14 @@ export interface GeoWatchHandle {
   stop: () => void;
 }
 
-let cachedIsNative: boolean | null = null;
+// Só cacheamos um resultado positivo (não pode virar mentira depois). Um
+// resultado negativo NÃO é cacheado — a ponte do Capacitor pode ainda não
+// ter injetado `window.Capacitor` no primeiro check (corrida de carregamento
+// da WebView), então sempre re-checa até confirmar nativo de verdade.
+let cachedIsNative = false;
 
 export function isNativeApp(): boolean {
-  if (cachedIsNative !== null) return cachedIsNative;
+  if (cachedIsNative) return true;
   try {
     // Import estático seria travado no build web (pacote nativo). Como só
     // precisamos de um boolean síncrono, checamos o objeto global que o
@@ -36,6 +40,20 @@ async function startNativeWatch(
 ): Promise<GeoWatchHandle> {
   const { registerPlugin } = await import('@capacitor/core');
   const BackgroundGeolocation = registerPlugin<any>('BackgroundGeolocation');
+
+  // Pede a permissão de localização explicitamente pelo plugin oficial
+  // primeiro — mais confiável que depender só do "requestPermissions" interno
+  // do plugin de background (que às vezes não dispara o diálogo do Android
+  // se chamado direto do addWatcher).
+  try {
+    const { Geolocation } = await import('@capacitor/geolocation');
+    const status = await Geolocation.checkPermissions();
+    if (status.location !== 'granted' && status.coarseLocation !== 'granted') {
+      await Geolocation.requestPermissions();
+    }
+  } catch (err: any) {
+    onError(err?.message || 'Não foi possível pedir permissão de localização.');
+  }
 
   // Android 13+ exige permissão de notificação pro serviço em primeiro
   // plano conseguir mostrar o aviso "rastreando localização".
