@@ -52,6 +52,7 @@ export default function AdminTreinosPage() {
   const [isSaving, setIsSaving] = useState(false);
   const [isUploadingImage, setIsUploadingImage] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
+  const [isImageZoomOpen, setIsImageZoomOpen] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const [isPickerOpen, setIsPickerOpen] = useState(false);
@@ -398,7 +399,11 @@ export default function AdminTreinosPage() {
           <div>
             <label className="block text-xs font-bold text-neutral-700 mb-1.5">Foto do Treino</label>
             <div className="flex items-center gap-3">
-              <div className="w-20 h-20 rounded-xl bg-neutral-100 overflow-hidden shrink-0 border border-neutral-200">
+              <div
+                className={`w-20 h-20 rounded-xl bg-neutral-100 overflow-hidden shrink-0 border border-neutral-200 ${formData.imageURL ? 'cursor-zoom-in' : ''}`}
+                onClick={() => formData.imageURL && setIsImageZoomOpen(true)}
+                title={formData.imageURL ? 'Clique para ampliar' : undefined}
+              >
                 {formData.imageURL ? (
                   <img src={formData.imageURL} alt="Prévia" className="w-full h-full object-cover" />
                 ) : (
@@ -619,6 +624,28 @@ export default function AdminTreinosPage() {
           </div>
         </div>
       </Modal>
+
+      {/* Zoom da foto */}
+      {isImageZoomOpen && formData.imageURL && (
+        <div
+          className="fixed inset-0 z-[100] bg-black/80 flex items-center justify-center p-6 cursor-zoom-out"
+          onClick={() => setIsImageZoomOpen(false)}
+        >
+          <img
+            src={formData.imageURL}
+            alt="Foto em tamanho grande"
+            className="max-w-full max-h-full rounded-2xl shadow-2xl object-contain"
+          />
+          <button
+            type="button"
+            onClick={() => setIsImageZoomOpen(false)}
+            className="absolute top-5 right-5 w-10 h-10 rounded-full bg-white/90 text-neutral-800 flex items-center justify-center text-lg font-bold cursor-pointer"
+            aria-label="Fechar"
+          >
+            ✕
+          </button>
+        </div>
+      )}
     </div>
   );
 }
