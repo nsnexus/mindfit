@@ -10,6 +10,7 @@ import { Card, Button } from '@/components/ui';
 import { ActivityMap } from '@/components/activities/ActivityMap';
 import { ROUTES } from '@/constants/routes';
 import { useActivityTracker } from '@/hooks/useActivityTracker';
+import { openNativeLocationSettings } from '@/lib/nativeGeolocation';
 import { useActivities } from '@/hooks/useActivities';
 import { useAuthStore } from '@/stores/authStore';
 import { getSubDocument } from '@/lib/firebase/firestore';
@@ -142,9 +143,20 @@ export function ActivityTrackerClient() {
       {tracker.error && (
         <Card padding="md" className="bg-red-50 border border-red-100">
           <p className="text-sm text-red-600 font-semibold">{tracker.error}</p>
-          <p className="text-xs text-red-400 mt-1">
-            Verifique se você liberou a permissão de localização pro navegador.
-          </p>
+          {tracker.permissionDeniedForever ? (
+            <Button
+              variant="outline"
+              size="sm"
+              className="mt-2.5"
+              onClick={() => openNativeLocationSettings()}
+            >
+              Abrir configurações
+            </Button>
+          ) : (
+            <p className="text-xs text-red-400 mt-1">
+              Verifique se você liberou a permissão de localização pro navegador.
+            </p>
+          )}
         </Card>
       )}
 

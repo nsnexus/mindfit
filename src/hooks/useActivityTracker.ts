@@ -26,6 +26,7 @@ export function useActivityTracker() {
   const [elapsedSeconds, setElapsedSeconds] = useState(0);
   const [currentSpeedKmh, setCurrentSpeedKmh] = useState(0);
   const [error, setError] = useState<string | null>(null);
+  const [permissionDeniedForever, setPermissionDeniedForever] = useState(false);
 
   const watchRef = useRef<GeoWatchHandle | null>(null);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
@@ -110,7 +111,10 @@ export function useActivityTracker() {
   }, []);
 
   const startWatch = useCallback(async () => {
-    const handle = await startGeoWatch(handlePosition, (message) => setError(message));
+    const handle = await startGeoWatch(handlePosition, (message, deniedForever) => {
+      setError(message);
+      setPermissionDeniedForever(!!deniedForever);
+    });
     watchRef.current = handle;
     timerRef.current = setInterval(() => {
       setElapsedSeconds(recomputeElapsed());
@@ -119,6 +123,7 @@ export function useActivityTracker() {
 
   const start = useCallback(() => {
     setError(null);
+    setPermissionDeniedForever(false);
     setRoute([]);
     setDistanceMeters(0);
     setElapsedSeconds(0);
@@ -183,6 +188,7 @@ export function useActivityTracker() {
     pausedAccumMsRef.current = 0;
     pausedAtRef.current = null;
     setError(null);
+    setPermissionDeniedForever(false);
   }, [stopWatch, releaseWakeLock]);
 
   useEffect(() => () => {
@@ -197,6 +203,7 @@ export function useActivityTracker() {
     elapsedSeconds,
     currentSpeedKmh,
     error,
+    permissionDeniedForever,
     isNative: isNativeApp(),
     start,
     pause,

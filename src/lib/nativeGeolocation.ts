@@ -32,7 +32,7 @@ export function isNativeApp(): boolean {
 
 async function startNativeWatch(
   onPosition: (p: RawGeoPoint) => void,
-  onError: (message: string) => void
+  onError: (message: string, deniedForever?: boolean) => void
 ): Promise<GeoWatchHandle> {
   const BackgroundGeolocation = registerPlugin<any>('BackgroundGeolocation');
 
@@ -42,9 +42,16 @@ async function startNativeWatch(
   // se chamado direto do addWatcher).
   try {
     const { Geolocation } = await import('@capacitor/geolocation');
-    const status = await Geolocation.checkPermissions();
+    let status = await Geolocation.checkPermissions();
     if (status.location !== 'granted' && status.coarseLocation !== 'granted') {
-      await Geolocation.requestPermissions();
+      status = await Geolocation.requestPermissions();
+    }
+    if (status.location !== 'granted' && status.coarseLocation !== 'granted') {
+      // Android já negou antes (ou negou agora e marcou "não perguntar de
+      // novo") — nenhum novo diálogo vai aparecer, só dá pra liberar pelas
+      // configurações do app.
+      onError('Permissão de localização negada. Toque em "Abrir configurações" e libere Localização pro Mindfit.', true);
+      return { stop: () => {} };
     }
   } catch (err: any) {
     onError(err?.message || 'Não foi possível pedir permissão de localização.');
@@ -126,10 +133,24 @@ function startWebWatch(
  */
 export async function startGeoWatch(
   onPosition: (p: RawGeoPoint) => void,
-  onError: (message: string) => void
+  onError: (message: string, deniedForever?: boolean) => void
 ): Promise<GeoWatchHandle> {
   if (isNativeApp()) {
     return startNativeWatch(onPosition, onError);
   }
   return startWebWatch(onPosition, onError);
+}
+
+/**
+ * Abre a tela de configurações do app no Android (Localização/Permissões) —
+ * único jeito de liberar o GPS depois que o Android já negou e parou de
+ * mostrar o diálogo de permissão.
+ */
+export async function openNativeLocationSettings(): Promise<void> {
+  try {
+    const BackgroundGeolocation = registerPlugin<any>('BackgroundGeolocation');
+    await BackgroundGeolocation.openSettings();
+  } catch {
+    // sem o que fazer se nem isso funcionar
+  }
 }
