@@ -10,7 +10,7 @@ import { Card, Button } from '@/components/ui';
 import { ActivityMap } from '@/components/activities/ActivityMap';
 import { ROUTES } from '@/constants/routes';
 import { useActivityTracker } from '@/hooks/useActivityTracker';
-import { openNativeLocationSettings } from '@/lib/nativeGeolocation';
+import { openNativeLocationSettings, isNativeApp } from '@/lib/nativeGeolocation';
 import { useActivities } from '@/hooks/useActivities';
 import { useAuthStore } from '@/stores/authStore';
 import { getSubDocument } from '@/lib/firebase/firestore';
@@ -38,6 +38,7 @@ export function ActivityTrackerClient() {
   const [startedAt, setStartedAt] = useState<string | null>(null);
   const [summary, setSummary] = useState<ReturnType<typeof tracker.finish> | null>(null);
   const [isSaving, setIsSaving] = useState(false);
+  const [debugInfo, setDebugInfo] = useState<string>('checando...');
 
   useEffect(() => {
     if (!firebaseUser) return;
@@ -45,6 +46,30 @@ export function ActivityTrackerClient() {
       if (p?.weight) setWeightKg(p.weight);
     });
   }, [firebaseUser]);
+
+  // Painel de diagnóstico temporário — ajuda a identificar onde o GPS nativo
+  // está travando sem precisar de log via cabo/adb.
+  useEffect(() => {
+    let cancelled = false;
+    async function checkDebug() {
+      const native = isNativeApp();
+      let extra = '';
+      if (native) {
+        try {
+          const { Geolocation } = await import('@capacitor/geolocation');
+          const perm = await Geolocation.checkPermissions();
+          extra = ` | permissão: ${JSON.stringify(perm)}`;
+        } catch (err: any) {
+          extra = ` | ERRO ao checar permissão: ${err?.message || err}`;
+        }
+      }
+      if (!cancelled) setDebugInfo(`modo: ${native ? 'app nativo' : 'navegador'}${extra}`);
+    }
+    checkDebug();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   const handleStart = () => {
     setStartedAt(new Date().toISOString());
@@ -222,6 +247,11 @@ export function ActivityTrackerClient() {
         {tracker.isNative
           ? 'Pode apagar a tela — o rastreio continua rodando em segundo plano.'
           : 'Mantenha a tela ligada e o app aberto durante a atividade pra não perder o rastreio de GPS.'}
+      </p>
+
+      {/* Diagnóstico temporário — remover depois que o GPS nativo estiver ok */}
+      <p className="text-[10px] text-neutral-300 text-center px-4 break-all">
+        🔧 debug: {debugInfo}
       </p>
     </div>
   );
