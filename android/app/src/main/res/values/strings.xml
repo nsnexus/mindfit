@@ -1,0 +1,11 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Mindfit</string>
+    <string name="title_activity_main">Mindfit</string>
+    <string name="package_name">com.nsnexus.mindfit</string>
+    <string name="custom_url_scheme">com.nsnexus.mindfit</string>
+
+    <!-- Notificação do rastreio de atividade em segundo plano -->
+    <string name="capacitor_background_geolocation_notification_channel_name">Rastreio de Atividade</string>
+    <string name="capacitor_background_geolocation_notification_color">#0e9f6e</string>
+</resources>

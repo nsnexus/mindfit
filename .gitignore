@@ -63,3 +63,12 @@ next-env.d.ts
 # actual PT-BR content the sync script upserts into Firestore)
 scripts/wger-raw-export.json
 scripts/wger-clean-*.json
+
+# Capacitor / Android (app nativo) — build output, não o projeto em si
+android/app/build/
+android/build/
+android/.gradle/
+android/capacitor-cordova-android-plugins/build/
+android/local.properties
+*.apk
+*.aab

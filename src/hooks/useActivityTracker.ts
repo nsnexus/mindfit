@@ -1,11 +1,14 @@
 // ============================================
 // useActivityTracker — rastreio de GPS em tempo real (corrida/caminhada/ciclismo)
+// No app nativo (Capacitor/Android), o rastreio continua com a tela apagada
+// via serviço em primeiro plano; no navegador, exige aba/tela ativas.
 // ============================================
 'use client';
 
 import { useState, useRef, useCallback, useEffect } from 'react';
 import type { ActivityType, RoutePoint } from '@/types/activity';
 import { haversineDistance, calcAvgSpeedKmh, estimateCalories } from '@/lib/activityMath';
+import { startGeoWatch, isNativeApp, type GeoWatchHandle, type RawGeoPoint } from '@/lib/nativeGeolocation';
 
 export type TrackerStatus = 'idle' | 'tracking' | 'paused' | 'finished';
 
@@ -24,10 +27,23 @@ export function useActivityTracker() {
   const [currentSpeedKmh, setCurrentSpeedKmh] = useState(0);
   const [error, setError] = useState<string | null>(null);
 
-  const watchIdRef = useRef<number | null>(null);
+  const watchRef = useRef<GeoWatchHandle | null>(null);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const wakeLockRef = useRef<WakeLockSentinel | null>(null);
   const lastPointRef = useRef<RoutePoint | null>(null);
+
+  // Cronômetro por relógio de parede — mesmo se o timer JS for pausado pelo
+  // sistema (app em segundo plano), o tempo real é recalculado certinho
+  // assim que voltar a rodar.
+  const startedAtRef = useRef<number | null>(null);
+  const pausedAccumMsRef = useRef(0);
+  const pausedAtRef = useRef<number | null>(null);
+
+  const recomputeElapsed = useCallback(() => {
+    if (!startedAtRef.current) return 0;
+    const now = Date.now();
+    return Math.max(0, Math.floor((now - startedAtRef.current - pausedAccumMsRef.current) / 1000));
+  }, []);
 
   const requestWakeLock = useCallback(async () => {
     try {
@@ -49,30 +65,24 @@ export function useActivityTracker() {
     const onVisibility = () => {
       if (status === 'tracking' && document.visibilityState === 'visible') {
         requestWakeLock();
+        setElapsedSeconds(recomputeElapsed());
       }
     };
     document.addEventListener('visibilitychange', onVisibility);
     return () => document.removeEventListener('visibilitychange', onVisibility);
-  }, [status, requestWakeLock]);
+  }, [status, requestWakeLock, recomputeElapsed]);
 
   const stopWatch = useCallback(() => {
-    if (watchIdRef.current !== null) {
-      navigator.geolocation.clearWatch(watchIdRef.current);
-      watchIdRef.current = null;
-    }
+    watchRef.current?.stop();
+    watchRef.current = null;
     if (timerRef.current) {
       clearInterval(timerRef.current);
       timerRef.current = null;
     }
   }, []);
 
-  const handlePosition = useCallback((pos: GeolocationPosition) => {
-    const point: RoutePoint = {
-      lat: pos.coords.latitude,
-      lng: pos.coords.longitude,
-      timestamp: pos.timestamp,
-      accuracy: pos.coords.accuracy,
-    };
+  const handlePosition = useCallback((raw: RawGeoPoint) => {
+    const point: RoutePoint = { lat: raw.lat, lng: raw.lng, timestamp: raw.timestamp, accuracy: raw.accuracy };
 
     if (point.accuracy != null && point.accuracy > MAX_ACCURACY_M) {
       return; // GPS impreciso demais, descarta
@@ -99,20 +109,13 @@ export function useActivityTracker() {
     setRoute((prev) => [...prev, point]);
   }, []);
 
-  const startWatch = useCallback(() => {
-    if (!('geolocation' in navigator)) {
-      setError('Este navegador não suporta GPS.');
-      return;
-    }
-    watchIdRef.current = navigator.geolocation.watchPosition(
-      handlePosition,
-      (err) => setError(err.message || 'Não foi possível obter sua localização.'),
-      { enableHighAccuracy: true, maximumAge: 0, timeout: 20000 }
-    );
+  const startWatch = useCallback(async () => {
+    const handle = await startGeoWatch(handlePosition, (message) => setError(message));
+    watchRef.current = handle;
     timerRef.current = setInterval(() => {
-      setElapsedSeconds((prev) => prev + 1);
+      setElapsedSeconds(recomputeElapsed());
     }, 1000);
-  }, [handlePosition]);
+  }, [handlePosition, recomputeElapsed]);
 
   const start = useCallback(() => {
     setError(null);
@@ -121,6 +124,9 @@ export function useActivityTracker() {
     setElapsedSeconds(0);
     setCurrentSpeedKmh(0);
     lastPointRef.current = null;
+    pausedAccumMsRef.current = 0;
+    pausedAtRef.current = null;
+    startedAtRef.current = Date.now();
     setStatus('tracking');
     requestWakeLock();
     startWatch();
@@ -128,10 +134,15 @@ export function useActivityTracker() {
 
   const pause = useCallback(() => {
     stopWatch();
+    pausedAtRef.current = Date.now();
     setStatus('paused');
   }, [stopWatch]);
 
   const resume = useCallback(() => {
+    if (pausedAtRef.current) {
+      pausedAccumMsRef.current += Date.now() - pausedAtRef.current;
+      pausedAtRef.current = null;
+    }
     setStatus('tracking');
     startWatch();
   }, [startWatch]);
@@ -142,19 +153,21 @@ export function useActivityTracker() {
       releaseWakeLock();
       setStatus('finished');
 
-      const avgSpeedKmh = calcAvgSpeedKmh(distanceMeters, elapsedSeconds);
-      const calories = estimateCalories(type, weightKg || 70, elapsedSeconds, avgSpeedKmh);
+      const finalElapsed = recomputeElapsed();
+      setElapsedSeconds(finalElapsed);
+      const avgSpeedKmh = calcAvgSpeedKmh(distanceMeters, finalElapsed);
+      const calories = estimateCalories(type, weightKg || 70, finalElapsed, avgSpeedKmh);
 
       return {
         type,
         distanceMeters,
-        durationSeconds: elapsedSeconds,
+        durationSeconds: finalElapsed,
         avgSpeedKmh,
         calories,
         route,
       };
     },
-    [stopWatch, releaseWakeLock, distanceMeters, elapsedSeconds, route]
+    [stopWatch, releaseWakeLock, distanceMeters, route, recomputeElapsed]
   );
 
   const reset = useCallback(() => {
@@ -166,6 +179,9 @@ export function useActivityTracker() {
     setElapsedSeconds(0);
     setCurrentSpeedKmh(0);
     lastPointRef.current = null;
+    startedAtRef.current = null;
+    pausedAccumMsRef.current = 0;
+    pausedAtRef.current = null;
     setError(null);
   }, [stopWatch, releaseWakeLock]);
 
@@ -181,6 +197,7 @@ export function useActivityTracker() {
     elapsedSeconds,
     currentSpeedKmh,
     error,
+    isNative: isNativeApp(),
     start,
     pause,
     resume,

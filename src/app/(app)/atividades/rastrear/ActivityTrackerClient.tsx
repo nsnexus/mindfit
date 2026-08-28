@@ -207,7 +207,9 @@ export function ActivityTrackerClient() {
       </Card>
 
       <p className="text-[11px] text-neutral-400 text-center px-4">
-        Mantenha a tela ligada e o app aberto durante a atividade pra não perder o rastreio de GPS.
+        {tracker.isNative
+          ? 'Pode apagar a tela — o rastreio continua rodando em segundo plano.'
+          : 'Mantenha a tela ligada e o app aberto durante a atividade pra não perder o rastreio de GPS.'}
       </p>
     </div>
   );
