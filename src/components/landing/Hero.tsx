@@ -69,21 +69,6 @@ export function Hero() {
             </svg>
 
             <img src="/celular.png" alt="App Mindfit — painel do aluno" className="hero-phone" />
-
-            <div className="hero-price-card">
-              <span className="hero-price-tag">🔥 Acesso vitalício</span>
-              <p className="hero-price-label">Pagamento único</p>
-              <div className="hero-price-value">
-                R$<b>49</b>
-                <span>,90</span>
-              </div>
-              <p className="hero-price-sub">• para sempre •</p>
-              <ul className="hero-price-list">
-                <li>✅ Sem mensalidade</li>
-                <li>✅ Sem pegadinha</li>
-                <li>✅ Use para sempre</li>
-              </ul>
-            </div>
           </div>
         </div>
       </div>
