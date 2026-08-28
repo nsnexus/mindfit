@@ -99,7 +99,12 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         ) : (
           <>
             {leftIcon && <span className="flex-shrink-0">{leftIcon}</span>}
-            <span>{children}</span>
+            {/* inline-flex aqui é essencial: ícones SVG passados direto como
+                children (sem leftIcon) viram display:block pelo preflight do
+                Tailwind, e dentro de um <span> normal isso quebra o ícone
+                pra "linha" separada do texto (parece quebra de linha, mas
+                não é — nowrap não resolve isso, só o inline-flex resolve) */}
+            <span className="inline-flex items-center">{children}</span>
             {rightIcon && <span className="flex-shrink-0">{rightIcon}</span>}
           </>
         )}
