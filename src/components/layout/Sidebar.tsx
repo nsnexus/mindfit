@@ -19,6 +19,7 @@ import {
   Sparkles,
   Route,
   HeartHandshake,
+  Scale,
 } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { useUIStore } from '@/stores/uiStore';
@@ -42,6 +43,7 @@ const NAV_ITEMS: NavItem[] = [
   { label: 'Treinos Guiados', href: ROUTES.TREINOS, icon: Dumbbell },
   { label: 'Atividades', href: ROUTES.ATIVIDADES, icon: Route },
   { label: 'Bem-Estar', href: ROUTES.BEM_ESTAR, icon: HeartHandshake },
+  { label: 'Calculadora IMC', href: ROUTES.IMC, icon: Scale },
   { label: 'Meu Progresso', href: ROUTES.PROGRESSO, icon: LineChart },
   { label: 'Painel Admin', href: ROUTES.ADMIN, icon: Settings, adminOnly: true },
 ];

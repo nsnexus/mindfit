@@ -26,6 +26,7 @@ export const ROUTES = {
   PROGRESSO: '/progresso',
   DIARIO: '/diario',
   BEM_ESTAR: '/bem-estar',
+  IMC: '/imc',
   PERFIL: '/perfil',
 
   // Admin (protegidas + role admin)
