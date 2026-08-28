@@ -8,8 +8,8 @@ export const APP_CONFIG = {
   description:
     'Plataforma de emagrecimento saudável com plano alimentar personalizado, receitas, treinos guiados e acompanhamento de progresso em ciclos de 21 dias.',
   url: process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000',
-  price: 49.9,
-  priceCents: 4990,
+  price: 29.9,
+  priceCents: 2990,
   currency: 'BRL',
   guaranteeDays: 7,
   cycleDays: 21,

@@ -26,7 +26,7 @@ export async function POST(req: Request) {
     const pixResult = await createPixPayment({
       appId: 'metodo-21-dias',
       externalOrderId,
-      amount: APP_CONFIG.price, // R$ 49.90
+      amount: APP_CONFIG.price, // R$ 29.90
       description: `Mindfit Método 21 Dias - ${fullName}`,
       webhookUrl,
       payer: {

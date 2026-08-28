@@ -13,7 +13,7 @@ export function FinalCTA() {
           Junte-se a milhares de pessoas que descobriram que emagrecer com saúde pode ser leve. Sua melhor versão começa agora.
         </p>
         <Link href={ROUTES.CHECKOUT} className="btn btn-primary">
-          Quero meu acesso vitalício por R$ 49,90
+          Quero meu acesso vitalício por R$ 29,90
         </Link>
       </div>
     </section>

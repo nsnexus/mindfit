@@ -8,7 +8,7 @@ import { useState } from 'react';
 const FAQS = [
   {
     q: 'O acesso é realmente vitalício?',
-    a: 'Sim! Você paga uma única vez R$ 49,90 e tem acesso a toda a plataforma para sempre, incluindo as atualizações futuras. Sem mensalidade.',
+    a: 'Sim! Você paga uma única vez R$ 29,90 e tem acesso a toda a plataforma para sempre, incluindo as atualizações futuras. Sem mensalidade.',
   },
   {
     q: 'Preciso de equipamentos para os treinos?',

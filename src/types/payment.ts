@@ -19,7 +19,7 @@ export interface PaymentRecord {
   userEmail: string;
   userName: string;
   amount: number; // em centavos (ex: 4990)
-  amountFormatted: string; // "R$ 49,90"
+  amountFormatted: string; // "R$ 29,90"
   method: PaymentMethod;
   status: PaymentStatus;
   txid?: string;

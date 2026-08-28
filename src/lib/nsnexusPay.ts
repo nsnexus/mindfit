@@ -5,7 +5,7 @@
 export interface CreatePixOptions {
   appId: string; // Ex: 'metodo-21-dias'
   externalOrderId: string; // ID do pedido no banco do seu novo site
-  amount: number; // Valor (Ex: 49.90)
+  amount: number; // Valor (Ex: 29.90)
   description?: string; // Descrição opcional que aparece no banco do cliente
   webhookUrl?: string; // URL do webhook do seu novo site que receberá o aviso de pago
   payer?: {

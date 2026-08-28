@@ -162,7 +162,7 @@ export function PixQRCode({ pixData, onConfirmSuccess }: PixQRCodeProps) {
           }}
         >
           <ShieldCheck className="w-4 h-4 text-[#0e9f6e]" />
-          <span>Valor: R$ {pixData.amount ? pixData.amount.toFixed(2).replace('.', ',') : '49,90'}</span>
+          <span>Valor: R$ {pixData.amount ? pixData.amount.toFixed(2).replace('.', ',') : '29,90'}</span>
         </div>
       </div>
 
