@@ -1,82 +1,63 @@
 // ============================================
-// Painel Administrativo — Gestão de Usuários
+// Painel Administrativo — Gestão de Usuários (dados reais do Firestore)
 // ============================================
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Card, Button, Badge, Input } from '@/components/ui';
+import { getDocuments, updateDocument } from '@/lib/firebase/firestore';
+import type { AppUser } from '@/types/user';
 
-interface MockUser {
-  id: string;
-  name: string;
-  email: string;
-  role: 'user' | 'admin';
-  isPremium: boolean;
-  onboardingCompleted: boolean;
-  createdAt: string;
+function formatDate(value: any): string {
+  try {
+    if (value?.toDate) return value.toDate().toLocaleDateString('pt-BR');
+    if (typeof value === 'string') return new Date(value).toLocaleDateString('pt-BR');
+    return '—';
+  } catch {
+    return '—';
+  }
 }
 
-const INITIAL_USERS: MockUser[] = [
-  {
-    id: 'usr_1',
-    name: 'Juliana Mendes',
-    email: 'juliana.mendes@email.com',
-    role: 'user',
-    isPremium: true,
-    onboardingCompleted: true,
-    createdAt: '2026-08-20',
-  },
-  {
-    id: 'usr_2',
-    name: 'Rodrigo Silveira',
-    email: 'rodrigo.silveira@email.com',
-    role: 'user',
-    isPremium: true,
-    onboardingCompleted: true,
-    createdAt: '2026-08-21',
-  },
-  {
-    id: 'usr_3',
-    name: 'Camila Ferreira',
-    email: 'camila.ferreira@email.com',
-    role: 'user',
-    isPremium: true,
-    onboardingCompleted: true,
-    createdAt: '2026-08-22',
-  },
-  {
-    id: 'usr_4',
-    name: 'Administrador Master',
-    email: 'admin@mindfit.com',
-    role: 'admin',
-    isPremium: true,
-    onboardingCompleted: true,
-    createdAt: '2026-08-01',
-  },
-];
-
 export default function AdminUsuariosPage() {
-  const [users, setUsers] = useState<MockUser[]>(INITIAL_USERS);
+  const [users, setUsers] = useState<AppUser[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   const [search, setSearch] = useState('');
+  const [pendingAction, setPendingAction] = useState<string | null>(null);
 
-  const togglePremium = (userId: string) => {
-    setUsers((prev) =>
-      prev.map((u) => (u.id === userId ? { ...u, isPremium: !u.isPremium } : u))
-    );
+  useEffect(() => {
+    getDocuments<AppUser>('users').then((list) => {
+      setUsers(list);
+      setIsLoading(false);
+    });
+  }, []);
+
+  const togglePremium = async (user: AppUser) => {
+    setPendingAction(user.uid);
+    try {
+      await updateDocument('users', user.uid, { isPremium: !user.isPremium });
+      setUsers((prev) => prev.map((u) => (u.uid === user.uid ? { ...u, isPremium: !u.isPremium } : u)));
+    } finally {
+      setPendingAction(null);
+    }
   };
 
-  const toggleRole = (userId: string) => {
-    setUsers((prev) =>
-      prev.map((u) =>
-        u.id === userId ? { ...u, role: u.role === 'admin' ? 'user' : 'admin' } : u
-      )
-    );
+  const toggleRole = async (user: AppUser) => {
+    const newRole = user.role === 'admin' ? 'user' : 'admin';
+    if (!confirm(`Confirma tornar ${user.displayName || user.email} ${newRole === 'admin' ? 'admin' : 'usuário comum'}?`)) return;
+
+    setPendingAction(user.uid);
+    try {
+      await updateDocument('users', user.uid, { role: newRole });
+      setUsers((prev) => prev.map((u) => (u.uid === user.uid ? { ...u, role: newRole } : u)));
+    } finally {
+      setPendingAction(null);
+    }
   };
 
   const filteredUsers = users.filter(
     (u) =>
-      u.name.toLowerCase().includes(search.toLowerCase()) ||
-      u.email.toLowerCase().includes(search.toLowerCase())
+      (u.displayName || '').toLowerCase().includes(search.toLowerCase()) ||
+      (u.email || '').toLowerCase().includes(search.toLowerCase())
   );
 
   return (
@@ -87,7 +68,7 @@ export default function AdminUsuariosPage() {
             Gestão de Usuários 👥
           </h1>
           <p className="text-xs sm:text-sm text-neutral-500 mt-0.5">
-            Gerencie permissões, status premium e perfis cadastrados.
+            {users.length} conta{users.length === 1 ? '' : 's'} cadastrada{users.length === 1 ? '' : 's'} — dados reais do Firestore.
           </p>
         </div>
 
@@ -109,55 +90,75 @@ export default function AdminUsuariosPage() {
                 <th className="p-4">Papel</th>
                 <th className="p-4">Status Acesso</th>
                 <th className="p-4">Onboarding</th>
+                <th className="p-4">Cadastro</th>
                 <th className="p-4 text-right">Ações</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-neutral-100">
-              {filteredUsers.map((user) => (
-                <tr key={user.id} className="hover:bg-neutral-50/50 transition-colors">
-                  <td className="p-4">
-                    <p className="font-bold text-neutral-900">{user.name}</p>
-                    <p className="text-xs text-neutral-400">{user.email}</p>
-                  </td>
-                  <td className="p-4">
-                    <Badge variant={user.role === 'admin' ? 'premium' : 'default'}>
-                      {user.role}
-                    </Badge>
-                  </td>
-                  <td className="p-4">
-                    <span
-                      className={`inline-flex items-center gap-1 font-semibold text-xs ${
-                        user.isPremium ? 'text-emerald-600' : 'text-neutral-400'
-                      }`}
-                    >
-                      {user.isPremium ? '⭐ Vitalício' : 'Gratuito'}
-                    </span>
-                  </td>
-                  <td className="p-4">
-                    <span className="text-xs text-neutral-500">
-                      {user.onboardingCompleted ? '✓ Concluído' : 'Pendente'}
-                    </span>
-                  </td>
-                  <td className="p-4 text-right space-x-2">
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => togglePremium(user.id)}
-                      className="text-xs"
-                    >
-                      {user.isPremium ? 'Revogar Premium' : 'Conceder Premium'}
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => toggleRole(user.id)}
-                      className="text-xs"
-                    >
-                      {user.role === 'admin' ? 'Tornar User' : 'Tornar Admin'}
-                    </Button>
+              {isLoading ? (
+                <tr>
+                  <td colSpan={6} className="p-8 text-center text-neutral-400 text-sm">
+                    Carregando usuários...
                   </td>
                 </tr>
-              ))}
+              ) : filteredUsers.length === 0 ? (
+                <tr>
+                  <td colSpan={6} className="p-8 text-center text-neutral-400 text-sm">
+                    Nenhum usuário encontrado.
+                  </td>
+                </tr>
+              ) : (
+                filteredUsers.map((user) => (
+                  <tr key={user.uid} className="hover:bg-neutral-50/50 transition-colors">
+                    <td className="p-4">
+                      <p className="font-bold text-neutral-900">{user.displayName || 'Sem nome'}</p>
+                      <p className="text-xs text-neutral-400">{user.email}</p>
+                    </td>
+                    <td className="p-4">
+                      <Badge variant={user.role === 'admin' ? 'premium' : 'default'}>
+                        {user.role}
+                      </Badge>
+                    </td>
+                    <td className="p-4">
+                      <span
+                        className={`inline-flex items-center gap-1 font-semibold text-xs ${
+                          user.isPremium ? 'text-emerald-600' : 'text-neutral-400'
+                        }`}
+                      >
+                        {user.isPremium ? '⭐ Vitalício' : 'Gratuito'}
+                      </span>
+                    </td>
+                    <td className="p-4">
+                      <span className="text-xs text-neutral-500">
+                        {user.onboardingCompleted ? '✓ Concluído' : 'Pendente'}
+                      </span>
+                    </td>
+                    <td className="p-4">
+                      <span className="text-xs text-neutral-500">{formatDate(user.createdAt)}</span>
+                    </td>
+                    <td className="p-4 text-right space-x-2">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => togglePremium(user)}
+                        disabled={pendingAction === user.uid}
+                        className="text-xs"
+                      >
+                        {user.isPremium ? 'Revogar Premium' : 'Conceder Premium'}
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => toggleRole(user)}
+                        disabled={pendingAction === user.uid}
+                        className="text-xs"
+                      >
+                        {user.role === 'admin' ? 'Tornar User' : 'Tornar Admin'}
+                      </Button>
+                    </td>
+                  </tr>
+                ))
+              )}
             </tbody>
           </table>
         </div>

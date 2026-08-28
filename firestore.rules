@@ -119,6 +119,17 @@ service cloud.firestore {
     }
 
     // =========================================
+    // ANALYTICS (visitas ao site) — qualquer um pode registrar uma
+    // visita (inclusive anônimo, antes de logar), ninguém le/edita/
+    // apaga except admin lendo pra montar as metricas
+    // =========================================
+    match /analytics/{eventId} {
+      allow create: if true;
+      allow read: if isAdmin();
+      allow update, delete: if false;
+    }
+
+    // =========================================
     // PAYMENTS (read own, write only via admin SDK)
     // =========================================
     match /payments/{paymentId} {

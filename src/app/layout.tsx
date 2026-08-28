@@ -3,6 +3,7 @@ import Script from 'next/script';
 import { Poppins, Inter } from 'next/font/google';
 import { Providers } from './providers';
 import { MetaPixelPageView } from '@/components/MetaPixelPageView';
+import { SiteVisitTracker } from '@/components/SiteVisitTracker';
 import { APP_CONFIG } from '@/constants/config';
 import { META_PIXEL_ID } from '@/lib/metaPixel';
 import './globals.css';
@@ -104,6 +105,7 @@ export default function RootLayout({
 
         <Providers>
           <MetaPixelPageView />
+          <SiteVisitTracker />
           {children}
         </Providers>
       </body>
