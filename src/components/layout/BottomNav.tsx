@@ -11,6 +11,7 @@ import {
   Salad,
   Dumbbell,
   LineChart,
+  Route,
 } from 'lucide-react';
 import { ROUTES } from '@/constants/routes';
 
@@ -25,6 +26,7 @@ const MOBILE_NAV_ITEMS: MobileNavItem[] = [
   { label: 'Diário', href: ROUTES.DIARIO, icon: UtensilsCrossed },
   { label: 'Plano 21D', href: ROUTES.PLANO_ALIMENTAR, icon: Salad },
   { label: 'Treinos', href: ROUTES.TREINOS, icon: Dumbbell },
+  { label: 'Ativ.', href: ROUTES.ATIVIDADES, icon: Route },
   { label: 'Evolução', href: ROUTES.PROGRESSO, icon: LineChart },
 ];
 

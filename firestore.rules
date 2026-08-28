@@ -60,6 +60,11 @@ service cloud.firestore {
       match /streak/{doc} {
         allow read, write: if isOwner(userId);
       }
+
+      // Atividades rastreadas por GPS (corrida/caminhada/ciclismo)
+      match /activities/{activityId} {
+        allow read, write: if isOwner(userId);
+      }
     }
 
     // =========================================
