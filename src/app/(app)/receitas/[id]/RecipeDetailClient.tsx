@@ -6,8 +6,8 @@
 import Link from 'next/link';
 import { ChevronLeft, ShoppingCart, Heart } from 'lucide-react';
 import { useRecipes } from '@/hooks/useRecipes';
+import { Button } from '@/components/ui';
 import { ROUTES } from '@/constants/routes';
-import type { Recipe } from '@/types/recipe';
 
 const TAG_TRANSLATIONS: Record<string, { label: string; bg: string; color: string }> = {
   quick: { label: '⚡ Rápido', bg: '#e6f6ef', color: '#0e9f6e' },
@@ -19,8 +19,34 @@ const TAG_TRANSLATIONS: Record<string, { label: string; bg: string; color: strin
   lowCarb: { label: '🥑 Low Carb', bg: '#e6f6ef', color: '#0e9f6e' },
 };
 
-export function RecipeDetailClient({ recipe }: { recipe: Recipe }) {
-  const { favorites, toggleFavorite, shoppingListIds, toggleShoppingList } = useRecipes();
+export function RecipeDetailClient({ recipeId }: { recipeId: string }) {
+  const { allRecipes, isLoading, favorites, toggleFavorite, shoppingListIds, toggleShoppingList } =
+    useRecipes();
+
+  const recipe = allRecipes.find((r) => r.id === recipeId);
+
+  if (isLoading && !recipe) {
+    return (
+      <div className="flex items-center justify-center min-h-[50vh]">
+        <div className="w-8 h-8 rounded-full border-2 border-emerald-500 border-t-transparent animate-spin" />
+      </div>
+    );
+  }
+
+  if (!recipe) {
+    return (
+      <div className="text-center py-20 bg-white rounded-3xl border border-neutral-200 shadow-sm max-w-lg mx-auto">
+        <span className="text-4xl block mb-2">🍽️</span>
+        <h2 className="text-lg font-bold text-neutral-800">Receita não encontrada</h2>
+        <p className="text-xs text-neutral-500 mt-1 mb-6">
+          A receita que você procura não está disponível ou foi movida.
+        </p>
+        <Link href={ROUTES.RECEITAS}>
+          <Button variant="primary">Voltar para o Catálogo</Button>
+        </Link>
+      </div>
+    );
+  }
 
   const isFavorite = favorites.includes(recipe.id);
   const isInShoppingList = shoppingListIds.includes(recipe.id);

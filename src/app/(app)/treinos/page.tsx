@@ -7,12 +7,15 @@ import { useState, useEffect, Suspense } from 'react';
 import Link from 'next/link';
 import { useProgress } from '@/hooks/useProgress';
 import { ExerciseLibrary } from '@/components/workouts/ExerciseLibrary';
+import { WorkoutCard } from '@/components/workouts/WorkoutCard';
 import { WorkoutQuestionnaireModal } from '@/components/workouts/WorkoutQuestionnaireModal';
+import { getDocuments } from '@/lib/firebase/firestore';
 import {
   buildExerciseListItem,
   fetchReplacementExercise,
   type WeeklyPlan,
 } from '@/lib/wgerApi';
+import type { Workout } from '@/types/workout';
 
 const FOCUS_LABELS: Record<string, string> = {
   fullBody: '🔥 Corpo Todo',
@@ -23,13 +26,22 @@ const FOCUS_LABELS: Record<string, string> = {
 };
 
 function TreinosPageContent() {
-  const [activeTab, setActiveTab] = useState<'method' | 'library'>('method');
+  const [activeTab, setActiveTab] = useState<'method' | 'ready' | 'library'>('method');
   const [isQuestionnaireOpen, setIsQuestionnaireOpen] = useState(false);
   const [weeklyPlan, setWeeklyPlan] = useState<WeeklyPlan | null>(null);
   const [regeneratingDay, setRegeneratingDay] = useState<number | null>(null);
   const [swappingKey, setSwappingKey] = useState<string | null>(null);
+  const [readyWorkouts, setReadyWorkouts] = useState<Workout[]>([]);
+  const [isLoadingReady, setIsLoadingReady] = useState(true);
 
   const { profile } = useProgress();
+
+  useEffect(() => {
+    getDocuments<Workout>('workouts').then((list) => {
+      setReadyWorkouts(list);
+      setIsLoadingReady(false);
+    });
+  }, []);
 
   useEffect(() => {
     try {
@@ -165,6 +177,13 @@ function TreinosPageContent() {
           </button>
           <button
             type="button"
+            onClick={() => setActiveTab('ready')}
+            className={`fbtn ${activeTab === 'ready' ? 'active' : ''}`}
+          >
+            🏆 Treinos Prontos
+          </button>
+          <button
+            type="button"
             onClick={() => setActiveTab('library')}
             className={`fbtn ${activeTab === 'library' ? 'active' : ''}`}
           >
@@ -173,7 +192,31 @@ function TreinosPageContent() {
         </div>
       </div>
 
-      {activeTab === 'method' ? (
+      {activeTab === 'ready' ? (
+        <div style={{ marginTop: '20px' }}>
+          {isLoadingReady ? (
+            <div className="flex items-center justify-center min-h-[30vh]">
+              <div className="w-8 h-8 rounded-full border-2 border-emerald-500 border-t-transparent animate-spin" />
+            </div>
+          ) : readyWorkouts.length === 0 ? (
+            <div className="card" style={{ textAlign: 'center', padding: '48px 32px' }}>
+              <span style={{ fontSize: '2.5rem', display: 'block', marginBottom: '10px' }}>🏋️</span>
+              <h3 style={{ fontFamily: "'Poppins', sans-serif", fontSize: '1.15rem', color: '#12352f', marginBottom: '6px' }}>
+                Nenhum treino pronto ainda
+              </h3>
+              <p style={{ color: 'var(--muted)', fontSize: '0.9rem', maxWidth: '440px', margin: '0 auto' }}>
+                Assim que a equipe cadastrar treinos prontos, eles aparecem aqui.
+              </p>
+            </div>
+          ) : (
+            <div className="grid g-3">
+              {readyWorkouts.map((w) => (
+                <WorkoutCard key={w.id} workout={w} />
+              ))}
+            </div>
+          )}
+        </div>
+      ) : activeTab === 'method' ? (
         <>
           {/* Plan Generator Banner */}
           <div

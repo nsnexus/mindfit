@@ -9,6 +9,7 @@ import { useActiveWorkout } from '@/hooks/useWorkouts';
 import { ExerciseDemo } from '@/components/workouts/ExerciseDemo';
 import { WorkoutTimer } from '@/components/workouts/WorkoutTimer';
 import { Progress } from '@/components/ui';
+import { getDocument } from '@/lib/firebase/firestore';
 import { ROUTES } from '@/constants/routes';
 import type { Workout } from '@/types/workout';
 
@@ -22,7 +23,10 @@ export function ActiveWorkoutClient({ workout: initialWorkout, workoutId }: Acti
   const [isCheckingCustom, setIsCheckingCustom] = useState(!initialWorkout);
 
   useEffect(() => {
-    if (!initialWorkout && workoutId) {
+    async function resolve() {
+      if (initialWorkout || !workoutId) return;
+
+      // 1. Treino gerado pelo plano semanal (fica só no localStorage do aluno)
       try {
         const saved = localStorage.getItem('mindfit_weekly_plan');
         if (saved) {
@@ -30,14 +34,23 @@ export function ActiveWorkoutClient({ workout: initialWorkout, workoutId }: Acti
           const match = plan?.days?.find((d: any) => d.workout?.id === workoutId)?.workout;
           if (match) {
             setResolvedWorkout(match);
+            setIsCheckingCustom(false);
+            return;
           }
         }
       } catch {
         // storage policy
-      } finally {
-        setIsCheckingCustom(false);
       }
+
+      // 2. Treino pronto cadastrado pelo admin (Firestore)
+      const fromDb = await getDocument<Workout>('workouts', workoutId);
+      if (fromDb) {
+        setResolvedWorkout(fromDb);
+      }
+      setIsCheckingCustom(false);
     }
+
+    resolve();
   }, [initialWorkout, workoutId]);
 
   if (isCheckingCustom) {

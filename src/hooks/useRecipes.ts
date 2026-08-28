@@ -5,15 +5,33 @@
 
 import { useState, useMemo, useEffect } from 'react';
 import { RECIPES_SEED } from '@/data/recipes-seed';
+import { getDocuments } from '@/lib/firebase/firestore';
 import type { Recipe } from '@/types/recipe';
 
 export function useRecipes() {
-  const [recipes] = useState<Recipe[]>(RECIPES_SEED);
+  const [recipes, setRecipes] = useState<Recipe[]>(RECIPES_SEED);
+  const [isLoading, setIsLoading] = useState(true);
   const [search, setSearch] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [selectedTag, setSelectedTag] = useState('all');
   const [favorites, setFavorites] = useState<string[]>([]);
   const [shoppingListIds, setShoppingListIds] = useState<string[]>([]);
+
+  // Carrega as receitas do Firestore (o que o admin gerencia). Mostra o
+  // seed local de imediato pra não deixar a tela em branco, e substitui
+  // assim que a busca real terminar. Se a coleção estiver vazia (Firestore
+  // ainda não populado) ou a busca falhar, mantém o seed local.
+  useEffect(() => {
+    async function load() {
+      try {
+        const fromDb = await getDocuments<Recipe>('recipes');
+        if (fromDb.length > 0) setRecipes(fromDb);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+    load();
+  }, []);
 
   // Load favorites & shopping list from localStorage
   useEffect(() => {
@@ -82,6 +100,7 @@ export function useRecipes() {
   return {
     recipes: filteredRecipes,
     allRecipes: recipes,
+    isLoading,
     search,
     setSearch,
     selectedCategory,
