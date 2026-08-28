@@ -5,13 +5,14 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { ChevronLeft, Flame, Clock, Route as RouteIcon, Gauge, Footprints, Bike, PersonStanding, Trash2 } from 'lucide-react';
+import { ChevronLeft, Flame, Clock, Route as RouteIcon, Gauge, Footprints, Bike, PersonStanding, Trash2, Share2 } from 'lucide-react';
 import { Card, Button } from '@/components/ui';
 import { ActivityMap } from '@/components/activities/ActivityMap';
 import { ROUTES } from '@/constants/routes';
 import { useActivities } from '@/hooks/useActivities';
 import { ACTIVITY_LABELS, type Activity, type ActivityType } from '@/types/activity';
 import { formatDuration, formatDistance, formatPace } from '@/lib/activityMath';
+import { shareOrDownloadActivityCard } from '@/lib/shareCard';
 
 const TYPE_ICON: Record<ActivityType, React.ComponentType<{ className?: string }>> = {
   corrida: PersonStanding,
@@ -31,6 +32,7 @@ export function ActivityDetailClient({ activityId }: { activityId: string }) {
   const router = useRouter();
   const { getActivity, removeActivity } = useActivities();
   const [activity, setActivity] = useState<Activity | null | undefined>(undefined);
+  const [isSharing, setIsSharing] = useState(false);
 
   useEffect(() => {
     getActivity(activityId).then(setActivity);
@@ -61,6 +63,17 @@ export function ActivityDetailClient({ activityId }: { activityId: string }) {
     if (!confirm('Excluir esta atividade?')) return;
     await removeActivity(activity.id);
     router.push(ROUTES.ATIVIDADES);
+  };
+
+  const handleShare = async () => {
+    setIsSharing(true);
+    try {
+      await shareOrDownloadActivityCard(activity);
+    } catch (err) {
+      console.error('Erro ao gerar card de compartilhamento:', err);
+    } finally {
+      setIsSharing(false);
+    }
   };
 
   return (
@@ -123,6 +136,10 @@ export function ActivityDetailClient({ activityId }: { activityId: string }) {
           <p className="text-[11px] text-neutral-400">kcal</p>
         </Card>
       </div>
+
+      <Button className="w-full" size="lg" onClick={handleShare} disabled={isSharing}>
+        <Share2 className="w-4 h-4 mr-1.5" /> {isSharing ? 'Gerando card...' : 'Compartilhar'}
+      </Button>
     </div>
   );
 }

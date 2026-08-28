@@ -4,11 +4,13 @@
 'use client';
 
 import Link from 'next/link';
+import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Footprints, Bike, PersonStanding, MapPin, Trash2, Flame, Clock, Route as RouteIcon } from 'lucide-react';
-import { Card } from '@/components/ui';
+import { Footprints, Bike, PersonStanding, MapPin, Trash2, Flame, Clock, Route as RouteIcon, Target, Pencil, Check } from 'lucide-react';
+import { Card, Progress } from '@/components/ui';
 import { ROUTES } from '@/constants/routes';
 import { useActivities } from '@/hooks/useActivities';
+import { useWeeklyGoal } from '@/hooks/useWeeklyGoal';
 import { ACTIVITY_LABELS, type ActivityType } from '@/types/activity';
 import { formatDistance, formatDuration, formatPace } from '@/lib/activityMath';
 
@@ -35,9 +37,23 @@ function formatDate(iso: string): string {
 export default function AtividadesPage() {
   const router = useRouter();
   const { activities, isLoading, totals, removeActivity } = useActivities();
+  const { goalKm, weekDistanceKm, progressPercent, updateGoal } = useWeeklyGoal(activities);
+  const [isEditingGoal, setIsEditingGoal] = useState(false);
+  const [goalInput, setGoalInput] = useState(String(goalKm));
 
   const startTracking = (type: ActivityType) => {
     router.push(`${ROUTES.ATIVIDADE_RASTREAR}?tipo=${type}`);
+  };
+
+  const openGoalEdit = () => {
+    setGoalInput(String(goalKm));
+    setIsEditingGoal(true);
+  };
+
+  const saveGoal = () => {
+    const parsed = Number(goalInput);
+    if (parsed > 0) updateGoal(parsed);
+    setIsEditingGoal(false);
   };
 
   return (
@@ -66,6 +82,58 @@ export default function AtividadesPage() {
             </button>
           ))}
         </div>
+      </Card>
+
+      {/* Meta semanal */}
+      <Card padding="md" className="bg-white">
+        <div className="flex items-center justify-between mb-3">
+          <h3 className="font-bold text-neutral-900 text-sm flex items-center gap-1.5">
+            <Target className="w-4 h-4 text-[#0e9f6e]" /> Meta da semana
+          </h3>
+          {!isEditingGoal && (
+            <button
+              onClick={openGoalEdit}
+              className="p-1.5 rounded-lg text-neutral-300 hover:text-[#0e9f6e] hover:bg-[#f0f9f4] transition-colors"
+              aria-label="Editar meta semanal"
+            >
+              <Pencil className="w-3.5 h-3.5" />
+            </button>
+          )}
+        </div>
+
+        {isEditingGoal ? (
+          <div className="flex items-center gap-2">
+            <input
+              type="number"
+              min={1}
+              value={goalInput}
+              onChange={(e) => setGoalInput(e.target.value)}
+              className="w-24 px-3 py-2 rounded-xl border border-[#d7ede3] text-sm font-bold text-neutral-900 focus-ring"
+              autoFocus
+            />
+            <span className="text-xs text-neutral-400">km por semana</span>
+            <button
+              onClick={saveGoal}
+              className="ml-auto p-2 rounded-xl bg-[#0e9f6e] text-white hover:brightness-105 transition-all"
+              aria-label="Salvar meta"
+            >
+              <Check className="w-4 h-4" />
+            </button>
+          </div>
+        ) : (
+          <>
+            <div className="flex items-baseline justify-between mb-2">
+              <span className="text-lg font-black text-neutral-900">{weekDistanceKm.toFixed(1)} km</span>
+              <span className="text-xs text-neutral-400">meta: {goalKm} km</span>
+            </div>
+            <Progress value={weekDistanceKm} max={goalKm} color={progressPercent >= 100 ? 'success' : 'primary'} />
+            <p className="text-[11px] text-neutral-400 mt-2">
+              {progressPercent >= 100
+                ? '🎉 Meta da semana batida!'
+                : `Faltam ${Math.max(0, goalKm - weekDistanceKm).toFixed(1)} km pra bater a meta.`}
+            </p>
+          </>
+        )}
       </Card>
 
       {/* Totais gerais */}
