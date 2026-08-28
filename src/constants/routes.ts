@@ -25,6 +25,7 @@ export const ROUTES = {
   ATIVIDADE_DETALHE: (id: string) => `/atividades/${id}`,
   PROGRESSO: '/progresso',
   DIARIO: '/diario',
+  BEM_ESTAR: '/bem-estar',
   PERFIL: '/perfil',
 
   // Admin (protegidas + role admin)

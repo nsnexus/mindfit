@@ -18,6 +18,7 @@ import {
   Flame,
   Sparkles,
   Route,
+  HeartHandshake,
 } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { useUIStore } from '@/stores/uiStore';
@@ -40,6 +41,7 @@ const NAV_ITEMS: NavItem[] = [
   { label: 'Receitas Fit', href: ROUTES.RECEITAS, icon: ChefHat },
   { label: 'Treinos Guiados', href: ROUTES.TREINOS, icon: Dumbbell },
   { label: 'Atividades', href: ROUTES.ATIVIDADES, icon: Route },
+  { label: 'Bem-Estar', href: ROUTES.BEM_ESTAR, icon: HeartHandshake },
   { label: 'Meu Progresso', href: ROUTES.PROGRESSO, icon: LineChart },
   { label: 'Painel Admin', href: ROUTES.ADMIN, icon: Settings, adminOnly: true },
 ];

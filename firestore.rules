@@ -65,6 +65,11 @@ service cloud.firestore {
       match /activities/{activityId} {
         allow read, write: if isOwner(userId);
       }
+
+      // Mensagens do chat de bem-estar emocional — privadas, só o dono acessa
+      match /wellnessMessages/{messageId} {
+        allow read, write: if isOwner(userId);
+      }
     }
 
     // =========================================
