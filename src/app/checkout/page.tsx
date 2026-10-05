@@ -9,9 +9,10 @@ import { useRouter } from 'next/navigation';
 import { useAuthStore } from '@/stores/authStore';
 import { PricingCard } from '@/components/checkout/PricingCard';
 import { PixQRCode, type PixDataView } from '@/components/checkout/PixQRCode';
-import { updateDocument } from '@/lib/firebase/firestore';
+import { updateDocument, getDocuments } from '@/lib/firebase/firestore';
 import { registerWithEmail } from '@/lib/firebase/auth';
 import { trackPixelEvent } from '@/lib/metaPixel';
+import { Eye, EyeOff } from 'lucide-react';
 import { DISCLAIMER_TEXT } from '@/constants/config';
 import { ROUTES } from '@/constants/routes';
 import type { PaymentMethod, CheckoutFormData } from '@/types/payment';
@@ -33,6 +34,8 @@ export default function CheckoutPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [pixData, setPixData] = useState<PixDataView | null>(null);
   const [error, setError] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const handleCreatePayment = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -54,7 +57,49 @@ export default function CheckoutPage() {
     }
 
     setIsLoading(true);
+
     try {
+      const cleanEmail = formData.email.toLowerCase().trim();
+      const isSameLoggedInUser = firebaseUser && firebaseUser.email?.toLowerCase().trim() === cleanEmail;
+
+      // 1. Verifica se já existe um cadastro com esse mesmo e-mail
+      if (!isSameLoggedInUser) {
+        try {
+          const { where } = await import('firebase/firestore');
+          const existingUsers = await getDocuments<{ id: string; email: string }>('users', [
+            where('email', '==', cleanEmail),
+          ]);
+
+          if (existingUsers && existingUsers.length > 0) {
+            setError('Esse e-mail já tem uma conta cadastrada. Faça login para acessar sua conta ou realizar o pagamento.');
+            setIsLoading(false);
+            return;
+          }
+        } catch (checkErr) {
+          console.warn('Erro ao verificar e-mail existente:', checkErr);
+        }
+      }
+
+      // 2. Realiza o cadastro do usuário no Firebase antes de gerar a cobrança
+      let currentUserId = firebaseUser?.uid || null;
+
+      if (!isSameLoggedInUser) {
+        try {
+          const newUser = await registerWithEmail(cleanEmail, formData.password, formData.fullName.trim());
+          if (newUser) {
+            currentUserId = newUser.uid;
+          }
+        } catch (authErr: any) {
+          if (authErr?.code === 'auth/email-already-in-use') {
+            setError('Esse e-mail já tem uma conta cadastrada. Faça login para acessar sua conta ou realizar o pagamento.');
+            setIsLoading(false);
+            return;
+          }
+          throw authErr;
+        }
+      }
+
+      // 3. Gera a cobrança Pix no gateway
       if (formData.paymentMethod === 'pix') {
         const { password, ...orderData } = formData;
         const res = await fetch('/api/checkout/pix', {
@@ -62,7 +107,8 @@ export default function CheckoutPage() {
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             ...orderData,
-            userId: firebaseUser?.uid || null,
+            email: cleanEmail,
+            userId: currentUserId,
           }),
         });
 
@@ -231,28 +277,74 @@ export default function CheckoutPage() {
                   <div className="form-row-2">
                     <div className="form-group-clean">
                       <label>Crie uma Senha</label>
-                      <input
-                        type="password"
-                        className="input-clean"
-                        placeholder="Mínimo 6 caracteres"
-                        value={formData.password}
-                        onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                        required
-                        minLength={6}
-                      />
+                      <div style={{ position: 'relative' }}>
+                        <input
+                          type={showPassword ? 'text' : 'password'}
+                          className="input-clean"
+                          placeholder="Mínimo 6 caracteres"
+                          value={formData.password}
+                          onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                          required
+                          minLength={6}
+                          style={{ paddingRight: '42px' }}
+                        />
+                        <button
+                          type="button"
+                          onClick={() => setShowPassword(!showPassword)}
+                          aria-label={showPassword ? 'Ocultar senha' : 'Ver senha'}
+                          style={{
+                            position: 'absolute',
+                            right: '12px',
+                            top: '50%',
+                            transform: 'translateY(-50%)',
+                            background: 'none',
+                            border: 'none',
+                            cursor: 'pointer',
+                            color: '#5b7a72',
+                            display: 'flex',
+                            alignItems: 'center',
+                            padding: 0,
+                          }}
+                        >
+                          {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                        </button>
+                      </div>
                     </div>
 
                     <div className="form-group-clean">
                       <label>Confirme a Senha</label>
-                      <input
-                        type="password"
-                        className="input-clean"
-                        placeholder="Repita a senha"
-                        value={confirmPassword}
-                        onChange={(e) => setConfirmPassword(e.target.value)}
-                        required
-                        minLength={6}
-                      />
+                      <div style={{ position: 'relative' }}>
+                        <input
+                          type={showConfirmPassword ? 'text' : 'password'}
+                          className="input-clean"
+                          placeholder="Repita a senha"
+                          value={confirmPassword}
+                          onChange={(e) => setConfirmPassword(e.target.value)}
+                          required
+                          minLength={6}
+                          style={{ paddingRight: '42px' }}
+                        />
+                        <button
+                          type="button"
+                          onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                          aria-label={showConfirmPassword ? 'Ocultar senha' : 'Ver senha'}
+                          style={{
+                            position: 'absolute',
+                            right: '12px',
+                            top: '50%',
+                            transform: 'translateY(-50%)',
+                            background: 'none',
+                            border: 'none',
+                            cursor: 'pointer',
+                            color: '#5b7a72',
+                            display: 'flex',
+                            alignItems: 'center',
+                            padding: 0,
+                          }}
+                        >
+                          {showConfirmPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                        </button>
+                      </div>
                     </div>
                   </div>
 
@@ -288,7 +380,7 @@ export default function CheckoutPage() {
                     className="btn btn-primary"
                     style={{ width: '100%', padding: '16px', fontSize: '1.05rem', justifyContent: 'center' }}
                   >
-                    {isLoading ? 'Gerando cobrança Pix...' : 'Gerar QR Code Pix →'}
+                    {isLoading ? 'Criando cadastro e gerando Pix...' : 'Criar Cadastro e Gerar Pagamento →'}
                   </button>
 
                   <div style={{ textAlign: 'center', marginTop: '14px', fontSize: '0.78rem', color: '#5b7a72' }}>
