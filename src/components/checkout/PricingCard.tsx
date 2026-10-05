@@ -9,7 +9,7 @@ export function PricingCard() {
         <span className="tag">🔒 ACESSO VITALÍCIO</span>
         <div className="price-old">de R$ 197,00 por</div>
         <div className="price-now" style={{ fontSize: '3.2rem' }}>
-          <small>R$</small> 49<small>,90</small>
+          <small>R$</small> 29<small>,90</small>
         </div>
         <div className="price-sub">pagamento único • acesso para sempre</div>
       </div>
