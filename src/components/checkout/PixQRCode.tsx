@@ -24,6 +24,47 @@ export function PixQRCode({ pixData, onConfirmSuccess }: PixQRCodeProps) {
   const [copied, setCopied] = useState(false);
   const [isChecking, setIsChecking] = useState(true);
   const [isPaid, setIsPaid] = useState(false);
+  const [manualCheckLoading, setManualCheckLoading] = useState(false);
+  const [manualCheckMessage, setManualCheckMessage] = useState<string | null>(null);
+
+  // Verificação manual com a Efí/Gateway ao clicar no botão
+  const handleManualCheck = async () => {
+    if (manualCheckLoading || isPaid) return;
+    setManualCheckLoading(true);
+    setManualCheckMessage(null);
+
+    try {
+      const res = await fetch(`/api/checkout/status?orderId=${pixData.externalOrderId}`);
+      if (res.ok) {
+        const data = await res.json();
+        if (data.isPaid || data.status === 'PAID') {
+          setIsPaid(true);
+          setIsChecking(false);
+
+          trackPixelEvent('Purchase', {
+            value: pixData.amount,
+            currency: 'BRL',
+            content_name: 'Mindfit Acesso Vitalício',
+            content_ids: [pixData.externalOrderId],
+          });
+
+          setTimeout(() => {
+            onConfirmSuccess();
+          }, 1500);
+          return;
+        }
+      }
+      setManualCheckMessage(
+        'Pagamento ainda não confirmado pela Efí. Se você já transferiu pelo seu banco, aguarde alguns segundos até o processamento ser concluído.'
+      );
+    } catch {
+      setManualCheckMessage(
+        'Não foi possível verificar o pagamento agora. Aguarde alguns instantes e tente novamente.'
+      );
+    } finally {
+      setManualCheckLoading(false);
+    }
+  };
 
   // Copiar código Pix
   const handleCopy = async () => {
@@ -257,15 +298,34 @@ export function PixQRCode({ pixData, onConfirmSuccess }: PixQRCodeProps) {
         </div>
       </div>
 
-      {/* Simulation/Manual verification button */}
+      {/* Manual verification button */}
       <button
         type="button"
-        onClick={onConfirmSuccess}
+        disabled={manualCheckLoading}
+        onClick={handleManualCheck}
         className="btn btn-ghost"
         style={{ width: '100%', fontSize: '0.85rem', padding: '12px' }}
       >
-        Já realizei o pagamento →
+        {manualCheckLoading ? 'Consultando o banco...' : 'Já realizei o pagamento →'}
       </button>
+
+      {manualCheckMessage && (
+        <div
+          style={{
+            marginTop: '12px',
+            padding: '12px 14px',
+            background: '#fffbeb',
+            border: '1.5px solid #fde68a',
+            borderRadius: '12px',
+            color: '#b45309',
+            fontSize: '0.8rem',
+            lineHeight: 1.4,
+            textAlign: 'center',
+          }}
+        >
+          {manualCheckMessage}
+        </div>
+      )}
     </div>
   );
 }

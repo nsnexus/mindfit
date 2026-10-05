@@ -100,13 +100,29 @@ export default function CheckoutPage() {
 
   const handleUnlockAccess = async () => {
     try {
+      if (!pixData?.externalOrderId) {
+        setError('Nenhum pedido Pix identificado.');
+        return;
+      }
+
+      // Validação estrita: confere se o pedido foi comprovadamente confirmado no servidor/Efí
+      const res = await fetch(`/api/checkout/status?orderId=${pixData.externalOrderId}`);
+      if (!res.ok) {
+        throw new Error('Falha ao validar o pagamento. Tente novamente em alguns instantes.');
+      }
+      const statusData = await res.json();
+      if (!statusData.isPaid && statusData.status !== 'PAID') {
+        setError('O pagamento deste pedido ainda não foi confirmado pela instituição bancária.');
+        return;
+      }
+
       if (firebaseUser) {
         // Já estava logado — só libera o acesso na conta existente
         await updateDocument('users', firebaseUser.uid, {
           isPremium: true,
           cpf: formData.cpf || undefined,
           phone: formData.phone || undefined,
-          premiumSince: new Date().toISOString(),
+          premiumSince: statusData.paidAt || new Date().toISOString(),
         });
 
         if (appUser) {
@@ -123,7 +139,7 @@ export default function CheckoutPage() {
           isPremium: true,
           cpf: formData.cpf || undefined,
           phone: formData.phone || undefined,
-          premiumSince: new Date().toISOString(),
+          premiumSince: statusData.paidAt || new Date().toISOString(),
         });
       }
 

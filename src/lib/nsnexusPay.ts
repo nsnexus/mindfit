@@ -68,3 +68,31 @@ export async function createPixPayment(options: CreatePixOptions): Promise<PixRe
 
   return data;
 }
+
+/**
+ * Consulta o status de uma cobrança Pix em tempo real no Gateway Centralizado NSNexus / Efí
+ */
+export async function getPixCharge(
+  txid: string
+): Promise<{ status: string; paidAt?: string; amount?: number } | null> {
+  const gatewayUrl = process.env.NSNEXUS_GATEWAY_URL || 'https://nsmusic.nsnexus.com.br';
+  const apiKey =
+    process.env.GATEWAY_API_KEY ||
+    process.env.NSNEXUS_GATEWAY_API_KEY;
+
+  if (!apiKey) {
+    throw new Error('GATEWAY_API_KEY não configurada nas variáveis de ambiente');
+  }
+
+  const response = await fetch(`${gatewayUrl}/api/gateway/v1/charges/${encodeURIComponent(txid)}`, {
+    headers: {
+      'X-Gateway-Api-Key': apiKey,
+    },
+    cache: 'no-store',
+  });
+
+  if (response.status === 404) return null;
+  if (!response.ok) return null;
+
+  return (await response.json()) as { status: string; paidAt?: string; amount?: number };
+}
