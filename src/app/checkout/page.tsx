@@ -34,9 +34,6 @@ export default function CheckoutPage() {
   const [pixData, setPixData] = useState<PixDataView | null>(null);
   const [error, setError] = useState('');
 
-  // Quem já está logado não precisa criar senha — a conta já existe
-  const needsPassword = !firebaseUser;
-
   const handleCreatePayment = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
@@ -46,15 +43,14 @@ export default function CheckoutPage() {
       return;
     }
 
-    if (needsPassword) {
-      if (formData.password.length < 6) {
-        setError('A senha precisa ter pelo menos 6 caracteres.');
-        return;
-      }
-      if (formData.password !== confirmPassword) {
-        setError('As senhas não coincidem.');
-        return;
-      }
+    if (!formData.password || formData.password.length < 6) {
+      setError('A senha precisa ter pelo menos 6 caracteres.');
+      return;
+    }
+
+    if (formData.password !== confirmPassword) {
+      setError('As senhas não coincidem.');
+      return;
     }
 
     setIsLoading(true);
@@ -116,12 +112,10 @@ export default function CheckoutPage() {
         return;
       }
 
-      if (firebaseUser) {
-        // Já estava logado — só libera o acesso na conta existente
+      if (firebaseUser && firebaseUser.email?.toLowerCase().trim() === formData.email.toLowerCase().trim()) {
+        // Já estava logado com esta mesma conta — só libera o acesso
         await updateDocument('users', firebaseUser.uid, {
           isPremium: true,
-          cpf: formData.cpf || undefined,
-          phone: formData.phone || undefined,
           premiumSince: statusData.paidAt || new Date().toISOString(),
         });
 
@@ -129,16 +123,14 @@ export default function CheckoutPage() {
           setAppUser({ ...appUser, isPremium: true });
         }
       } else {
-        // Ninguém logado — cria a conta agora com a senha definida no checkout
-        const newUser = await registerWithEmail(formData.email, formData.password, formData.fullName);
+        // Cria a conta com email e senha definidos no formulário
+        const newUser = await registerWithEmail(formData.email.trim(), formData.password, formData.fullName.trim());
         if (!newUser) {
           throw new Error('Não foi possível criar sua conta. Tente novamente.');
         }
 
         await updateDocument('users', newUser.uid, {
           isPremium: true,
-          cpf: formData.cpf || undefined,
-          phone: formData.phone || undefined,
           premiumSince: statusData.paidAt || new Date().toISOString(),
         });
       }
@@ -236,56 +228,30 @@ export default function CheckoutPage() {
                     </span>
                   </div>
 
-                  {needsPassword && (
-                    <div className="form-row-2">
-                      <div className="form-group-clean">
-                        <label>Crie uma Senha</label>
-                        <input
-                          type="password"
-                          className="input-clean"
-                          placeholder="Mínimo 6 caracteres"
-                          value={formData.password}
-                          onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                          required
-                          minLength={6}
-                        />
-                      </div>
-
-                      <div className="form-group-clean">
-                        <label>Confirme a Senha</label>
-                        <input
-                          type="password"
-                          className="input-clean"
-                          placeholder="Repita a senha"
-                          value={confirmPassword}
-                          onChange={(e) => setConfirmPassword(e.target.value)}
-                          required
-                          minLength={6}
-                        />
-                      </div>
-                    </div>
-                  )}
-
                   <div className="form-row-2">
                     <div className="form-group-clean">
-                      <label>CPF (opcional)</label>
+                      <label>Crie uma Senha</label>
                       <input
-                        type="text"
+                        type="password"
                         className="input-clean"
-                        placeholder="000.000.000-00"
-                        value={formData.cpf}
-                        onChange={(e) => setFormData({ ...formData, cpf: e.target.value })}
+                        placeholder="Mínimo 6 caracteres"
+                        value={formData.password}
+                        onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                        required
+                        minLength={6}
                       />
                     </div>
 
                     <div className="form-group-clean">
-                      <label>WhatsApp (opcional)</label>
+                      <label>Confirme a Senha</label>
                       <input
-                        type="tel"
+                        type="password"
                         className="input-clean"
-                        placeholder="(00) 00000-0000"
-                        value={formData.phone}
-                        onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                        placeholder="Repita a senha"
+                        value={confirmPassword}
+                        onChange={(e) => setConfirmPassword(e.target.value)}
+                        required
+                        minLength={6}
                       />
                     </div>
                   </div>
